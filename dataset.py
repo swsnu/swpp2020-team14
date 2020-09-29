@@ -139,19 +139,6 @@ def create_single_image(font, word=None):
     img_cut = img.transform((IMG_SIZE, IMG_SIZE),
         method=Image.PERSPECTIVE, data=coeff)
 
-    def _debug():
-        tmp = Image.new('L', img.size, 0)
-        dd = ImageDraw.Draw(tmp)
-        reg = region
-        dd.polygon([reg[0], reg[1], reg[3], reg[2]], fill=255, outline=255)
-        plt.figure()
-        plt.imshow(tmp)
-        plt.figure()
-        plt.imshow(img)
-        plt.figure()
-        plt.imshow(img_cut)
-    # _debug()
-
     return img_cut
 
 def get_font_object(font_itm):
