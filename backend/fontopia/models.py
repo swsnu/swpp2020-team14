@@ -1,8 +1,9 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 
 # Create your models here.
-class FontopiaUser(User):
+class FontopiaUser(models.Model):
+    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
     nickname = models.CharField(max_length=20)
 
 class Font(models.Model):
