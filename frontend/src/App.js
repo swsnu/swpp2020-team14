@@ -1,6 +1,7 @@
-import { BrowserRouter, Switch } from 'react-router-dom';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
-import logo from './logo.svg';
+import { FontListView, FontItemView } from './font/views/all.js';
+
 import './App.css';
 
 function App() {
@@ -11,6 +12,8 @@ function App() {
         </div>
 
         <Switch>
+          <Route exact path="/font" component={FontListView} />
+          <Route exact path="/font/:font_id" component={FontItemView} />
         </Switch>
       </BrowserRouter>
     </div>
