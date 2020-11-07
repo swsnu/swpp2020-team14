@@ -1,20 +1,33 @@
+"""
+Django models for fontopia app
+"""
+
 from django.db import models
 from django.contrib.auth import get_user_model
 
 # Create your models here.
 class FontopiaUser(models.Model):
+    """
+    extends Django default User model.
+    """
     user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
     nickname = models.CharField(max_length=20)
 
 class Font(models.Model):
+    """
+    represents a set of fonts.
+    """
     name = models.CharField(max_length=100)
     is_free = models.BooleanField()
     license_summary = models.TextField()
     license_detail = models.JSONField()
     manufacturer = models.CharField(max_length=100)
     view_count = models.IntegerField()
- 
+
 class Photo(models.Model):
+    """
+    represents photos that users uploaded for analysis.
+    """
     author = models.ForeignKey(
         FontopiaUser,
         on_delete=models.CASCADE,
@@ -33,6 +46,9 @@ class Photo(models.Model):
     metadata = models.JSONField()
 
 class Finding(models.Model):
+    """
+    represents a result of analysis of each photo.
+    """
     photo = models.ForeignKey(
         Photo,
         on_delete=models.CASCADE,
@@ -45,6 +61,9 @@ class Finding(models.Model):
     probability = models.FloatField()
 
 class Article(models.Model):
+    """
+    represents a set of articles.
+    """
     author = models.ForeignKey(
         FontopiaUser,
         on_delete=models.CASCADE,
@@ -62,6 +81,9 @@ class Article(models.Model):
     view_count = models.IntegerField()
 
 class Comment(models.Model):
+    """
+    represents a set of comments.
+    """
     author = models.ForeignKey(
         FontopiaUser,
         on_delete=models.CASCADE,
