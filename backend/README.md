@@ -4,6 +4,7 @@
 
 | Model | API | GET | POST | PUT | DELETE |
 |-------|-----|-----|------|-----|--------|
+| | /api/token | Get a CSRF token | | | |
 | User | /api/signup | | Create new user | | |
 | | /api/signin | | sign in | | |
 | | /api/signout | | sign out | | |
@@ -18,34 +19,121 @@
 | Font | /api/font | view all fonts	| | | |
 | | /api/font/:font_id | view detailed font info | | | |
 
-
 ## Authentiation
 ### `/api/token`
 **GET**
 - Input: None
 - Ouptut: HTTP `204` Response (automatically set CSRF token cookie)
 ### `/api/signup`
-**GET**
+**POST**
 - Input: JSON `{username: str, password: str, first_name: str}`
 - Output: HTTP `201` Response
 ### `/api/signin`
+**POST**
+- Input: None
+- Output: HTTP `` Response
 
 ### `/api/signout`
 - login required
 
+**POST**
+- Input: None
+- Output: HTTP `` Response
+
 ## Photo
 ### `/api/photo`
 - login required
+**GET**
+- Input: None
+- Output: HTTP `` Response
+
+**POST**
+- Input: None
+- Output: HTTP `` Response
+
 ### `/api/photo/:photo_id`
 - login required
+**GET**
+- Input: None
+- Output: HTTP `` Response
+
+**PUT**
+- Input: None
+- Output: HTTP `` Response
+
+**DELETE**
+- Input: None
+- Output: HTTP `` Response
+
 ### `/api/photo/:photo_id/report`
 - login required
+
 ## Article
 ### `/api/article`
+**GET**
+- Input: None
+- Output: HTTP `` Response
+
+**POST**
+- Input: None
+- Output: HTTP `` Response
+
 ### `/api/article/:article_id`
+**GET**
+- Input: None
+- Output: HTTP `` Response
+
+**PUT**
+- Input: None
+- Output: HTTP `` Response
+
+**DELETE**
+- Input: None
+- Output: HTTP `` Response
+
 ### `/api/article/:article_id/like`
+**GET**
+- Input: None
+- Output: HTTP `` Response
+
+**POST**
+- Input: None
+- Output: HTTP `` Response
+
+**DELETE**
+- Input: None
+- Output: HTTP `` Response
+
 ## Comment
-### `/api/article/comment/:comment_id`
+### `/api/article/:article_id/comment`
+**GET**
+- Input: None
+- Output: HTTP `` Response
+
+**POST**
+- Input: None
+- Output: HTTP `` Response
+
+### `/api/comment/:comment_id`
+**GET**
+- Input: None
+- Output: HTTP `` Response
+
+**PUT**
+- Input: None
+- Output: HTTP `` Response
+
+**DELETE**
+- Input: None
+- Output: HTTP `` Response
+
 ## Font
 ### `/font`
+**GET**
+- Input: None
+- Output: HTTP `` Response
+
 ### `/font/:font_id`
+**GET**
+- Input: None
+- Output: HTTP `` Response
