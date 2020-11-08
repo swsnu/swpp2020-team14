@@ -3,6 +3,8 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path('token', views.common.CSRFTokenView.as_view()),
+
     path('article', views.article.APIArticle.as_view()),
     path('article/<int:article_id>', views.article.APIArticleItem.as_view()),
     path('article/<int:article_id>/comment', views.article.APIComment.as_view()),
