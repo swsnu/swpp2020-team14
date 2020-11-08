@@ -71,7 +71,7 @@ class ArticleList extends Component {
         cur={this.state.cur} onclick={(i)=>this.onBrowsePage(i)} />
     </div>
   }
-};
+}
 
 export default withRouter(ArticleList);
 

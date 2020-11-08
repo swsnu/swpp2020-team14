@@ -13,6 +13,6 @@ class ArticleDetailView extends Component {
       </div>
     )
   }
-};
+}
 
 export default withRouter(ArticleDetailView);

@@ -20,14 +20,12 @@ describe('ArticleList', () => {
   });
 
   it('should attempt to fetch', (done) => {
-    let comp;
-
     axios.get.mockImplementationOnce((url) => new Promise((resv, rej) => {
       expect(url.startsWith(mock_endpoint)).toBe(true);
       rej(); done();
     }));
 
-    comp = shallow(<ArticleListInner fetchEndpoint={ mock_endpoint } />,
+    const comp = shallow(<ArticleListInner fetchEndpoint={ mock_endpoint } />,
       { disableLifecycleMethods: false });
   });
 

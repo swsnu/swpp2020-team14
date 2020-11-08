@@ -45,7 +45,7 @@ class CommentList extends Component {
       {items}
     </div>
   }
-};
+}
 
 export default CommentList;
 

@@ -25,7 +25,7 @@ class APIArticle(View):
         })
 
     def post(self, request):
-        pass
+        raise NotImplementedError
 
 class APIArticleItem(View):
     def get(self, request, article_id=None):

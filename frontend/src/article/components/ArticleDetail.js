@@ -55,14 +55,16 @@ class ArticleDetail extends Component {
     });
   }
 
+  _afterUpdateComment(resp) {
+    const response = resp.data;
+    if (response.success !== true) throw new Error(response.error);
+    this.loadComment();
+  }
+
   onDeleteComment(target) {
     axios.delete(`/api/comment/${target}`)
-    .then((resp) => {
-      const response = resp.data;
-      if (response.success !== true) throw new Error(response.error);
-      this.loadComment();
-    })
-    .catch((err) => { alert("Error deleting comment: " + err); });
+      .then(this._afterUpdateComment.bind(this))
+      .catch((err) => { alert("Error deleting comment: " + err); });
   }
 
   onSubmitComment(target, content) {
@@ -70,12 +72,8 @@ class ArticleDetail extends Component {
     const job = (target !== -1 ?
       axios.put(`/api/comment/${content}`, payload) :
       axios.post("/api/comment", payload));
-    job.then((resp) => {
-      const response = resp.data;
-      if (response.success !== true) throw new Error(response.error);
-      this.loadComment();
-    })
-    .catch((err) => { alert("Error submitting comment: " + err); });
+    job.then(this._afterUpdateComment.bind(this))
+      .catch((err) => { alert("Error submitting comment: " + err); });
   }
 
   onLike() {
@@ -140,6 +138,6 @@ class ArticleDetail extends Component {
     </div>
     );
   }
-};
+}
 
 export default withRouter(ArticleDetail);

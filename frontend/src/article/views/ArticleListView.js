@@ -11,7 +11,7 @@ class ArticleListView extends Component {
       </div>
     )
   }
-};
+}
 
 export default withRouter(ArticleListView);
 
