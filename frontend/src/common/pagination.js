@@ -7,7 +7,7 @@ class PageButtonArray extends Component {
     for (let i=this.props.cur-5; i<=this.props.cur+5; ++i) {
       if (i<1 || i>this.props.n) continue;
       arr.push(<button key={i} className={
-        "page-btn"+((i === this.props.cur) && " page-btn-cur")}
+        "page-btn "+((i === this.props.cur) ? "page-btn-cur" : "")}
         onClick={H(i)}>{i}</button>);
     }
     return (<div className="page-button-array">
