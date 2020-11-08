@@ -47,7 +47,9 @@ class Signin extends Component{
         axios.post(`/api/signin`, this.state)
         .then((resp) => {
           this.props.logInSuccess();
+          window.sessionStorage.setItem('user_ptr', resp.user_ptr);
           window.sessionStorage.setItem('email', this.state.email);
+          window.sessionStorage.setItem('nickname', resp.nickname);
           window.sessionStorage.setItem('preserve_login', true);
         })
         .catch((err) => {
@@ -56,16 +58,24 @@ class Signin extends Component{
           this.history.goBack();
         });
     }    
-    // Log out, which may be used in other pages(Here, this function is useless)
+    // Log out, which may be used in other pages
     onSignoutClicked(){
-        this.props.logOutSuccess();
-        window.sessionStorage.clear();
-        return ( (e) =>
-            this.setState({
-                email: "", 
-                password: ""
-            })
-        );
+        axios.post('/api/signout', this.state)
+        .then((resp) => {
+            this.props.logOutSuccess();
+            window.sessionStorage.clear();
+            return ( (e) =>
+                this.setState({
+                    email: "", 
+                    password: ""
+                })
+            );
+        })
+        .catch((err) => {
+            console.log(err);
+            alert(err);
+            this.history.goBack();
+        })
     }
 
     componentDidMount() {
@@ -77,6 +87,13 @@ class Signin extends Component{
             <div className="Sign In Page">
                 { (function(){
                     if(this.props.isLoggedIn === true){
+                        return(
+                            <div className="Sign Out Button">
+                            <button onClick={this.onSignoutClicked}>Sign Out</button>
+                            </div>
+                        );
+                    }
+                    else{
                         return(
                             <div>
                                 <div className="email">
@@ -92,10 +109,7 @@ class Signin extends Component{
                         );
                     }
                   })()
-                }   
-                <div className="Sign Out Button">
-                    <button onClick={this.onSignoutClicked}>Sign Out</button>
-                </div>
+                }
             </div>
         );
 
