@@ -2,8 +2,8 @@
 
 ## Overview
 
-| Model | API         | GET             | POST | PUT | DELETE |
-|-------|-------------|-----------------|------|-----|--------|
+| Model | API | GET | POST | PUT | DELETE |
+|-------|-----|-----|------|-----|--------|
 | User | /api/signup | | Create new user | | |
 | | /api/signin | | sign in | | |
 | | /api/signout | | sign out | | |
