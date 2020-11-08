@@ -5,13 +5,15 @@ Django models for fontopia app
 from django.db import models
 from django.contrib.auth import get_user_model
 
-# Create your models here.
-class FontopiaUser(models.Model):
-    """
-    extends Django default User model.
-    """
-    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
-    nickname = models.CharField(max_length=20)
+
+# TODO: update wiki
+# class FontopiaUser(models.Model):
+#     """
+#     extends Django default User model.
+#     """
+#     user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
+#     nickname = models.CharField(max_length=20)
+
 
 class Font(models.Model):
     """
@@ -24,12 +26,13 @@ class Font(models.Model):
     manufacturer = models.CharField(max_length=100)
     view_count = models.IntegerField()
 
+
 class Photo(models.Model):
     """
     represents photos that users uploaded for analysis.
     """
     author = models.ForeignKey(
-        FontopiaUser,
+        get_user_model(),
         on_delete=models.CASCADE,
         related_name='my_photos'
     )
@@ -44,6 +47,7 @@ class Photo(models.Model):
     )
     memo = models.TextField()
     metadata = models.JSONField()
+
 
 class Finding(models.Model):
     """
@@ -60,32 +64,34 @@ class Finding(models.Model):
     )
     probability = models.FloatField()
 
+
 class Article(models.Model):
     """
     represents a set of articles.
     """
     author = models.ForeignKey(
-        FontopiaUser,
+        get_user_model(),
         on_delete=models.CASCADE,
         related_name='my_articles'
     )
-    created_at = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
     last_edited_at = models.DateTimeField()
     title = models.CharField(max_length=100)
     content = models.TextField()
     image_file = models.FileField()
     liked_users = models.ManyToManyField(
-        FontopiaUser,
+        get_user_model(),
         related_name='liked_articles'
     )
-    view_count = models.IntegerField()
+    view_count = models.IntegerField(default=0)
+
 
 class Comment(models.Model):
     """
     represents a set of comments.
     """
     author = models.ForeignKey(
-        FontopiaUser,
+        get_user_model(),
         on_delete=models.CASCADE,
         related_name='my_comments'
     )
