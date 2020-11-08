@@ -1,17 +1,18 @@
-from django.http import JsonResponse, HttpResponse, HttpResponseNotFound
+from django.http import HttpResponse
 
-def date2str(dt):
-    return dt.strftime("%Y/%m/%d %H:%M:%S")
+def date2str(date):
+    return date.strftime("%Y/%m/%d %H:%M:%S")
 
-def force_login(f):
+def force_login(func):
     def _inner(request, *args, **kwargs):
         if request.user.is_authenticated:
-            return f(request, *args, **kwargs)
+            return func(request, *args, **kwargs)
         return HttpResponse(403)
-    return f
+    return func
 
 # Cf. https://thihara.github.io/Django-Req-Parsing/
-def prepare_put(f):
+def prepare_put(func):
+    # pylint: disable=protected-access
     def _inner(request, *args, **kwargs):
         if request.method == "PUT":
             if hasattr(request, '_post'):
@@ -26,5 +27,5 @@ def prepare_put(f):
                 request._load_post_and_files()
                 request.META['REQUEST_METHOD'] = 'PUT'
             request.PUT = request.POST
-        return f(request, *args, **kwargs)
+        return func(request, *args, **kwargs)
     return _inner

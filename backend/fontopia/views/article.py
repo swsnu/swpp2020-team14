@@ -154,4 +154,3 @@ class APIComment(View):
           'content': a.content,
           'is_owner': (a.author.id == request.user.id)
         } for c in cmts]})
-
