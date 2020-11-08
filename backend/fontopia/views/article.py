@@ -15,7 +15,7 @@ class APIArticle(View):
         resp = [{
             'id': a.id,
             'title': a.title,
-            'author': a.author.nickname
+            'author': a.author.first_name
         } for a in page]
 
         return JsonResponse(data={
@@ -42,7 +42,7 @@ class APIArticleItem(View):
 
         return JsonResponse(data={'article': {
           'title': a.title,
-          'author': a.author.nickname,
+          'author': a.author.first_name,
           'created_at': date2str(a.created_at),
           'last_edited_at': date2str(a.last_edited_at),
           'image_url': a.image_file.url,
@@ -64,7 +64,7 @@ class APIComment(View):
 
         return JsonResponse(data={'comments': [{
           'id': c.id,
-          'author': c.author.nickname,
+          'author': c.author.first_name,
           'created_at': date2str(c.created_at),
           'last_edited_at': date2str(c.last_edited_at),
           'content': a.content,
