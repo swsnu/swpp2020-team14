@@ -17,13 +17,9 @@ class CommentList extends Component {
   }
 
   render() {
-    if (this.state.list === null) {
-      return <p className="loading">Loading comment list...</p>
-    }
-
     const items = this.props.comments.map(c => {
-      return <div className={"cmt-itm" +
-        (c.id === this.state.edit_target && " cmt-itm-editing")} key={c.id}>
+      return <div className={"cmt-itm " +
+        (c.id === this.state.edit_target ? "edit" : "nonedit")} key={c.id}>
         <div className="meta">
           <div className="username"><span>{c.author}</span></div>
           <div className="dates">
@@ -48,4 +44,3 @@ class CommentList extends Component {
 }
 
 export default CommentList;
-
