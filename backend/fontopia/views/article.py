@@ -1,11 +1,9 @@
 from datetime import datetime
 
 from django.views import View
-from django.http import JsonResponse, HttpResponse, HttpResponseNotFound, QueryDict
-from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse, HttpResponseNotFound
 from django.utils.decorators import method_decorator
 from django.core.paginator import Paginator
-from django.db import models
 
 from fontopia.models import Article
 from fontopia.utils import date2str, force_login, prepare_put
@@ -50,7 +48,7 @@ class APIArticleItem(View):
     def get(self, request, article_id=None):
         q = Article.objects.filter(id=article_id)
 
-        if not len(q):
+        if not q.count():
             return HttpResponseNotFound()
 
         a = q.get()
@@ -74,7 +72,7 @@ class APIArticleItem(View):
     @method_decorator([force_login, prepare_put])
     def put(self, request, article_id=None):
         q = Article.objects.filter(id=article_id)
-        if not len(q):
+        if not q.count():
             return JsonResponse({'success': False, 'error': 'No such article'})
         a = q.get()
         if a.author != request.user:
@@ -99,9 +97,10 @@ class APIArticleItem(View):
     @method_decorator(force_login)
     def delete(self, request, article_id=None):
         q = Article.objects.filter(id=article_id)
-        if not len(q):
+        if not q.count():
             return JsonResponse({'success': False, 'error': 'No such article'})
         a = q.get()
+
         if a.author != request.user:
             return JsonResponse({'success': False, 'error': 'Author mismatch'})
 
@@ -114,9 +113,10 @@ class APIArticleLike(View):
     @method_decorator(force_login)
     def post(self, request, article_id=None):
         q = Article.objects.filter(id=article_id)
-        if not len(q):
+        if not q.count():
             return JsonResponse({'success': False, 'error': 'No such article'})
         a = q.get()
+
         likes = a.liked_users
         if likes.filter(id=request.user.id).count():
             return JsonResponse({'success': False, 'error': 'Cannot like twice'})
@@ -126,9 +126,10 @@ class APIArticleLike(View):
     @method_decorator(force_login)
     def delete(self, request, article_id=None):
         q = Article.objects.filter(id=article_id)
-        if not len(q):
+        if not q.count():
             return JsonResponse({'success': False, 'error': 'No such article'})
         a = q.get()
+
         likes = a.liked_users
         if not likes.filter(id=request.user.id).count():
             return JsonResponse({'success': False, 'error': 'Cannot undo non-liked articles'})
@@ -139,10 +140,8 @@ class APIArticleLike(View):
 class APIComment(View):
     def get(self, request, article_id=None):
         q = Article.objects.filter(id=article_id)
-
-        if not len(q):
+        if not q.count():
             return HttpResponseNotFound()
-
         a = q.get()
         cmts = a.comments.all()
 
