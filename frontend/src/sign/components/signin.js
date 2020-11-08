@@ -73,18 +73,26 @@ class Signin extends Component{
     }
 
     render(){
-
         return(
             <div className="Sign In Page">
-                <div className="email">
-                    email <input type="text" onChange={this.onEmailInputChanged} />
-                </div>
-                <div className="PW">
-                    PW <input type="password" onChange={this.onPasswordInputChanged} />
-                </div>
-                <div className="Sign In Button">
-                    <button onClick={this.onSigninClicked}>Sign In</button>
-                </div>
+                { function(){
+                    if(this.props.isLoggedIn === true){
+                        return(
+                            <div>
+                                <div className="email">
+                                    email <input type="text" onChange={this.onEmailInputChanged} />
+                                </div>
+                                <div className="PW">
+                                    PW <input type="password" onChange={this.onPasswordInputChanged} />
+                                </div>
+                                <div className="Sign In Button">
+                                    <button onClick={this.onSigninClicked}>Sign In</button>
+                                </div>
+                            </div>
+                        );
+                    }
+                  }
+                }   
                 <div className="Sign Out Button">
                     <button onClick={this.onSignoutClicked}>Sign Out</button>
                 </div>
