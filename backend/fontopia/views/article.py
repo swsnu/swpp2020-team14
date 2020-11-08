@@ -1,10 +1,14 @@
+from datetime import datetime
+
 from django.views import View
-from django.http import JsonResponse, HttpResponse, HttpResponseNotFound
+from django.http import JsonResponse, HttpResponse, HttpResponseNotFound, QueryDict
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from django.core.paginator import Paginator
 from django.db import models
 
 from fontopia.models import Article
-from fontopia.utils import date2str
+from fontopia.utils import date2str, force_login, prepare_put
 
 class APIArticle(View):
     def get(self, request):
@@ -24,8 +28,23 @@ class APIArticle(View):
             'cur': page.number
         })
 
+    @method_decorator(force_login)
     def post(self, request):
-        raise NotImplementedError
+        try:
+            body = request.POST
+            title = body['title']
+            content = body['content']
+            uploaded_image = request.FILES['image']
+            print(uploaded_image)
+        except KeyError:
+            return JsonResponse({'success': False, 'error': 'Malformed request'})
+        now = datetime.now()
+        a = Article.objects.create(title=title, content=content,
+            author=request.user, created_at=now, last_edited_at=now,
+            view_count=0)
+        a.save()
+        a.image_file.save('article/attachment', uploaded_image)
+        return JsonResponse({'success': True, 'id': a.id})
 
 class APIArticleItem(View):
     def get(self, request, article_id=None):
@@ -51,6 +70,71 @@ class APIArticleItem(View):
           'like_count': likes.count(),
           'is_owner': (a.author.id == request.user.id)
         }})
+
+    @method_decorator([force_login, prepare_put])
+    def put(self, request, article_id=None):
+        q = Article.objects.filter(id=article_id)
+        if not len(q):
+            return JsonResponse({'success': False, 'error': 'No such article'})
+        a = q.get()
+        if a.author != request.user:
+            return JsonResponse({'success': False, 'error': 'Author mismatch'})
+
+        try:
+            title = request.PUT['title']
+            content = request.PUT['content']
+            uploaded_image = request.FILES['image']
+            assert title and content
+        except (KeyError, AssertionError):
+            return JsonResponse({'success': False, 'error': 'Malformed request'})
+
+        a.title = title
+        a.content = content
+        a.image_file.delete()
+        a.image_file.save('article/attachment', uploaded_image)
+        a.save()
+
+        return JsonResponse({'success': True, 'id': a.id})
+
+    @method_decorator(force_login)
+    def delete(self, request, article_id=None):
+        q = Article.objects.filter(id=article_id)
+        if not len(q):
+            return JsonResponse({'success': False, 'error': 'No such article'})
+        a = q.get()
+        if a.author != request.user:
+            return JsonResponse({'success': False, 'error': 'Author mismatch'})
+
+        a.image_file.delete()
+        a.delete()
+        return JsonResponse({'success': True})
+
+class APIArticleLike(View):
+
+    @method_decorator(force_login)
+    def post(self, request, article_id=None):
+        q = Article.objects.filter(id=article_id)
+        if not len(q):
+            return JsonResponse({'success': False, 'error': 'No such article'})
+        a = q.get()
+        likes = a.liked_users
+        if likes.filter(id=request.user.id).count():
+            return JsonResponse({'success': False, 'error': 'Cannot like twice'})
+        likes.add(request.user.id)
+        return JsonResponse({'success': True, 'like_count': likes.count()})
+
+    @method_decorator(force_login)
+    def delete(self, request, article_id=None):
+        q = Article.objects.filter(id=article_id)
+        if not len(q):
+            return JsonResponse({'success': False, 'error': 'No such article'})
+        a = q.get()
+        likes = a.liked_users
+        if not likes.filter(id=request.user.id).count():
+            return JsonResponse({'success': False, 'error': 'Cannot undo non-liked articles'})
+        likes.remove(request.user.id)
+        return JsonResponse({'success': True, 'like_count': likes.count()})
+
 
 class APIComment(View):
     def get(self, request, article_id=None):
