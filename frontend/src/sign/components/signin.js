@@ -75,7 +75,7 @@ class Signin extends Component{
     render(){
         return(
             <div className="Sign In Page">
-                { function(){
+                { (function(){
                     if(this.props.isLoggedIn === true){
                         return(
                             <div>
@@ -91,7 +91,7 @@ class Signin extends Component{
                             </div>
                         );
                     }
-                  }
+                  })()
                 }   
                 <div className="Sign Out Button">
                     <button onClick={this.onSignoutClicked}>Sign Out</button>
