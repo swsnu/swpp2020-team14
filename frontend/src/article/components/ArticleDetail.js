@@ -78,17 +78,18 @@ class ArticleDetail extends Component {
 
   onLike() {
     this.setState({ is_sending_like: true });
-    const a = this.state.article;
-    const job = (a.is_liked ?
-      axios.delete(`/api/article/${a.id}/like`) :
-      axios.post(`/api/article/${a.id}/like`));
-    job.then((resp) => {
-      const response = resp.data;
-      if (response.success !== true) throw new Error(response.error);
-      a.like_count = response.like_count;
+    const a = this.state.article, aid = this.props.article_id;
+    (async () => {
+      await axios.get('/api/token');
+      const resp = await (a.is_liked ?
+        axios.delete(`/api/article/${aid}/like`) :
+        axios.post(`/api/article/${aid}/like`));
+      if (resp.data.success !== true) throw new Error(resp.data.error);
+      a.like_count = resp.data.like_count;
       a.is_liked = !a.is_liked;
-    })
-    .catch((err) => { alert("Error sending like update: " + err); });
+    })().catch((err) => {
+      alert("Error sending like update: " + err.name + ": " + err.message); })
+    .finally(() => this.setState({ is_sending_like: false }));
   }
 
   componentDidMount() {
@@ -123,7 +124,7 @@ class ArticleDetail extends Component {
 
       <div className="likes">
         <button onClick={()=>this.onLike()} className={a.is_liked ? "liked" : "not-liked"}
-          disabled={this.state.is_sending_like}>Like</button>
+          disabled={this.state.is_sending_like}>{a.is_liked ? "Unlike" : "Like"}</button>
         <span className="like-cnt">{a.like_count} {a.like_count === 1 ? "Like" : "Likes"}</span>
       </div>
 

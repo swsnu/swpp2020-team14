@@ -85,7 +85,7 @@ describe('ArticleDetail', () => {
     it('should have working Like button', () => {
       const btn = comp.find('.likes button.not-liked');
       expect(btn.length).toBe(1);
-      axios.post.mockRejectedValueOnce();
+      axios.post.mockRejectedValueOnce(new Error(""));
       btn.simulate("click");
       axios.post.mockResolvedValueOnce({ data: { success: false, error: "" }});
       btn.simulate("click");
@@ -123,7 +123,7 @@ describe('ArticleDetail', () => {
       axios.get.mockImplementationOnce((url) => {
         expect(url).toEqual(`/api/article/${aid}/comment`);
         done();
-        return new Promise((resv, rej) => rej());
+        return new Promise((resv, rej) => rej(new Error("")));
       });
       onSubmit(5, "edit content");
     });
@@ -158,18 +158,11 @@ describe('ArticleDetail', () => {
     it('should have working delete button', async () => {
       await loadArticle({ is_owner: true });
       const btn = comp.find(".control-buttons button.delete");
-      // simulate delete fail
-      axios.delete.mockImplementationOnce(() => new Promise((resv, rej) => rej() ));
+      axios.delete.mockRejectedValueOnce(new Error(""));
       btn.simulate("click");
-
-      // simulate delete fail
-      axios.delete.mockImplementationOnce(() => new Promise((resv) =>
-        resv({ data: { success: false, error: "err str" }})));
+      axios.delete.mockResolvedValueOnce({ data: { success: false, error: "" }});
       btn.simulate("click");
-
-      // simulate delete success
-      axios.delete.mockImplementationOnce(() => new Promise((resv) =>
-        resv({ data: { success: true }})));
+      axios.delete.mockResolvedValueOnce({ data: { success: true }});
       btn.simulate("click");
     });
 
@@ -177,14 +170,14 @@ describe('ArticleDetail', () => {
       await loadArticle({ is_liked: true });
       const btn = comp.find('.likes button.liked');
       expect(btn.length).toBe(1);
-      axios.delete.mockRejectedValueOnce();
+      axios.delete.mockRejectedValueOnce(new Error(""));
       btn.simulate("click");
       axios.delete.mockResolvedValueOnce({ data: { success: false, error: "" }});
       btn.simulate("click");
       axios.delete.mockResolvedValueOnce({ data: { success: true }});
       btn.simulate("click");
     });
-  
+
     it('should have proper Like number text (sg.)', async () => {
       await loadArticle({ like_count: 1 });
       const txt = comp.find('.likes .like-cnt');
