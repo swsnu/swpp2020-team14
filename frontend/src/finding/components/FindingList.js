@@ -4,14 +4,15 @@ import axios from 'axios';
 
 class FindingList extends Component {
     state = {
-        photo_id = this.props.match.params.id,
-        findings: null,
-		selected_font: null
+		findings: null,
+		image_file: null,
+		selected_font: null,
+		memo: ''
     }
 
 	onInit() {
 
-		axios.get(`api/report/${this.state.photo_id}`)
+		axios.get(`api/report/${this.props.photo_id}`)
 		.then((resp) => {
 			console.log(resp);
 			const newFindings = resp.map((finding) => {
@@ -29,7 +30,7 @@ class FindingList extends Component {
 			console.log(err);
 			alert(err);
 			window.location.reload(false);
-		})              
+		})
     }
 
     componentDidMount() {
@@ -42,7 +43,7 @@ class FindingList extends Component {
 
     onRadioClicked = (finding) => {
 		const newPhoto = {}
-		axios.put(`/api/photo/${this.state.photo_id}`, newPhoto)
+		axios.put(`/api/photo/${this.props.photo_id}`, newPhoto)
 		.then((resp) => {
 			console.log(resp);
 			this.setState({
@@ -70,8 +71,7 @@ class FindingList extends Component {
 
         return (
             <div className='FindingList'>
-                {photo.image_file}
-                <div className="findings">{findings}</div>
+                {findings}
             </div>
         )
     }
