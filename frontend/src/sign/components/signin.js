@@ -22,6 +22,9 @@ class Signin extends Component{
     }
     // Redirect to my-page if user is already logged in
     onInit() {
+        if(window.sessionStorage.getItem('preserve_login')===true){
+            this.props.logInSuccess();
+        }
         if(this.props.isLoggedIn === true){
             return (<Redirect exact from='/signin' to='/my-page' />);
         }
@@ -44,6 +47,8 @@ class Signin extends Component{
         axios.post(`/api/signin`, this.state)
         .then((resp) => {
           this.props.logInSuccess();
+          window.sessionStorage.setItem('email', this.state.email);
+          window.sessionStorage.setItem('preserve_login', true);
         })
         .catch((err) => {
           console.log(err);
@@ -54,6 +59,7 @@ class Signin extends Component{
     // Log out, which may be used in other pages(Here, this function is useless)
     onSignoutClicked(){
         this.props.logOutSuccess();
+        window.sessionStorage.clear();
         return ( (e) =>
             this.setState({
                 email: "", 
