@@ -7,6 +7,9 @@ class ArticleListView extends Component {
   render() {
     return (
       <div className="article-list-view">
+        <div className="row-create">
+          <button onClick={() => this.props.history.push('/article/create')}>Create</button>
+        </div>
         <ArticleList fetchEndpoint="/api/article" />
       </div>
     )
