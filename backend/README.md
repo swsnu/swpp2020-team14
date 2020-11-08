@@ -28,7 +28,7 @@
 | Font | /api/font | view all fonts	| | | |
 | | /api/font/:font_id | view detailed font info | | | |
 
-## Authentiation
+## Authentication
 ### `/api/token`
 **GET**
 - Input: None
