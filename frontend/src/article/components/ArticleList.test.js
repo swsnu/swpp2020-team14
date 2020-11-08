@@ -1,3 +1,4 @@
+import React from 'react';
 import axios from 'axios';
 import { shallow } from 'enzyme';
 
@@ -25,7 +26,7 @@ describe('ArticleList', () => {
       rej(); done();
     }));
 
-    const comp = shallow(<ArticleListInner fetchEndpoint={ mock_endpoint } />,
+    shallow(<ArticleListInner fetchEndpoint={ mock_endpoint } />,
       { disableLifecycleMethods: false });
   });
 
@@ -51,7 +52,7 @@ describe('ArticleList', () => {
       // wait for the axios & re-render() jobs to finish,
       //   by flushing Promise chain; cf.
       //   GitHub: facebook/jest#2157
-      await new Promise(resolve => setImmediate(resolve));
+      await new Promise(resolve => window.setImmediate(resolve));
       tbody = comp.find('table.article-list-table tbody');
     });
 
