@@ -4,20 +4,20 @@ import axios from 'axios';
 
 class PhotoDetail extends Component {
 	state = {
-		image_file: null,
+		image_url: null,
 		memo: '', 
 		selected_font: null,
 		memo_changed: false
 	}
 
 	onInit() {
-		axios.get(`/api/my-page/photo/${this.props.photo_id}`)
+		axios.get(`/api/photo/${this.props.photo_id}`)
 			.then((resp) => {
 				console.log(resp);
 				this.setState({ 
-					...this.state, 
-					memo: resp.data.memo,
-					selected_font: resp.data.selected_font
+					memo: resp.data.photo.memo,
+					image_url: resp.data.photo.image_url,
+					selected_font: resp.data.photo.selected_font
 				});
 			})
 			.catch((err) => {
@@ -32,28 +32,25 @@ class PhotoDetail extends Component {
 	}
 
 	onMemoChanged = (event) => {
-		this.setState({ ...this.state, memo_changed: true, memo: event.target.value})
+		this.setState({ memo_changed: true, memo: event.target.value})
 	}
 
 	onUpdateMemoChanged = () => {
-		const photo = {
-		}
-		axios.put(`/api/my-page/photo/${this.props.photo_id}`, photo)
+		const payload = new FormData();
+		payload.append("memo", this.state.memo);
+
+		axios.patch(`/api/photo/${this.props.photo_id}`, payload)
 			.then((resp) => {
 				console.log(resp);
-				this.setState({ 
-					...this.state, memo: resp.data.memo, memo_changed: false
-				});
+				this.setState({ memo_changed: false });
 			})
 			.catch((err) => {
 				console.log(err);
 				alert(err);
-				window.location.reload(false);
 			});
 	}
 
 	onAnalysisButtonClicked = () => {
-		console.log('hi')
 		this.props.history.push(`/my-page/photo/${this.props.photo_id}/report`);
 		
 	}
@@ -66,9 +63,7 @@ class PhotoDetail extends Component {
 
 		return (
 			<div className="photo-detail">
-				<div className="image">
-					<p>{this.state.image_file}</p>
-				</div>
+				<img src={this.state.image_url} alt="uploaded photo"/>
 
 				<input className="memo" 
 					type="text" 

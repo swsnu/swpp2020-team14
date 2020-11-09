@@ -5,8 +5,8 @@ import axios from 'axios';
 
 class MyPage extends Component {
 	state = {
-		article_list: null,
-		photo_list: null,
+		articles: null,
+		photos: null,
 	}
 
 	onInit() {
@@ -18,7 +18,7 @@ class MyPage extends Component {
 		axios.get(`/api/article?page=${n}`)
 			.then((resp) => {
 				this.setState({
-					list: resp.data.list,
+					articles: resp.data.list,
 				});
 			})
 			.catch((err) => {
@@ -26,10 +26,10 @@ class MyPage extends Component {
 				window.location.reload(false);
 			});
 
-		axios.get(`/api/my-page/photo`)
+		axios.get(`/api/photo`)
 			.then((resp) => {
 				this.setState({
-					list: resp.data.list,
+					photos: resp.data.photos,
 				});
 			})
 			.catch((err) => {
@@ -42,16 +42,20 @@ class MyPage extends Component {
 		this.onInit();
 	}
 
+	onPhotoDetailClicked = (photo) => {
+        this.props.history.push(`/my-page/photo/${photo.id}`);
+    }
+
 	render() {
-		if (this.state.article_list === null) {
+		if (this.state.articles === null) {
 			return <p className="loading">Loading article list...</p>
 		}
 
-		if (this.state.photo_list === null) {
+		if (this.state.photos === null) {
 			return <p className="loading">Loading photo list...</p>
 		}
 
-		const articles = this.state.article_list.map(f => {
+		const articles = this.state.articles.map(f => {
 			return <tr key={f.id}>
 				<td className="name">
 					<button onClick={(e)=>
@@ -60,14 +64,17 @@ class MyPage extends Component {
 			</tr>
 		});
 
-		const photos = this.state.photo_list.map(f => {
-			return <tr key={f.id}>
-				<td className="name">
-					<button onClick={(e)=>
-						this.props.history.push(`/my-page/photo/${f.id}`)}>
-						{f.image_file}</button></td>
-			</tr>
-		});
+		const photos = this.state.photos.map((photo) => {
+            return ( 
+                <div className='Photo' >
+                    <img src={photo.image_url} alt="uploaded photo" onClick={() => this.onPhotoDetailClicked(photo)}/>
+
+                    <input type="checkbox" id="delete-checkbox" 
+                        disabled={!this.state.is_delete_clicked}
+                        onClick={() => this.onPhotoChecked(photo)} />
+                </div>
+            )
+        })
 
 		return <div className="my-page">
 			<div className="articles">

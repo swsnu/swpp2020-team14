@@ -4,35 +4,27 @@ import axios from 'axios';
 
 class PhotoList extends Component {
     state = {
-        image_file: null,
         is_delete_clicked: false,
-        list: null
+        photos: null
     }
 
     onInit() {
-		this.setState({
-			image_file: null,
-			is_delete_clicked: false,
-			list: null
-		})
-
-		axios.get(`/api/my-page/photo`)
+		axios.get(`/api/photo`)
 		.then((resp) => {
 			console.log(resp);
-			const newPhotos = resp.data.list.map((photo) => {
+			const newPhotos = resp.data.photos.map((photo) => {
 				return {
-					id: photo.id,
+                    id: photo.id,
+                    image_url: photo.image_url,
 					uploaded_datetime: photo.uploaded_datetime,
-					image_file: photo.image_file,
 					is_checked: false,
 				};
 			})
-			this.setState({ ...this.state, list: newPhotos})
+			this.setState({ photos: newPhotos })
 		})
 		.catch((err) => {
 			console.log(err);
 		  	alert(err);
-		  	window.location.reload(false);
 		});
     }
 
@@ -41,7 +33,7 @@ class PhotoList extends Component {
     }
 
     onPhotoDetailClicked = (photo) => {
-        this.props.history.push('/my-page/photo/' + photo.id);
+        this.props.history.push(`/my-page/photo/${photo.id}`);
     }
 
     onPhotoChecked = (photo) => {
@@ -49,47 +41,45 @@ class PhotoList extends Component {
     }
 
     onUploadClicked() {
-        alert('hi')
+        this.props.history.push('/my-page/photo/create');
     }
 
     onDeleteClicked = () => {
         if (!this.state.is_delete_clicked) {
-			this.setState({ ...this.state, is_delete_clicked: true})
+			this.setState({ is_delete_clicked: true })
         }
         else {
-            this.state.list.map((photo) => {
+            this.state.photos.map((photo) => {
                 if (photo.is_checked) {
 
-					axios.delete(`/api/my-page/photo/${photo.id}`)
+					axios.delete(`/api/photo/${photo.id}`)
 					.then((resp) => {
 						console.log(resp);
 					})
 					.catch((err) => {
 						console.log(err);
 						alert(err);
-        				window.location.reload(false);
 					})
                 }
 			})
-			const deleted = this.state.list.filter((photo) => {
+			const deleted = this.state.photos.filter((photo) => {
 				return !(photo.is_checked)
 			})
-			this.setState({ ...this.state, list: deleted, is_delete_clicked: false})
+			this.setState({ photos: deleted, is_delete_clicked: false })
 		}
     }
 
 
     render() {
-		if (this.state.list === null) {
-			return <p className="loading">Loading photo list...</p>
+		if (this.state.photos === null) {
+			return <p className="loading">Loading photo photos...</p>
 		}
 
-        const photos = this.state.list.map((photo) => {
+        const photos = this.state.photos.map((photo) => {
             return ( 
                 <div className='Photo' >
-                    <div className='image_file' onClick={() => this.onPhotoDetailClicked(photo)}>
-                        {photo.image_file}
-                    </div>
+                    <img src={photo.image_url} alt="uploaded photo" onClick={() => this.onPhotoDetailClicked(photo)}/>
+
                     <input type="checkbox" id="delete-checkbox" 
                         disabled={!this.state.is_delete_clicked}
                         onClick={() => this.onPhotoChecked(photo)} />

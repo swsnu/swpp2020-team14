@@ -68,7 +68,10 @@ class ArticleDetail extends Component {
   }
 
   onSubmitComment(target, content) {
-    const payload = {"content": content, "article": this.props.article_id};
+    const payload = new FormData();
+    payload.append("content", content);
+    payload.append("article", this.props.article_id);
+
     const job = (target !== -1 ?
       axios.put(`/api/comment/${content}`, payload) :
       axios.post("/api/comment", payload));

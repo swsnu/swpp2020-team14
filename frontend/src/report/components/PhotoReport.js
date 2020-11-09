@@ -4,19 +4,19 @@ import axios from 'axios';
 
 class PhotoReport extends Component {
     state = {
-		image_file: null,
+		image_url: null,
 		selected_font: null,
 		memo: ''
     }
 
 	onInit() {
-		axios.get(`/api/my-page/photo/${this.props.photo_id}`)
+		axios.get(`/api/photo/${this.props.photo_id}`)
 		.then((resp) => {
 			console.log(resp);
 			this.setState({ 
-				...this.state, 
-				selected_font: resp.data.selected_font, 
-				memo: resp.data.memo,
+				memo: resp.data.photo.memo,
+				image_url: resp.data.photo.image_url,
+				selected_font: resp.data.photo.selected_font
 			})
 		})
 		.catch((err) => {
@@ -33,8 +33,11 @@ class PhotoReport extends Component {
     render() {
         return (
             <div className='PhotoReport'>
-                {this.state.image_file}
-				{this.state.memo}
+                <img src={this.state.image_url} alt="uploaded photo"/>
+				
+				<div className='memo'>
+					{this.state.memo}
+				</div>
             </div>
         )
     }
