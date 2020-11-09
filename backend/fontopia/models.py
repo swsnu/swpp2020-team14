@@ -1,10 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 
-# Create your models here.
-class FontopiaUser(models.Model):
-    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
-    nickname = models.CharField(max_length=20)
+User = get_user_model()
 
 class Font(models.Model):
     name = models.CharField(max_length=100)
@@ -13,10 +10,10 @@ class Font(models.Model):
     license_detail = models.JSONField()
     manufacturer = models.CharField(max_length=100)
     view_count = models.IntegerField()
- 
+
 class Photo(models.Model):
     author = models.ForeignKey(
-        FontopiaUser,
+        User,
         on_delete=models.CASCADE,
         related_name='my_photos'
     )
@@ -46,7 +43,7 @@ class Finding(models.Model):
 
 class Article(models.Model):
     author = models.ForeignKey(
-        FontopiaUser,
+        User,
         on_delete=models.CASCADE,
         related_name='my_articles'
     )
@@ -56,14 +53,14 @@ class Article(models.Model):
     content = models.TextField()
     image_file = models.FileField()
     liked_users = models.ManyToManyField(
-        FontopiaUser,
+        User,
         related_name='liked_articles'
     )
     view_count = models.IntegerField()
 
 class Comment(models.Model):
     author = models.ForeignKey(
-        FontopiaUser,
+        User,
         on_delete=models.CASCADE,
         related_name='my_comments'
     )
