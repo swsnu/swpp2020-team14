@@ -7,9 +7,7 @@ import { FontListView, FontItemView } from './font/views/all.js';
 import { PhotoListView, PhotoItemView, PhotoCreateView } from './photo/views/all.js';
 import MyPageView from './mypage/views/mypage.js';
 import ReportView from './report/views/reportView.js';
-import Signup from './sign/components/signup';
-import Signin from './sign/components/signin';
-
+import { SignupView, SigninView } from './sign/views/all';
 import './App.css';
 
 axios.defaults.xsrfCookieName = 'csrftoken';
@@ -35,8 +33,8 @@ function App() {
           <Route exact path="/my-page/photo/:photo_id/report" component={ReportView} />
           <Route exact path="/font/:font_id" component={FontItemView} />
           <Route exact path="/font" component={FontListView} />          
-          <Route exact path="/signup" component={Signup} />
-          <Route exact path="/signin" component={Signin} />
+          <Route exact path="/signup" component={SignupView} />
+          <Route exact path="/signin" component={SigninView} />
         </Switch>
       </BrowserRouter>
     </div>
