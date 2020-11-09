@@ -16,10 +16,10 @@ class PhotoList extends Component {
 			list: null
 		})
 
-		axios.get(`/api/photo`)
+		axios.get(`/api/my-page/photo`)
 		.then((resp) => {
 			console.log(resp);
-			const newPhotos = resp.map((photo) => {
+			const newPhotos = resp.data.list.map((photo) => {
 				return {
 					id: photo.id,
 					uploaded_datetime: photo.uploaded_datetime,
@@ -45,7 +45,7 @@ class PhotoList extends Component {
     }
 
     onPhotoChecked = (photo) => {
-        photo.is_delete_clicked = !photo.is_delete_clicked
+        photo.is_checked = !(photo.is_checked)
     }
 
     onUploadClicked() {
@@ -60,7 +60,7 @@ class PhotoList extends Component {
             this.state.list.map((photo) => {
                 if (photo.is_checked) {
 
-					axios.delete(`/api/photo/${photo.id}`)
+					axios.delete(`/api/my-page/photo/${photo.id}`)
 					.then((resp) => {
 						console.log(resp);
 					})
@@ -86,9 +86,12 @@ class PhotoList extends Component {
 
         const photos = this.state.list.map((photo) => {
             return ( 
-                <div className='Photo' onClick={() => this.onPhotoDetailClicked(photo)}>
-                    {photo.image_file}
+                <div className='Photo' >
+                    <div className='image_file' onClick={() => this.onPhotoDetailClicked(photo)}>
+                        {photo.image_file}
+                    </div>
                     <input type="checkbox" id="delete-checkbox" 
+                        disabled={!this.state.is_delete_clicked}
                         onClick={() => this.onPhotoChecked(photo)} />
                 </div>
             )

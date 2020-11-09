@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-
+import { withRouter } from 'react-router-dom';
 import axios from 'axios';
 
-class FontDetail extends Component {
+class PhotoDetail extends Component {
 	state = {
 		image_file: null,
 		memo: '', 
@@ -11,14 +11,13 @@ class FontDetail extends Component {
 	}
 
 	onInit() {
-		axios.get(`/api/photo/${this.props.photo_id}`)
+		axios.get(`/api/my-page/photo/${this.props.photo_id}`)
 			.then((resp) => {
 				console.log(resp);
 				this.setState({ 
 					...this.state, 
-					image_file: resp.image_file,
-					memo: resp.memo,
-					selected_font: resp.selected_font
+					memo: resp.data.memo,
+					selected_font: resp.data.selected_font
 				});
 			})
 			.catch((err) => {
@@ -39,11 +38,11 @@ class FontDetail extends Component {
 	onUpdateMemoChanged = () => {
 		const photo = {
 		}
-		axios.put(`api/photo/${this.props.photo_id}`, photo)
+		axios.put(`/api/my-page/photo/${this.props.photo_id}`, photo)
 			.then((resp) => {
 				console.log(resp);
 				this.setState({ 
-					...this.state, memo: resp.memo, memo_changed: false
+					...this.state, memo: resp.data.memo, memo_changed: false
 				});
 			})
 			.catch((err) => {
@@ -52,11 +51,17 @@ class FontDetail extends Component {
 				window.location.reload(false);
 			});
 	}
+
+	onAnalysisButtonClicked = () => {
+		console.log('hi')
+		this.props.history.push(`/my-page/photo/${this.props.photo_id}/report`);
+		
+	}
 	
 
 	render() {
-		if (this.state.data === null) {
-			return <p>Loading font detail...</p>;
+		if (this.state.selected_font === null) {
+			return <p>Loading photo detail...</p>;
 		}
 
 		return (
@@ -65,29 +70,30 @@ class FontDetail extends Component {
 					<p>{this.state.image_file}</p>
 				</div>
 
-				<div className="memo" onChanged={this.onMemoChanged}>
-					<p>{this.state.memo}</p>
-				</div>
+				<input className="memo" 
+					type="text" 
+					value={this.state.memo}
+					onChange={this.onMemoChanged} />
 
 				<button 
-					className="update_memo" 
-					onClicked={this.onUpdateMemoChanged}
+					className="update-memo-button" 
+					onClick={() => this.onUpdateMemoChanged()}
 					disabled={!this.state.memo_changed}>
 					Update Memo
 				</button>
 
-				<div className="license">
-					<h3>License</h3>
-					<div className={f.license.is_free ?
-						"license-free" : "license-nonfree"}>
-						<p>{f.license.is_free ?
-							"Free" : "Non-free"}</p>
-						<FontLicenseDetail license={f.license} />
-					</div>
+				<div className="selected-font">
+					<p>{this.state.selected_font.name}</p>
 				</div>
+
+				<button 
+					className="analysis-button" 
+					onClick={() => this.onAnalysisButtonClicked()} >
+					Analysis!
+				</button>
 			</div>
 		);
 	}
 };
 
-export default FontDetail;
+export default withRouter(PhotoDetail);

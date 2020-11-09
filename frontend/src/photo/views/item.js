@@ -8,7 +8,7 @@ class PhotoItemView extends Component {
     return (
       <div className="photo-detail-view">
         <button className="back"
-          onClick={(e)=>this.props.history.goBack()}>Back</button>
+          onClick={(e)=>this.props.history.push("/my-page/photo")}>Back</button>
         <PhotoDetail photo_id={this.props.match.params.photo_id} />
       </div>
     )

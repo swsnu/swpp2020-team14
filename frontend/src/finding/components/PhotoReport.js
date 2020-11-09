@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import { withRouter } from 'react-router';
 import axios from 'axios';
 
-class FindingList extends Component {
+class PhotoReport extends Component {
     state = {
 		image_file: null,
 		selected_font: null,
@@ -10,14 +10,13 @@ class FindingList extends Component {
     }
 
 	onInit() {
-		axios.get(`api/photo/${this.props.photo_id}`)
+		axios.get(`/api/my-page/photo/${this.props.photo_id}`)
 		.then((resp) => {
 			console.log(resp);
 			this.setState({ 
 				...this.state, 
-				selected_font: resp.selected_font, 
-				memo: resp.memo,
-				image_file: resp.image_file
+				selected_font: resp.data.selected_font, 
+				memo: resp.data.memo,
 			})
 		})
 		.catch((err) => {
@@ -40,4 +39,4 @@ class FindingList extends Component {
         )
     }
 }
-export default withRouter(FindingList);
+export default PhotoReport;
