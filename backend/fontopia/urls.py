@@ -5,6 +5,9 @@ from . import views
 urlpatterns = [
     path('token', views.common.CSRFTokenView.as_view()),
 
+    path('signin', views.sign.APISignin.as_view()),
+    path('signup', views.sign.APISignup.as_view()),
+
     path('article', views.article.APIArticle.as_view()),
     path('article/<int:article_id>', views.article.APIArticleItem.as_view()),
     path('article/<int:article_id>/like', views.article.APIArticleLike.as_view()),

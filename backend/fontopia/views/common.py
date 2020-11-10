@@ -6,8 +6,4 @@ from django.http import HttpResponse
 class CSRFTokenView(View):
     @method_decorator(ensure_csrf_cookie)
     def get(self, request):
-        from django.contrib.auth import login, get_user_model
-        u = get_user_model().objects.all()[0]
-        print(u)
-        login(request, u)
         return HttpResponse()

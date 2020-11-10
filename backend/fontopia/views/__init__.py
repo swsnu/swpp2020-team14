@@ -1,1 +1,1 @@
-from . import common, photo, report, font, article
+from . import common, sign, photo, report, font, article
