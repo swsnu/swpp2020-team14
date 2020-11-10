@@ -12,10 +12,10 @@ class FindingList extends Component {
 
 	onInit() {
 
-		axios.get(`/api/my-page/photo/${this.props.photo_id}/report`)
+		axios.get(`/api/photo/${this.props.photo_id}/report`)
 		.then((resp) => {
 			console.log(resp);
-			const newFindings = resp.data.list.map((finding) => {
+			const newFindings = resp.data.findings.map((finding) => {
 				return {
 					font_id: finding.font.id,
 					font_name: finding.font.name,
@@ -24,25 +24,23 @@ class FindingList extends Component {
 					license_summary: finding.font.license_summary,
 				}
 			})
-			this.setState({ ...this.state, findings: newFindings})
+			this.setState({ findings: newFindings })
 		})
 		.catch((err) => {
 			console.log(err);
 			alert(err);
-			window.location.reload(false);
 		})
 
-		axios.get(`/api/my-page/photo/${this.props.photo_id}`)
+		axios.get(`/api/photo/${this.props.photo_id}`)
 		.then((resp) => {
 			console.log(resp);
-			const photo = resp.data;
-			this.setState({ ...this.state, selected_font: photo.selected_font})
+			const photo = resp.data.photo;
+			this.setState({ selected_font: photo.selected_font.id })
 
 		})
 		.catch((err) => {
 			console.log(err);
 		  	alert(err);
-		  	window.location.reload(false);
 		});
     }
 
@@ -55,18 +53,19 @@ class FindingList extends Component {
     }
 
     onRadioClicked = (finding) => {
-		const newPhoto = {}
-		axios.put(`/api/my-page/photo/${this.props.photo_id}`, newPhoto)
+		const payload = new FormData();
+		payload.append("selected_font", finding.font_id)
+		
+		axios.patch(`/api/photo/${this.props.photo_id}`, payload)
 		.then((resp) => {
 			console.log(resp);
 			this.setState({
-				...this.state, selected_font: resp.selected_font
+				selected_font: finding.font_id
 			})
 		})
 		.catch((err) => {
 			console.log(err);
 		  	alert(err);
-		  	window.location.reload(false);
 		});
 
     }
@@ -81,13 +80,14 @@ class FindingList extends Component {
 
         const findings = this.state.findings.map((finding) => {
             return ( 
-                <div className='Finding' onClick={() => this.onFindingDetailClicked(finding)}>
-                    <h4>{finding.font_name}</h4>
+                <div className='Finding' >
+                    <h4 onClick={() => this.onFindingDetailClicked(finding)}>
+						{finding.font_name} </h4>
 					<h4>{finding.probability}</h4>
 					<input type="radio" 
 						id="selected-finding" 
 						name="finding"
-						checked={this.state.selected_font.id === finding.font_id}
+						checked={this.state.selected_font === finding.font_id}
                         onClick={() => this.onRadioClicked(finding)} />
                 </div>
             )
@@ -100,4 +100,4 @@ class FindingList extends Component {
         )
     }
 }
-export default FindingList;
+export default withRouter(FindingList);

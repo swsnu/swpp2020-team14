@@ -29,3 +29,22 @@ def prepare_put(func):
             request.PUT = request.POST
         return func(request, *args, **kwargs)
     return _inner
+
+def prepare_patch(func):
+    # pylint: disable=protected-access
+    def _inner(request, *args, **kwargs):
+        if request.method == "PATCH":
+            if hasattr(request, '_post'):
+                del request._post
+                del request._files
+            try:
+                request.method = "POST"
+                request._load_post_and_files()
+                request.method = "PATCH"
+            except AttributeError:
+                request.META['REQUEST_METHOD'] = 'POST'
+                request._load_post_and_files()
+                request.META['REQUEST_METHOD'] = 'PATCH'
+            request.PATCH = request.POST
+        return func(request, *args, **kwargs)
+    return _inner

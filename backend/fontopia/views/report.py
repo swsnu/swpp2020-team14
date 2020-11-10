@@ -25,6 +25,6 @@ class APIReport(View):
             } for f in Finding.objects.filter(photo=target_photo)]
 
         return JsonResponse(data={
-            'list': resp,
+            'findings': resp,
         })
 

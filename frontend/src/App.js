@@ -5,11 +5,11 @@ import axios from 'axios';
 import { ArticleDetailView, ArticleListView, ArticleCreateView, ArticleEditView } from './article/views/all.js';
 import { FontListView, FontItemView } from './font/views/all.js';
 
-import { PhotoListView, PhotoItemView } from './photo/views/all.js';
+import { PhotoListView, PhotoItemView, PhotoCreateView } from './photo/views/all.js';
 
 import MyPageView from './mypage/views/mypage.js';
 
-import ReportView from './finding/views/report.js';
+import ReportView from './report/views/reportView.js';
 
 import './App.css';
 
@@ -32,6 +32,7 @@ function App() {
           <Route exact path="/font/:font_id" component={FontItemView} />
           <Route exact path="/my-page" component={MyPageView} />
           <Route exact path="/my-page/photo" component={PhotoListView} />
+          <Route exact path="/my-page/photo/create" component={PhotoCreateView} />
           <Route exact path="/my-page/photo/:photo_id" component={PhotoItemView} />
           <Route exact path="/my-page/photo/:photo_id/report" component={ReportView} />
         </Switch>
