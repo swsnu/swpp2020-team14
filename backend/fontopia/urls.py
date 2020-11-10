@@ -7,6 +7,7 @@ urlpatterns = [
 
     path('signin', views.sign.APISignin.as_view()),
     path('signup', views.sign.APISignup.as_view()),
+    path('signout', views.sign.APISignout.as_view()),
 
     path('article', views.article.APIArticle.as_view()),
     path('article/<int:article_id>', views.article.APIArticleItem.as_view()),
