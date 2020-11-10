@@ -1,78 +1,64 @@
 import React, { Component } from 'react';
-import {Redirect, withRouter} from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import axios from 'axios';
 
 import './signup.css';
 
-// Here, we use 'sign' as a key to our combineReducers
-class Signup extends Component{
-  constructor(props){
+class Signup extends Component {
+  constructor(props) {
     super(props);
+
     this.state = {
       email: "",
       password: "",
-      nickname: ""
+      nickname: "",
+      errorMessage: null
     };
-    this.onEmailInputChanged = this.onEmailInputChanged.bind(this);
-    this.onPasswordInputChanged = this.onPasswordInputChanged.bind(this);
-    this.onNicknameInputChanged = this.onNicknameInputChanged.bind(this);
-    this.onSigninClicked = this.onSigninClicked.bind(this);
   }
 
-  // Set email state as input
-  onEmailInputChanged(){
-    return ( (e) =>
-      this.setState({email: e.target.value})
-    );
+  handleChange(e){
+    this.setState({ [e.target.name]: e.target.value });
   }
 
-  // Set password state as input
-  onPasswordInputChanged(){
-    return ( (e) =>
-      this.setState({password: e.target.value})
-    );
-  }
-
-  // Set nickname state as input
-  onNicknameInputChanged(){
-    return ( (e) =>
-      this.setState({nickname: e.target.value})
-    );
-  }
-
-  // Send email/password/nickname to the server
-  onSigninClicked(){
-    axios.post(`/api/signup`, this.state)
-    .then(function (resp){
-      alert("Now, sign in with your account");
-      return(<Redirect exact from='/signup' to='/signin'/>);
-    })
-    .catch((err) => {
-      console.log(err);
-      alert(err);
-      this.history.goBack();
-    });
-  }
-
-  componentDidMount() {
-    this.onInit();
+  onSubmit(e) {
+    e.preventDefault();
+    (async () => {
+      await axios.get('/api/token');
+      await axios.post('/api/signup', {
+        email: this.state.email,
+        password: this.state.password,
+        nickname: this.state.nickname,
+      });
+      alert('Signup success.\nNow please login.');
+      this.props.history.replace('/signin');
+    })().catch(err => this.setState({ errorMessage: err.message }));;
   }
 
   render(){
-    return(
-      <div className="Sign Up Page">
-        <div className="email">
-          email <input type="text"  onChange={this.onEmailInputChanged} />
-        </div>
-        <div className="PW">
-          PW <input type="password" onChange={this.onPasswordInputChanged} />
-        </div>
-        <div className="Nickname">
-          Nickname <input type="text"  onChange={this.onNicknameInputChanged} />
-        </div>
-        <div className="Sign Up Button">
-          <button onClick={this.onSigninClicked}>Sign Up</button>
-        </div>
+    return (
+      <div className="signup">
+        <form onSubmit={ this.onSubmit.bind(this) }>
+          <div className="row-email">
+            <span className="hint hint-email">Email</span>
+            <input type="email" name="email" onChange={ this.handleChange.bind(this) } />
+          </div>
+          <div className="row-password">
+            <span className="hint hint-password">Password</span>
+            <input type="password" name="password" onChange={ this.handleChange.bind(this) } />
+          </div>
+          <div className="row-nickname">
+            <span className="hint hint-nickname">Nickname</span>
+            <input type="text" name="nickname" onChange={ this.handleChange.bind(this) } />
+          </div>
+          {this.state.errorMessage !== null &&
+          <div className="row-error-message">
+            <span className="icon">⚠&nbsp;</span>
+            <span className="error-message">{ this.state.errorMessage }</span>
+          </div>}
+          <div className="row-submit">
+            <button type="submit">Sign up</button>
+          </div>
+        </form>
       </div>
     );
   }

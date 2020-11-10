@@ -1,0 +1,15 @@
+.signin {
+    display: inline-table;
+}
+
+.row-email,.row-password {
+    display: table-row;
+}
+
+.hint {
+    display: table-cell;
+}
+
+.row-error-message {
+    color: red;
+}

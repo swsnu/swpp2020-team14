@@ -4,12 +4,12 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
-import {createStore, combineReducers} from 'redux';
-import {Provider} from 'react-redux';
+import { createStore, combineReducers } from 'redux';
+import { Provider } from 'react-redux';
 
-import loginReducer from './sign/reducers/loginreducer';
+import loginReducer from './sign/reducers/reducers';
 const reducer = combineReducers({
-  sign: loginReducer
+  login: loginReducer
 });
 const store = createStore(reducer);
 ReactDOM.render(

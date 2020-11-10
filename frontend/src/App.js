@@ -1,5 +1,6 @@
 import React from 'react';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
 import axios from 'axios';
 
 import { ArticleDetailView, ArticleListView, ArticleCreateView, ArticleEditView } from './article/views/all.js';
@@ -13,7 +14,21 @@ import './App.css';
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN';
 
-function App() {
+function App(props) {
+  const AuthorizedRoute = ({ component, ...rest}) => {
+    if (props.login.logged_in === true) {
+      return <Route {...rest} component={ component } />;
+    }
+    return <Redirect to="/signin" />;
+  };
+
+  const UnauthorizedRoute = ({ component, ...rest}) => {
+    if (props.login.logged_in === false) {
+      return <Route {...rest} component={ component } />;
+    }
+    return <Redirect to="/" />;
+  };
+
   return (
     <div className="App">
       <BrowserRouter>
@@ -21,24 +36,29 @@ function App() {
         </div>
         <Switch>
           <Route exact path="/article" component={ArticleListView} />
-          <Route exact path="/article/create" component={ArticleCreateView} />
+          <AuthorizedRoute exact path="/article/create" component={ArticleCreateView} />
           <Route exact path="/article/:article_id" component={ArticleDetailView} />
-          <Route exact path="/article/:article_id/edit" component={ArticleEditView} />
+          <AuthorizedRoute exact path="/article/:article_id/edit" component={ArticleEditView} />
           <Route exact path="/font" component={FontListView} />
           <Route exact path="/font/:font_id" component={FontItemView} />
-          <Route exact path="/my-page" component={MyPageView} />
-          <Route exact path="/my-page/photo" component={PhotoListView} />
-          <Route exact path="/my-page/photo/create" component={PhotoCreateView} />
-          <Route exact path="/my-page/photo/:photo_id" component={PhotoItemView} />
-          <Route exact path="/my-page/photo/:photo_id/report" component={ReportView} />
-          <Route exact path="/font/:font_id" component={FontItemView} />
-          <Route exact path="/font" component={FontListView} />          
-          <Route exact path="/signup" component={SignupView} />
-          <Route exact path="/signin" component={SigninView} />
+          <AuthorizedRoute exact path="/my-page" component={MyPageView} />
+          <AuthorizedRoute exact path="/my-page/photo" component={PhotoListView} />
+          <AuthorizedRoute exact path="/my-page/photo/create" component={PhotoCreateView} />
+          <AuthorizedRoute exact path="/my-page/photo/:photo_id" component={PhotoItemView} />
+          <AuthorizedRoute exact path="/my-page/photo/:photo_id/report" component={ReportView} />
+
+          <UnauthorizedRoute exact path="/signin" component={SigninView} />
+          <UnauthorizedRoute exact path="/signup" component={SignupView} />
+
+          <Redirect from="*" to="/article" />
         </Switch>
       </BrowserRouter>
     </div>
   );
 }
 
-export default App;
+const mapStateToProps = (state) => ({
+  login: state.login
+});
+
+export default connect(mapStateToProps)(App);
