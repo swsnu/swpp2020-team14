@@ -56,7 +56,6 @@ class ArticleEdit extends Component {
     })().catch((err) => {
       this.setState({ is_submitting: false });
       alert("Error saving article: " + err.name + ": " + err.message);
-      console.log("Error saving article: " + err.name + ": " + err.message);
     });
   }
 
