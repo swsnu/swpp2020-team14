@@ -9,6 +9,8 @@ import { PhotoListView, PhotoItemView, PhotoCreateView } from './photo/views/all
 import MyPageView from './mypage/views/mypage.js';
 import ReportView from './report/views/reportView.js';
 import { SignupView, SigninView } from './sign/views/all';
+import NavigationBar from './common/NavigationBar';
+
 import './App.css';
 
 axios.defaults.xsrfCookieName = 'csrftoken';
@@ -32,8 +34,7 @@ function App(props) {
   return (
     <div className="App">
       <BrowserRouter>
-        <div className="navbar">
-        </div>
+        <NavigationBar />
         <Switch>
           <Route exact path="/article" component={ArticleListView} />
           <AuthorizedRoute exact path="/article/create" component={ArticleCreateView} />
