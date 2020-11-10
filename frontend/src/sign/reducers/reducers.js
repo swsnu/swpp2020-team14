@@ -1,8 +1,8 @@
 import { UPDATE_LOGIN } from '../actions/actionTypes';
 
 const initialState = {
-    logged_in: false,
-    user_info: null
+    logged_in: (window.localStorage.getItem("login.logged_in") != null),
+    user_info: JSON.parse(window.localStorage.getItem("login.user_info"))
 };
 
 export default function loginReducer(state = initialState, action){

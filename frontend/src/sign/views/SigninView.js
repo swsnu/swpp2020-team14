@@ -27,6 +27,8 @@ class SigninView extends Component {
         logged_in: true,
         user_info: resp.data
       });
+      window.localStorage.setItem("login.logged_in", "");
+      window.localStorage.setItem("login.user_info", JSON.stringify(resp.data));
     })().catch(err => {
       if (err.response) {
         this.setState({ errorMessage: err.response.data });
