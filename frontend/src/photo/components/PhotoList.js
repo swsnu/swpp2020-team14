@@ -51,9 +51,9 @@ class PhotoList extends Component {
 			this.setState({ is_delete_clicked: true })
         }
         else {
-            this.state.photos.map((photo) => {
-                if (photo.is_checked) {
-
+            this.state.photos
+                .filter(photo => photo.is_checked)
+                .forEach((photo) => {
 					axios.delete(`/api/photo/${photo.id}`)
 					.then((resp) => {
 						console.log(resp);
@@ -61,9 +61,8 @@ class PhotoList extends Component {
 					.catch((err) => {
 						console.log(err);
 						alert(err);
-					})
-                }
-			})
+                    })
+			    });
 			const deleted = this.state.photos.filter((photo) => {
 				return !(photo.is_checked)
 			})
@@ -80,7 +79,7 @@ class PhotoList extends Component {
         const photos = this.state.photos.map((photo) => {
             return ( 
                 <div className='Photo' >
-                    <img src={photo.image_url} alt="uploaded photo" onClick={() => this.onPhotoDetailClicked(photo)}/>
+                    <img src={photo.image_url} alt="uploaded" onClick={() => this.onPhotoDetailClicked(photo)}/>
                     {this.props.isDeleteAvailable ? 
                     <input type="checkbox" id="delete-checkbox" 
                         disabled={!this.state.is_delete_clicked}

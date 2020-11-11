@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Redirect, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import ArticleList from '../../article/components/ArticleList';
 import PhotoList from '../../photo/components/PhotoList';
 

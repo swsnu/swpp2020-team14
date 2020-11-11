@@ -63,7 +63,7 @@ class PhotoDetail extends Component {
 
 		return (
 			<div className="photo-detail">
-				<img src={this.state.image_url} alt="uploaded photo"/>
+				<img src={this.state.image_url} alt="uploaded"/>
 
 				<input className="memo" 
 					type="text" 

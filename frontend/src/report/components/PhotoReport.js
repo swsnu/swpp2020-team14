@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import { withRouter } from 'react-router';
 import axios from 'axios';
 
 class PhotoReport extends Component {
@@ -33,7 +32,7 @@ class PhotoReport extends Component {
     render() {
         return (
             <div className='PhotoReport'>
-                <img src={this.state.image_url} alt="uploaded photo"/>
+                <img src={this.state.image_url} alt="uploaded"/>
 				
 				<div className='memo'>
 					{this.state.memo}
