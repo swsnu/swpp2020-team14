@@ -77,26 +77,44 @@ class FindingList extends Component {
 		if (this.state.selected_font === null) {
 			return <p className="loading">Loading photo...</p>
 		}
-
-        const findings = this.state.findings.map((finding) => {
-            return ( 
-                <div className='Finding' >
-                    <h4 onClick={() => this.onFindingDetailClicked(finding)}>
-						{finding.font_name} </h4>
-					<h4>{finding.probability}</h4>
+        
+		const items = this.state.findings.map(finding => {
+			return <tr>
+				<td className="font-name">
+					{finding.font_name}
+				</td>
+				<td className="probability">
+					{finding.probability}
+				</td>
+				<td className="license">
+					{(finding.is_free ?
+						<span className="license-free">Free</span> : 
+						<span className="license-nonfree">Proprietary ({finding.license_summary})</span>)}
+				</td>
+				<td className="is-selected">
 					<input type="radio" 
 						id="selected-finding" 
 						name="finding"
 						checked={this.state.selected_font === finding.font_id}
-                        onClick={() => this.onRadioClicked(finding)} />
-                </div>
-            )
-        })
+						onClick={() => this.onRadioClicked(finding)} />
+				</td>
+			</tr>
+		})
 
         return (
-            <div className='FindingList'>
-                {findings}
-            </div>
+            <div className='finding-list' >
+					<table className="font-list-table">
+						<thead>
+						<tr>
+							<th className="font-name">Name</th>
+							<th className="probability">probability</th>
+							<th className="license">License</th>
+							<th className="is-selected">Select</th>
+						</tr>
+						</thead>
+						<tbody>{items}</tbody>
+					</table>
+                </div>
         )
     }
 }
