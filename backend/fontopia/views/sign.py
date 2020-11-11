@@ -55,4 +55,3 @@ class APISignout(View):
     def post(self, request):
         logout(request)
         return HttpResponse(status=204)
-

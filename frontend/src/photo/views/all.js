@@ -1,5 +1,5 @@
-import PhotoListView from './list';
-import PhotoItemView from './item';
-import PhotoCreateView from './photoCreateView';
+import PhotoListView from './PhotoListView';
+import PhotoDetailView from './PhotoDetailView';
+import PhotoCreateView from './PhotoCreateView';
 
-export { PhotoListView, PhotoItemView, PhotoCreateView };
+export { PhotoListView, PhotoDetailView, PhotoCreateView };

@@ -5,7 +5,7 @@ import axios from 'axios';
 
 import { ArticleDetailView, ArticleListView, ArticleCreateView, ArticleEditView } from './article/views/all.js';
 import { FontListView, FontItemView } from './font/views/all.js';
-import { PhotoListView, PhotoItemView, PhotoCreateView } from './photo/views/all.js';
+import { PhotoListView, PhotoDetailView, PhotoCreateView } from './photo/views/all.js';
 import MyPageView from './mypage/views/mypage.js';
 import ReportView from './report/views/reportView.js';
 import { SignupView, SigninView } from './sign/views/all';
@@ -45,7 +45,7 @@ function App(props) {
           <AuthorizedRoute exact path="/my-page" component={MyPageView} />
           <AuthorizedRoute exact path="/my-page/photo" component={PhotoListView} />
           <AuthorizedRoute exact path="/my-page/photo/create" component={PhotoCreateView} />
-          <AuthorizedRoute exact path="/my-page/photo/:photo_id" component={PhotoItemView} />
+          <AuthorizedRoute exact path="/my-page/photo/:photo_id" component={PhotoDetailView} />
           <AuthorizedRoute exact path="/my-page/photo/:photo_id/report" component={ReportView} />
 
           <UnauthorizedRoute exact path="/signin" component={SigninView} />
