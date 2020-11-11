@@ -10,7 +10,7 @@ class MyPage extends Component {
 
 			<button onClick={() => {
 				this.props.history.push(`/my-page/photo/`);
-			} > photo </button>
+			}}>photo</button>
 			<div className="articles">
 				<ArticleList fetchEndpoint="/api/my-page/article" />
 			</div>
