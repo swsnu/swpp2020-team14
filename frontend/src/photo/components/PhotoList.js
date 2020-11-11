@@ -9,7 +9,7 @@ class PhotoList extends Component {
     }
 
     onInit() {
-		axios.get(`${this.props.fetchEndpoint}`)
+        axios.get(`${this.props.fetchEndpoint}`)
 		.then((resp) => {
 			console.log(resp);
 			const newPhotos = resp.data.photos.map((photo) => {
@@ -72,14 +72,14 @@ class PhotoList extends Component {
 
     render() {
 		if (this.state.photos === null) {
-			return <p className="loading">Loading photo photos...</p>
+			return <p className="loading">Loading photos...</p>
 		}
 
         const photos = this.state.photos.map((photo) => {
             return ( 
                 <div className='Photo' >
                     <img src={photo.image_url} alt="uploaded photo" onClick={() => this.onPhotoDetailClicked(photo)}/>
-                    {this.props.is_delete_available ? 
+                    {this.props.isDeleteAvailable ? 
                     <input type="checkbox" id="delete-checkbox" 
                         disabled={!this.state.is_delete_clicked}
                         onClick={() => this.onPhotoChecked(photo)} /> : null}
@@ -87,13 +87,14 @@ class PhotoList extends Component {
             )
         })
 
+
         return (
             <div className='PhotoList'>
                 {this.props.isUploadAvailable ?
-                <button id="upload-button" onClick={this.onUploadClicked}>Upload New</button> : null}
+                <button id="upload-button" onClick={() => this.onUploadClicked()}>Upload New</button> : null}
 
                 {this.props.isDeleteAvailable ?
-                <button id="delete-button" onClick={this.onDeleteClicked}>Delete</button> : null}
+                <button id="delete-button" onClick={() => this.onDeleteClicked()}>Delete</button> : null}
                 <div className="photos">{photos}</div>
             </div>
         )

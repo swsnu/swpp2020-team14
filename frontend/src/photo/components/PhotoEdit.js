@@ -50,7 +50,7 @@ class PhotoEdit extends Component {
       if (resp.data.success !== true) throw new Error(resp.data.error);
       if (this.props.originalId !== -1)
         this.props.history.goBack();
-      this.props.history.replace(`my-page/photo/`);
+      this.props.history.replace(`/my-page/photo/`);
     })().catch((err) => {
       this.setState({ is_submitting: false });
       alert("Error saving photo: " + err.name + ": " + err.message);

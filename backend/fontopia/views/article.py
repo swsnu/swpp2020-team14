@@ -48,7 +48,7 @@ class APIArticleMy(View):
     @method_decorator(force_login)
     def get(self, request):
         page_idx = request.GET.get('page', 1)
-        articles_my = Article.objects.get(author=request.user)
+        articles_my = Article.objects.filter(author=request.user)
         paginator = Paginator(articles_my.order_by('-id'), 20)
         page = paginator.get_page(page_idx)
 

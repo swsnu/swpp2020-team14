@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
+import { Redirect, withRouter } from 'react-router-dom';
 import ArticleList from '../../article/components/ArticleList';
 import PhotoList from '../../photo/components/PhotoList';
 
@@ -10,8 +10,11 @@ class MyPage extends Component {
 			<div className="articles">
 				<ArticleList fetchEndpoint="/api/my-page/article" />
 			</div>
+			<button className="photo" onClick={
+				() => this.props.history.push('/my-page/photo')
+			}>Photo</button>
 			<div className="photos">
-				<PhotoList fetchEndPoint="api/my-page/photo" isUploadAvailabe={true} isDeleteAvailabe={true}/>
+				<PhotoList fetchEndpoint="/api/my-page/photo" isUploadAvailabe={true} isDeleteAvailabe={true}/>
 			</div>
 		</div>
 	}
