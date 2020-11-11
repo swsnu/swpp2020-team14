@@ -10,10 +10,9 @@ from fontopia.utils import date2str, force_login, prepare_patch
 from datetime import datetime
 
 class APIPhoto(View):
+    @method_decorator(force_login)
     def get(self, request):
-
-        q = Photo.objects.filter(author=request.user)
-
+        photos_my = Photo.objects.filter(author=request.user)
         resp = [{
             'id': p.id,
             'memo': p.memo,
@@ -28,7 +27,7 @@ class APIPhoto(View):
                 },
                 'view_count': p.selected_font.view_count,
             },
-            } for p in q]
+            } for p in photos_my]
 
         return JsonResponse(data={
             'photos': resp,
@@ -57,6 +56,30 @@ class APIPhoto(View):
         p.image_file.save('photo', uploaded_image)
         return JsonResponse({'success': True, 'id': p.id})
 
+
+class APIPhotoMy(View):
+    @method_decorator(force_login)
+    def get(self, request):
+        photos_my = Photo.objects.filter(author=request.user)
+        resp = [{
+            'id': p.id,
+            'memo': p.memo,
+            'image_url': p.image_file.url,
+            'selected_font': {
+                'id': p.selected_font.id,
+                'name': p.selected_font.name,
+                'manufacturer_name': p.selected_font.manufacturer,
+                'license': {
+                    'is_free': p.selected_font.is_free,
+                    'type': p.selected_font.license_summary
+                },
+                'view_count': p.selected_font.view_count,
+            },
+            } for p in photos_my]
+
+        return JsonResponse(data={
+            'photos': resp,
+        })
 
 class APIPhotoItem(View):
     def get(self, request, photo_id=None):

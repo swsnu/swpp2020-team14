@@ -44,12 +44,14 @@ class APISignin(View):
                 login(request, u)
             else:
                 return HttpResponse("Incorrect password", status=401)
-        else:
-            logout(request)
-            return JsonResponse({})
 
         u = request.user
         return JsonResponse({
             "email": u.email,
             "nickname": u.first_name
         })
+
+class APISignout(View):
+    def post(self, request):
+        logout(request)
+        return HttpResponse(status=204)

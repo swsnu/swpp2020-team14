@@ -7,6 +7,7 @@ urlpatterns = [
 
     path('signin', views.sign.APISignin.as_view()),
     path('signup', views.sign.APISignup.as_view()),
+    path('signout', views.sign.APISignout.as_view()),
 
     path('article', views.article.APIArticle.as_view()),
     path('article/<int:article_id>', views.article.APIArticleItem.as_view()),
@@ -18,4 +19,7 @@ urlpatterns = [
     path('photo', views.photo.APIPhoto.as_view()),
     path('photo/<int:photo_id>', views.photo.APIPhotoItem.as_view()),
     path('photo/<int:photo_id>/report', views.report.APIReport.as_view()),
+
+    path('my-page/article', views.article.APIArticleMy.as_view()),
+    path('my-page/photo', views.photo.APIPhotoMy.as_view()),
 ]

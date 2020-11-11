@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 
 import PhotoDetail from '../components/PhotoDetail';
 
-class PhotoItemView extends Component {
+class PhotoDetailView extends Component {
   render() {
     return (
       <div className="photo-detail-view">
@@ -15,4 +15,4 @@ class PhotoItemView extends Component {
   }
 };
 
-export default withRouter(PhotoItemView);
+export default withRouter(PhotoDetailView);

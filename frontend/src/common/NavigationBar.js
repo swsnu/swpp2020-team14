@@ -1,14 +1,20 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
+import axios from 'axios';
 
 import { updateLogin } from '../sign/actions/actions';
 
 class NavigationBar extends Component {
   onSignout() {
-    window.localStorage.removeItem("login.logged_in");
-    window.localStorage.removeItem("login.user_info");
-    this.props.updateLogin({ logged_in: false, user_info: null });
+    (async () => {
+      await axios.get('/api/token')
+      await axios.post('/api/signout')
+    })().finally(() => {
+      window.localStorage.removeItem("login.logged_in");
+      window.localStorage.removeItem("login.user_info");
+      this.props.updateLogin({ logged_in: false, user_info: null });
+    });
   }
 
   render() {
@@ -26,8 +32,10 @@ class NavigationBar extends Component {
           </div>
         ) : (
           <div className="greeting-not-logged-in">
-            <div className="plz-sign-in">Please sign in.</div>
-            <div className="btn-signin"><Link to="/signin">Sign in</Link></div>
+            <div className="msg-signin">Please sign in.</div>
+            <span className="btn-signin"><Link to="/signin">Sign in</Link></span>
+            &nbsp;/&nbsp;
+            <span className="btn-signup"><Link to="/signup">Sign up</Link></span>
           </div>
         )
       }</div>

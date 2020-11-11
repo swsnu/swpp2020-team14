@@ -9,7 +9,7 @@ class PhotoList extends Component {
     }
 
     onInit() {
-		axios.get(`/api/photo`)
+        axios.get(`${this.props.fetchEndpoint}`)
 		.then((resp) => {
 			console.log(resp);
 			const newPhotos = resp.data.photos.map((photo) => {
@@ -41,7 +41,7 @@ class PhotoList extends Component {
     }
 
     onUploadClicked() {
-        this.props.history.push('/my-page/photo/create');
+        this.props.history.push('/photo/create');
     }
 
     onDeleteClicked = () => {
@@ -72,32 +72,32 @@ class PhotoList extends Component {
 
     render() {
 		if (this.state.photos === null) {
-			return <p className="loading">Loading photo photos...</p>
+			return <p className="loading">Loading photos...</p>
 		}
 
         const photos = this.state.photos.map((photo) => {
             return ( 
                 <div className='Photo' >
                     <img src={photo.image_url} alt="uploaded photo" onClick={() => this.onPhotoDetailClicked(photo)}/>
-
+                    {this.props.isDeleteAvailable ? 
                     <input type="checkbox" id="delete-checkbox" 
                         disabled={!this.state.is_delete_clicked}
-                        onClick={() => this.onPhotoChecked(photo)} />
+                        onClick={() => this.onPhotoChecked(photo)} /> : null}
                 </div>
             )
         })
 
+
         return (
             <div className='PhotoList'>
-                <button id="upload-button" onClick={this.onUploadClicked}>Upload New</button>
-                <button id="delete-button" onClick={this.onDeleteClicked}>Delete</button>
+                {this.props.isUploadAvailable ?
+                <button id="upload-button" onClick={() => this.onUploadClicked()}>Upload New</button> : null}
+
+                {this.props.isDeleteAvailable ?
+                <button id="delete-button" onClick={() => this.onDeleteClicked()}>Delete</button> : null}
                 <div className="photos">{photos}</div>
             </div>
-
         )
-
-
     }
-
 }
 export default withRouter(PhotoList);
