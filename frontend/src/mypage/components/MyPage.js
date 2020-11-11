@@ -8,15 +8,12 @@ class MyPage extends Component {
 	render() {
 		return <div className="my-page">
 
-			<button onClick={() => {
+			<button className="Photo" onClick={() => {
 				this.props.history.push(`/my-page/photo/`);
 			}}>photo</button>
 			<div className="articles">
 				<ArticleList fetchEndpoint="/api/my-page/article" />
 			</div>
-			<button className="photo" onClick={
-				() => this.props.history.push('/my-page/photo')
-			}>Photo</button>
 			<div className="photos">
 				<PhotoList fetchEndpoint="/api/my-page/photo" isUploadAvailabe={true} isDeleteAvailabe={true}/>
 			</div>
