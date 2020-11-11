@@ -77,6 +77,10 @@ class MyPage extends Component {
         })
 
 		return <div className="my-page">
+
+			<button onClick={() => {
+				this.props.history.push(`/my-page/photo/`);
+			} > photo </button>
 			<div className="articles">
 				{articles}
 			</div>
