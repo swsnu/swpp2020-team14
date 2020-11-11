@@ -44,6 +44,26 @@ class APIArticle(View):
         a.image_file.save('article/attachment', uploaded_image)
         return JsonResponse({'success': True, 'id': a.id})
 
+class APIArticleMy(View):
+    @method_decorator(force_login)
+    def get(self, request):
+        page_idx = request.GET.get('page', 1)
+        articles_my = Article.objects.get(author=request.user)
+        paginator = Paginator(articles_my.order_by('-id'), 20)
+        page = paginator.get_page(page_idx)
+
+        resp = [{
+            'id': a.id,
+            'title': a.title,
+            'author': a.author.first_name
+        } for a in page]
+
+        return JsonResponse(data={
+            'list': resp,
+            'pages': paginator.num_pages,
+            'cur': page.number
+        })
+
 class APIArticleItem(View):
     def get(self, request, article_id=None):
         q = Article.objects.filter(id=article_id)

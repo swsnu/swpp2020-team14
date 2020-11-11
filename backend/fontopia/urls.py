@@ -19,4 +19,7 @@ urlpatterns = [
     path('photo', views.photo.APIPhoto.as_view()),
     path('photo/<int:photo_id>', views.photo.APIPhotoItem.as_view()),
     path('photo/<int:photo_id>/report', views.report.APIReport.as_view()),
+
+    path('my-page/article', views.article.APIArticleMy.as_view()),
+    path('my-page/photo', views.photo.APIPhotoMy.as_view()),
 ]
