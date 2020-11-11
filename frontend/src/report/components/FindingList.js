@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import { withRouter } from 'react-router';
 import axios from 'axios';
 
+import './FindingList.css';
+
 class FindingList extends Component {
     state = {
 		findings: null,
@@ -79,12 +81,14 @@ class FindingList extends Component {
 		}
         
 		const items = this.state.findings.map(finding => {
-			return <tr>
+			return <tr key={finding.font_id}>
 				<td className="font-name">
 					{finding.font_name}
 				</td>
-				<td className="probability">
-					{finding.probability}
+				<td className="probability" style={{
+					background: `rgba(0, 100, 0, ${0.05 + 0.95*finding.probability})`
+				}}>
+					{(finding.probability*100).toFixed(2)}%
 				</td>
 				<td className="license">
 					{(finding.is_free ?
@@ -92,7 +96,7 @@ class FindingList extends Component {
 						<span className="license-nonfree">Proprietary ({finding.license_summary})</span>)}
 				</td>
 				<td className="is-selected">
-					<input type="radio" 
+					<input type="radio"
 						id="selected-finding" 
 						name="finding"
 						checked={this.state.selected_font === finding.font_id}

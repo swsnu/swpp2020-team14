@@ -80,10 +80,10 @@ class PhotoList extends Component {
             return ( 
                 <div className='Photo' >
                     <img src={photo.image_url} alt="uploaded" onClick={() => this.onPhotoDetailClicked(photo)}/>
-                    {this.props.isDeleteAvailable ? 
+                    {this.props.isDeleteAvailable && this.state.is_delete_clicked &&
                     <input type="checkbox" id="delete-checkbox" 
                         disabled={!this.state.is_delete_clicked}
-                        onClick={() => this.onPhotoChecked(photo)} /> : null}
+                        onClick={() => this.onPhotoChecked(photo)} />}
                 </div>
             )
         })
