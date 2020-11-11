@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import { withRouter } from 'react-router';
 import axios from 'axios';
 
+import './PhotoList.css';
+
 class PhotoList extends Component {
     state = {
         is_delete_clicked: false,
