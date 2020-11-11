@@ -11,6 +11,8 @@ import ReportView from './report/views/reportView.js';
 import { SignupView, SigninView } from './sign/views/all';
 import NavigationBar from './common/NavigationBar';
 
+import Demo from './demo/Demo';
+
 import './App.css';
 
 axios.defaults.xsrfCookieName = 'csrftoken';
@@ -36,6 +38,8 @@ function App(props) {
       <BrowserRouter>
         <NavigationBar />
         <Switch>
+          <Route exact path="/demo" component={Demo} />
+        
           <Route exact path="/article" component={ArticleListView} />
           <AuthorizedRoute exact path="/article/create" component={ArticleCreateView} />
           <Route exact path="/article/:article_id" component={ArticleDetailView} />
