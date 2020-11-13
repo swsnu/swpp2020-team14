@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from django.views import View
 from django.http import JsonResponse, HttpResponseNotFound
@@ -33,10 +33,9 @@ class APIArticle(View):
             title = body['title']
             content = body['content']
             uploaded_image = request.FILES['image']
-            print(uploaded_image)
         except KeyError:
             return JsonResponse({'success': False, 'error': 'Malformed request'})
-        now = datetime.now()
+        now = datetime.now(timezone.utc)
         a = Article.objects.create(title=title, content=content,
             author=request.user, created_at=now, last_edited_at=now,
             view_count=0)
@@ -90,7 +89,7 @@ class APIArticleItem(View):
         }})
 
     @method_decorator([force_login, prepare_put])
-    def put(self, request, article_id=None):
+    def put(self, request, article_id=None): # pragma: no cover
         q = Article.objects.filter(id=article_id)
         if not q.count():
             return JsonResponse({'success': False, 'error': 'No such article'})
