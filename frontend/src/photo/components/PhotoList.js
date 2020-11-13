@@ -13,7 +13,6 @@ class PhotoList extends Component {
     onInit() {
         axios.get(`${this.props.fetchEndpoint}`)
 		.then((resp) => {
-			console.log(resp);
 			const newPhotos = resp.data.photos.map((photo) => {
 				return {
                     id: photo.id,
@@ -25,7 +24,6 @@ class PhotoList extends Component {
 			this.setState({ photos: newPhotos })
 		})
 		.catch((err) => {
-			console.log(err);
 		  	alert(err);
 		});
     }
@@ -56,10 +54,8 @@ class PhotoList extends Component {
                 .forEach((photo) => {
 					axios.delete(`/api/photo/${photo.id}`)
 					.then((resp) => {
-						console.log(resp);
 					})
 					.catch((err) => {
-						console.log(err);
 						alert(err);
                     })
 			    });
@@ -78,7 +74,7 @@ class PhotoList extends Component {
 
         const photos = this.state.photos.map((photo) => {
             return ( 
-                <div className='Photo' >
+                <div className='Photo' key={photo.id}>
                     <img src={photo.image_url} alt="uploaded" onClick={() => this.onPhotoDetailClicked(photo)}/>
                     {this.props.isDeleteAvailable && this.state.is_delete_clicked &&
                     <input type="checkbox" id="delete-checkbox" 

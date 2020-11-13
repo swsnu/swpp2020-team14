@@ -13,7 +13,6 @@ class PhotoDetail extends Component {
 	onInit() {
 		axios.get(`/api/photo/${this.props.photo_id}`)
 			.then((resp) => {
-				console.log(resp);
 				this.setState({ 
 					memo: resp.data.photo.memo,
 					image_url: resp.data.photo.image_url,
@@ -21,9 +20,7 @@ class PhotoDetail extends Component {
 				});
 			})
 			.catch((err) => {
-				console.log(err);
 				alert(err);
-				window.location.reload(false);
 			});
 	}
 
@@ -41,11 +38,9 @@ class PhotoDetail extends Component {
 
 		axios.patch(`/api/photo/${this.props.photo_id}`, payload)
 			.then((resp) => {
-				console.log(resp);
 				this.setState({ memo_changed: false });
 			})
 			.catch((err) => {
-				console.log(err);
 				alert(err);
 			});
 	}
