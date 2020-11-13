@@ -16,7 +16,6 @@ class FindingList extends Component {
 
 		axios.get(`/api/photo/${this.props.photo_id}/report`)
 		.then((resp) => {
-			console.log(resp);
 			const newFindings = resp.data.findings.map((finding) => {
 				return {
 					font_id: finding.font.id,
@@ -29,19 +28,16 @@ class FindingList extends Component {
 			this.setState({ findings: newFindings })
 		})
 		.catch((err) => {
-			console.log(err);
 			alert(err);
 		})
 
 		axios.get(`/api/photo/${this.props.photo_id}`)
 		.then((resp) => {
-			console.log(resp);
 			const photo = resp.data.photo;
 			this.setState({ selected_font: photo.selected_font.id })
 
 		})
 		.catch((err) => {
-			console.log(err);
 		  	alert(err);
 		});
     }
@@ -60,13 +56,11 @@ class FindingList extends Component {
 		
 		axios.patch(`/api/photo/${this.props.photo_id}`, payload)
 		.then((resp) => {
-			console.log(resp);
 			this.setState({
 				selected_font: finding.font_id
 			})
 		})
 		.catch((err) => {
-			console.log(err);
 		  	alert(err);
 		});
 
@@ -82,7 +76,7 @@ class FindingList extends Component {
         
 		const items = this.state.findings.map(finding => {
 			return <tr key={finding.font_id}>
-				<td className="font-name">
+				<td className="font-name" onClick={() => this.onFindingDetailClicked(finding)}>
 					{finding.font_name}
 				</td>
 				<td className="probability" style={{

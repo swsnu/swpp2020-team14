@@ -11,7 +11,6 @@ class PhotoReport extends Component {
 	onInit() {
 		axios.get(`/api/photo/${this.props.photo_id}`)
 		.then((resp) => {
-			console.log(resp);
 			this.setState({ 
 				memo: resp.data.photo.memo,
 				image_url: resp.data.photo.image_url,
@@ -19,9 +18,7 @@ class PhotoReport extends Component {
 			})
 		})
 		.catch((err) => {
-			console.log(err);
 			alert(err);
-			window.location.reload(false);
 		})
     }
 
