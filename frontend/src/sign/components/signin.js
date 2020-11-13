@@ -14,6 +14,7 @@ class Signin extends Component {
 
   onSubmit(event){
     event.preventDefault();
+    
     this.props.loginAttempt({
       email: this.state.email,
       password: this.state.password
@@ -25,11 +26,11 @@ class Signin extends Component {
       <div className="signin">
         <form onSubmit={ this.onSubmit.bind(this) }>
           <div className="row-email">
-            <span className="hint hint-email">Email</span>
+            <span className="hint-email">Email</span>
             <input type="email" name="email" onChange={ this.handleChange.bind(this) } />
           </div>
           <div className="row-password">
-            <span className="hint hint-password">Password</span>
+            <span className="hint-password">Password</span>
             <input type="password" name="password" onChange={ this.handleChange.bind(this) } />
           </div>
           {this.props.errorMessage !== null &&
