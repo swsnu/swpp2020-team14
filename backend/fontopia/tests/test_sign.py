@@ -74,3 +74,13 @@ class UserCase(TestCase):
         resp = resp.json()
         self.assertIn('email', resp)
         self.assertIn('nickname', resp)
+
+        # try to login twice
+        cred_right = cred.copy()
+        resp = cli.post('/api/signin', data=cred_right,
+            content_type="application/json")
+        self.assertEqual(resp.status_code, 200)
+        resp = cli.post('/api/signin', data=cred_right,
+            content_type="application/json")
+        self.assertEqual(resp.status_code, 200)
+

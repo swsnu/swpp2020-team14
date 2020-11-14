@@ -38,7 +38,7 @@ class PhotoBaseCase(TestCase):
 
         for i in range(3):
             photo = Photo.objects.create(
-                author=self.me, width=3, height=4,
+                author=self.users[i], width=3, height=4,
                 is_analyzed=False, analyzed_at=sometime,
                 selected_font=self.fonts[i],
                 image_file=test_image,
@@ -124,6 +124,15 @@ class PhotoAuthorizedCase(PhotoBaseCase):
         resp = resp.json()
         self.assertIn('success', resp)
         self.assertEqual(resp['success'], True)
+
+        # try to delete anothor user's photo
+        photo = self.photos[1]
+        resp = cli.delete(f'/api/photo/{photo.id}')
+        self.assertEqual(resp.status_code, 200)
+        resp = resp.json()
+        self.assertIn('success', resp)
+        self.assertEqual(resp['success'], False)
+
 
 class PhotoFindingCase(PhotoBaseCase):
     def setUp(self):

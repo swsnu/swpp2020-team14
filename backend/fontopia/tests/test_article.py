@@ -111,6 +111,12 @@ class ArticleAuthorizedCase(ArticleBaseCase):
         resp = resp.json()
         self.assertEqual(resp['success'], True)
 
+        # malformed request
+        resp = cli.post('/api/article', {})
+        self.assertEqual(resp.status_code, 200)
+        resp = resp.json()
+        self.assertEqual(resp['success'], False)
+
     def test_delete_article(self):
         cli = self.client
 
@@ -125,6 +131,14 @@ class ArticleAuthorizedCase(ArticleBaseCase):
         resp = resp.json()
         self.assertEqual(resp['success'], True)
 
+        # try to delete another user's article
+        art = self.articles[1]
+        resp = cli.delete(f'/api/article/{art.id}')
+        self.assertEqual(resp.status_code, 200)
+        resp = resp.json()
+        self.assertEqual(resp['success'], False)
+
+
     def test_like_article(self):
         cli = self.client
 
@@ -137,6 +151,12 @@ class ArticleAuthorizedCase(ArticleBaseCase):
         self.assertEqual(resp['success'], True)
         self.assertIn('like_count', resp)
         self.assertIs(type(resp['like_count']), int)
+
+        # try to like twice
+        resp = cli.post(f'/api/article/{art.id}/like')
+        self.assertEqual(resp.status_code, 200)
+        resp = resp.json()
+        self.assertEqual(resp['success'], False)
 
         resp = cli.delete(f'/api/article/{art.id}/like')
         self.assertEqual(resp.status_code, 200)
@@ -154,4 +174,19 @@ class ArticleAuthorizedCase(ArticleBaseCase):
         self.assertIn('success', resp)
         self.assertEqual(resp['success'], False)
         self.assertIn('error', resp)
+
+        # try to like non-existing article
+        resp = cli.post(f'/api/article/{404}/like')
+        self.assertEqual(resp.status_code, 200)
+        resp = resp.json()
+        self.assertEqual(resp['success'], False)
+
+        # try to delete like on non-existing article
+        resp = cli.delete(f'/api/article/{404}/like')
+        self.assertEqual(resp.status_code, 200)
+        resp = resp.json()
+        self.assertEqual(resp['success'], False)
+
+
+
 
