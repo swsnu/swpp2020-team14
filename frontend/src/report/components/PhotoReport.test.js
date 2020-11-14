@@ -20,7 +20,7 @@ describe('PhotoReport', () => {
 		},
 	}
 
-	it('should attempt to fetch photo report', () => {
+	it('should attempt to fetch photo report', (done) => {
 		axios.get.mockImplementationOnce((url) => new Promise((resv, rej) => {
 			expect(url).toEqual(`/api/photo/${pid}`);
 			rej(); done();

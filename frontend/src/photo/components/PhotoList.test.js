@@ -95,7 +95,7 @@ describe('PhotoList', () => {
 			expect(mock_history.push).lastCalledWith(`/photo/create`)
     })
 
-    it('should have working delete button', () => {
+    it('should have working delete button', (done) => {
       axios.delete.mockImplementationOnce((url) => new Promise((resv, rej) => {
         expect(url.endsWith(1)).toBe(true);
         rej(); done();
