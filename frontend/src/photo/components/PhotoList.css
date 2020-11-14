@@ -1,0 +1,7 @@
+.Photo {
+    display: inline;
+}
+
+.Photo img {
+    max-height: 100px;
+}

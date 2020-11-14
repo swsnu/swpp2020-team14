@@ -1,0 +1,11 @@
+.signup {
+    display: inline-table;
+}
+
+.row-email,.row-password,.row-nickname {
+    display: table-row;
+}
+
+.hint {
+    display: table-cell;
+}

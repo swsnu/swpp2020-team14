@@ -2,6 +2,11 @@ matrix:
   include:
     - language: node_js
       node_js: '12'
+      addons:
+        sonarcloud:
+          organization: "swsnu"
+          token:
+            secure: "IjWgCHYbNVH+LJeuuzms7hu4u5aWL/Z69WrQpaF8BdLoyBjryMELQqFP0sI2C/R5CKRUhX++pZMWi/K3Ox4ZdIWIRdzqdE3Xi86rakZb8jUo/r8F9fLUNtq+fQVue1ingepp0tgB352Fq9b3ibrdENLF9wAW2PV6CL8mVJEhPWU4j65zIlyex6Nz+WT4+6T9dV8Mh8RJV9biBprEHNMoJVc3VJO+sN7sC04tLE5CNrUDpvdKJrTHe4Ns9UH5U/INle4D7TopBEei0oAuyM4RxpeMhEMalMw08GVzigWXlajyrFTfgQAqnUdtO57FWLVa2FeM6hEMGPz0GFNkoOnxSJVOmIscsgvJuxJ5Grlr2cY0rqyXzM6PKQjUVmY/FKvUGqFDBweI2R07wfOi1GR6VDtZduQsO7MbkEQa5kkx5C6VuJq4FkCALmOo0HWLqzcAbAEUfbWqDHTY36k9UwoXaJLsPxDHfzVYoXyQ7luvTzNg3P6YM2rWzbbT+3chkkZFD7U68EYiVm1QP0sFRC/LFINnjjcCDdPV/43ENEAViDmX9C1XPVKjdYnuPnrDXsjX+oyFEjtCRxGGlPP0Q/wbe1UET8LuDtDgbQJKu6dX0bYRgD0XHxf4ss1nQOf15pR6CoazTNsMcJw2pHLEpftRsBPLqa3P00px1vW746PFIN8="
       cache:
         - yarn: true
       before_install:
@@ -11,6 +16,7 @@ matrix:
       script:
         - ./node_modules/.bin/eslint src/
         - yarn test --coverage --watchAll=false
+        - cd ../ && sonar-scanner
 
     - language: python
       python: '3.7'
@@ -22,6 +28,7 @@ matrix:
         - pip install -r requirements.txt
       script:
         - pylint **/*.py --load-plugins pylint_django
-        - coverage run --source='.' manage.py test
+        - coverage run --source='fontopia/views' --omit 'fontopia/tests/*,*__init__.py,fontopia/migrations/*' manage.py test
         - coverage xml
-
+      after_success:
+        - bash <(curl -s https://codecov.io/bash)
