@@ -29,7 +29,6 @@ class FontList extends Component {
       })
       .catch((err) => {
         alert(err);
-        window.location.reload(false);
       });
   }
 

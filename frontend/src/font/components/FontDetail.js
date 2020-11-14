@@ -20,13 +20,11 @@ class FontDetail extends Component {
   onInit() {
     axios.get(`/api/font/${this.props.font_id}`)
       .then((resp) => {
-        console.log(resp);
         this.setState({data: resp.data});
       })
       .catch((err) => {
-        console.log(err);
         alert(err);
-        this.history.goBack();
+        this.props.history.goBack();
       });
   }
 
