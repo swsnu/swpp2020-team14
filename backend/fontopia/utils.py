@@ -7,8 +7,8 @@ def force_login(func):
     def _inner(request, *args, **kwargs):
         if request.user.is_authenticated:
             return func(request, *args, **kwargs)
-        return HttpResponse(403)
-    return func
+        return HttpResponse(status=403)
+    return _inner
 
 # Cf. https://thihara.github.io/Django-Req-Parsing/
 def prepare_put(func):
