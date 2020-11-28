@@ -8,33 +8,28 @@ import { updateLogin } from '../sign/actions/actions';
 class NavigationBar extends Component {
   onSignout() {
     (async () => {
-      await axios.get('/api/token');
-      await axios.post('/api/signout');
+      await axios.get('/api/token')
+      await axios.post('/api/signout')
     })().finally(() => {
-      window.localStorage.removeItem('login.logged_in');
-      window.localStorage.removeItem('login.user_info');
+      window.localStorage.removeItem("login.logged_in");
+      window.localStorage.removeItem("login.user_info");
       this.props.updateLogin({ logged_in: false, user_info: null });
     });
   }
 
+
   render() {
     const { logged_in, user_info } = this.props.login;
-    return (
-      <div className="navi">
-        <img src="" alt="Logo" />
-        <Link replace to="/article"><button className="btn btn-article">Articles</button></Link>
-        <Link replace to="/my-page"><button className="btn btn-mypage">My Page</button></Link>
-        <Link replace to="/font"><button className="btn btn-font">Font</button></Link>
-        <div className="greeting">
-          {
+    return (<div className="navi">
+      <img src="" alt="Logo" />
+      <Link replace to="/article"><button className="btn btn-article">Articles</button></Link>
+      <Link replace to="/my-page"><button className="btn btn-mypage">My Page</button></Link>
+      <Link replace to="/font"><button className="btn btn-font">Font</button></Link>
+      <div className="greeting">{
         (logged_in) ? (
           <div className="greeting-logged-in">
-            <div className="username">
-              Hello,
-              { user_info.nickname }
-              .
-            </div>
-            <div className="btn-signout"><button onClick={this.onSignout.bind(this)}>Sign out</button></div>
+            <div className="username">Hello, { user_info.nickname }.</div>
+            <div><button className="btn-signout" onClick={ () => this.onSignout() }>Sign out</button></div>
           </div>
         ) : (
           <div className="greeting-not-logged-in">
@@ -44,19 +39,17 @@ class NavigationBar extends Component {
             <span className="btn-signup"><Link to="/signup">Sign up</Link></span>
           </div>
         )
-      }
-        </div>
-      </div>
-    );
+      }</div>
+    </div>);
   }
 }
 
-const mapStateToProps = (state) => ({
-  login: state.login,
+const mapStateToProps = state => ({
+  login: state.login
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  updateLogin: (data) => dispatch(updateLogin(data)),
+const mapDispatchToProps = dispatch => ({
+  updateLogin: (data) => dispatch(updateLogin(data))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(NavigationBar));
