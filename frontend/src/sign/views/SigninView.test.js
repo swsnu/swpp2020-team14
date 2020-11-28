@@ -21,7 +21,7 @@ describe("SigninView", () => {
     comp.state().password = "TEST_PASSWORD"
     expect(form.length).toBe(1);
     axios.get = jest.fn(url => 0);
-    axios.post = jest.fn((url, data) => {data: "hello"});
+    axios.post = jest.fn((url, data) => {"hello"});
 
     await comp.instance().loginAttempt({email: "TEST_EMAIL", password: "TEST_PASSWORD"})
     await comp.instance().loginAttempt({email: "", password: ""})
