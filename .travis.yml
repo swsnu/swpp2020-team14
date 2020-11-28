@@ -40,7 +40,7 @@ matrix:
         - coveralls-lcov -v -n coverage/lcov.info > coverage.json
         - cd ..
         - cd backend
-        - coveralls --merge=../../frontend/coverage.json
+        - coveralls --merge=../frontend/coverage.json
         - cd ../
 
     - language: node_js
