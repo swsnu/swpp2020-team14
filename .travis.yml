@@ -23,7 +23,7 @@ matrix:
         - source ~/virtualenv/python3.7/bin/activate
         - pip install -r requirements.txt
         - pip install coveralls
-        - cd ../../
+        - cd ../
       script:
         - cd frontend
         - ./node_modules/.bin/eslint src/
@@ -34,14 +34,14 @@ matrix:
         - python manage.py migrate  
         - coverage run --source='.' manage.py test
         - coverage xml
-        - cd ../..
+        - cd ../
         - sonar-scanner
         - cd frontend
         - coveralls-lcov -v -n coverage/lcov.info > coverage.json
         - cd ..
         - cd backend
         - coveralls --merge=../../frontend/coverage.json
-        - cd ../..
+        - cd ../
 
     - language: node_js
       node_js: '12'
