@@ -12,20 +12,20 @@ class PhotoList extends Component {
 
     onInit() {
         axios.get(`${this.props.fetchEndpoint}`)
-		.then((resp) => {
-			const newPhotos = resp.data.photos.map((photo) => {
-				return {
+        .then((resp) => {
+            const newPhotos = resp.data.photos.map((photo) => {
+                return {
                     id: photo.id,
                     image_url: photo.image_url,
-					uploaded_datetime: photo.uploaded_datetime,
-					is_checked: false,
-				};
-			})
-			this.setState({ photos: newPhotos })
-		})
-		.catch((err) => {
-		  	alert(err);
-		});
+                    uploaded_datetime: photo.uploaded_datetime,
+                    is_checked: false,
+                };
+            })
+            this.setState({ photos: newPhotos })
+        })
+        .catch((err) => {
+              alert(err);
+        });
     }
 
     componentDidMount() {
@@ -46,31 +46,31 @@ class PhotoList extends Component {
 
     onDeleteClicked = () => {
         if (!this.state.is_delete_clicked) {
-			this.setState({ is_delete_clicked: true })
+            this.setState({ is_delete_clicked: true })
         }
         else {
             this.state.photos
                 .filter(photo => photo.is_checked)
                 .forEach((photo) => {
-					axios.delete(`/api/photo/${photo.id}`)
-					.then((resp) => {
-					})
-					.catch((err) => {
-						alert(err);
+                    axios.delete(`/api/photo/${photo.id}`)
+                    .then((resp) => {
                     })
-			    });
-			const deleted = this.state.photos.filter((photo) => {
-				return !(photo.is_checked)
-			})
-			this.setState({ photos: deleted, is_delete_clicked: false })
-		}
+                    .catch((err) => {
+                        alert(err);
+                    })
+                });
+            const deleted = this.state.photos.filter((photo) => {
+                return !(photo.is_checked)
+            })
+            this.setState({ photos: deleted, is_delete_clicked: false })
+        }
     }
 
 
     render() {
-		if (this.state.photos === null) {
-			return <p className="loading">Loading photos...</p>
-		}
+        if (this.state.photos === null) {
+            return <p className="loading">Loading photos...</p>
+        }
 
         const photos = this.state.photos.map((photo) => {
             return ( 

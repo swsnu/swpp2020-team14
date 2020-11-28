@@ -71,7 +71,7 @@ class FontList extends Component {
         cur={this.state.cur} onclick={(i)=>this.onBrowsePage(i)} />
     </div>
   }
-};
+}
 
 export default withRouter(FontList);
 

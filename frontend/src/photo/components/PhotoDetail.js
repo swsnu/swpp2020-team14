@@ -84,6 +84,6 @@ class PhotoDetail extends Component {
 			</div>
 		);
 	}
-};
+}
 
 export default withRouter(PhotoDetail);
