@@ -28,14 +28,30 @@ describe("Navigation bar", () => {
     expect(component.find('.navi').length).toBe(1);
   });
 
-  it(`should handle signout`, () => {
+  it(`should render without error if not logged in`, () => {
+    
+    const navi = (
+      <BrowserRouter>
+        <NavigationBar.WrappedComponent login={{logged_in: false, user_info: false}}/>
+      </BrowserRouter>
+    );
+
+    const component = mount(navi);
+    expect(component.find('.navi').length).toBe(1);
+
+  });
+
+  it(`should handle signout`, (done) => {
     // TODO
     axios.get = jest.fn();
     axios.post = jest.fn();
     const component = mount(navi);
     const button = component.find('.btn-signout');
     expect(button.length).toBe(1);
+    console.log("before");
     button.simulate('click');
+    done();
+
   })
   
 })

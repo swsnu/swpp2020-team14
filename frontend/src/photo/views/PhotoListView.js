@@ -7,10 +7,10 @@ class PhotoListView extends Component {
   render() {
     return (
       <div className="photo-list-view">
-        <PhotoList fetchEndpoint="/api/photo" isUploadAvailable={true} isDeleteAvailable={true}/>
+        <PhotoList fetchEndpoint="/api/photo" isUploadAvailable isDeleteAvailable />
       </div>
-    )
+    );
   }
-};
+}
 
 export default withRouter(PhotoListView);

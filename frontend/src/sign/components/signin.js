@@ -45,6 +45,6 @@ class Signin extends Component {
       </div>
     );
   }
-};
+}
 
 export default Signin;

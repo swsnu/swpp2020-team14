@@ -17,6 +17,7 @@ class NavigationBar extends Component {
     });
   }
 
+
   render() {
     const { logged_in, user_info } = this.props.login;
     return (<div className="navi">
@@ -28,7 +29,7 @@ class NavigationBar extends Component {
         (logged_in) ? (
           <div className="greeting-logged-in">
             <div className="username">Hello, { user_info.nickname }.</div>
-            <div className="btn-signout"><button onClick={ this.onSignout.bind(this) }>Sign out</button></div>
+            <div><button className="btn-signout" onClick={ () => this.onSignout() }>Sign out</button></div>
           </div>
         ) : (
           <div className="greeting-not-logged-in">
