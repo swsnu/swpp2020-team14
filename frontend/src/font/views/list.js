@@ -9,8 +9,8 @@ class FontListView extends Component {
       <div className="font-list-view">
         <FontList />
       </div>
-    )
+    );
   }
-};
+}
 
 export default withRouter(FontListView);

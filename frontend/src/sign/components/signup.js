@@ -9,14 +9,14 @@ class Signup extends Component {
     super(props);
 
     this.state = {
-      email: "",
-      password: "",
-      nickname: "",
-      errorMessage: null
+      email: '',
+      password: '',
+      nickname: '',
+      errorMessage: null,
     };
   }
 
-  handleChange(e){
+  handleChange(e) {
     this.setState({ [e.target.name]: e.target.value });
   }
 
@@ -31,30 +31,32 @@ class Signup extends Component {
       });
       alert('Signup success.\nNow please login.');
       this.props.history.replace('/signin');
-    })().catch(err => this.setState({ errorMessage: err.message }));;
+    })().catch((err) => this.setState({ errorMessage: err.message }));
   }
 
-  render(){
+  render() {
     return (
       <div className="signup">
-        <form onSubmit={ this.onSubmit.bind(this) }>
+        <form onSubmit={this.onSubmit.bind(this)}>
           <div className="row-email">
             <span className="hint hint-email">Email</span>
-            <input type="email" name="email" onChange={ this.handleChange.bind(this) } />
+            <input type="email" name="email" onChange={this.handleChange.bind(this)} />
           </div>
           <div className="row-password">
             <span className="hint hint-password">Password</span>
-            <input type="password" name="password" onChange={ this.handleChange.bind(this) } />
+            <input type="password" name="password" onChange={this.handleChange.bind(this)} />
           </div>
           <div className="row-nickname">
             <span className="hint hint-nickname">Nickname</span>
-            <input type="text" name="nickname" onChange={ this.handleChange.bind(this) } />
+            <input type="text" name="nickname" onChange={this.handleChange.bind(this)} />
           </div>
-          {this.state.errorMessage !== null &&
+          {this.state.errorMessage !== null
+          && (
           <div className="row-error-message">
             <span className="icon">⚠&nbsp;</span>
             <span className="error-message">{ this.state.errorMessage }</span>
-          </div>}
+          </div>
+          )}
           <div className="row-submit">
             <button type="submit">Sign up</button>
           </div>
@@ -62,6 +64,6 @@ class Signup extends Component {
       </div>
     );
   }
-};
+}
 
 export default withRouter(Signup);

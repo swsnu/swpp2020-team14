@@ -12,9 +12,8 @@ class ArticleListView extends Component {
         </div>
         <ArticleList fetchEndpoint="/api/article" />
       </div>
-    )
+    );
   }
 }
 
 export default withRouter(ArticleListView);
-

@@ -7,5 +7,5 @@ export {
   ArticleDetailView,
   ArticleListView,
   ArticleCreateView,
-  ArticleEditView
+  ArticleEditView,
 };

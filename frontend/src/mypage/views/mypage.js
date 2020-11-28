@@ -9,7 +9,7 @@ class MyPageView extends Component {
       <div className="my-page">
         <MyPage />
       </div>
-    )
+    );
   }
-};
+}
 export default withRouter(MyPageView);

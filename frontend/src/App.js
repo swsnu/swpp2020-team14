@@ -1,9 +1,13 @@
 import React from 'react';
-import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
+import {
+  BrowserRouter, Switch, Route, Redirect,
+} from 'react-router-dom';
 import { connect } from 'react-redux';
 import axios from 'axios';
 
-import { ArticleDetailView, ArticleListView, ArticleCreateView, ArticleEditView } from './article/views/all.js';
+import {
+  ArticleDetailView, ArticleListView, ArticleCreateView, ArticleEditView,
+} from './article/views/all.js';
 import { FontListView, FontItemView } from './font/views/all.js';
 import { PhotoListView, PhotoDetailView, PhotoCreateView } from './photo/views/all.js';
 import MyPageView from './mypage/views/mypage.js';
@@ -17,16 +21,16 @@ axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN';
 
 function App(props) {
-  const AuthorizedRoute = ({ component, ...rest}) => {
+  const AuthorizedRoute = ({ component, ...rest }) => {
     if (props.login.logged_in === true) {
-      return <Route {...rest} component={ component } />;
+      return <Route {...rest} component={component} />;
     }
     return <Redirect to="/signin" />;
   };
 
-  const UnauthorizedRoute = ({ component, ...rest}) => {
+  const UnauthorizedRoute = ({ component, ...rest }) => {
     if (props.login.logged_in === false) {
-      return <Route {...rest} component={ component } />;
+      return <Route {...rest} component={component} />;
     }
     return <Redirect to="/" />;
   };
@@ -60,7 +64,7 @@ function App(props) {
 }
 
 const mapStateToProps = (state) => ({
-  login: state.login
+  login: state.login,
 });
 
 export default connect(mapStateToProps)(App);

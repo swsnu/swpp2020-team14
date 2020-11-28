@@ -9,7 +9,7 @@ jest.spyOn(window, 'alert');
 
 describe('ArticleList', () => {
   const ArticleListInner = ArticleList.WrappedComponent;
-  const mock_endpoint = "/end/point";
+  const mock_endpoint = '/end/point';
 
   it('should display loading message when not loaded', () => {
     // Since disableLifecycleMethods: true (globally),
@@ -26,33 +26,51 @@ describe('ArticleList', () => {
       rej(); done();
     }));
 
-    shallow(<ArticleListInner fetchEndpoint={ mock_endpoint } />,
+    shallow(<ArticleListInner fetchEndpoint={mock_endpoint} />,
       { disableLifecycleMethods: false });
   });
 
   describe('with mock data', () => {
     const mocked_data = {
-        pages: 50, cur: 38, list: [
-          {id: 3, title: "title 01", author: "author 01",
-            comment_count: 3},
-          {id: 5, title: "title 02", author: "author 02",
-            comment_count: 0},
-          {id: 9, title: "title 03", author: "author 03",
-            comment_count: 1},
-        ]};
+      pages: 50,
+      cur: 38,
+      list: [
+        {
+          id: 3,
+          title: 'title 01',
+          author: 'author 01',
+          comment_count: 3,
+        },
+        {
+          id: 5,
+          title: 'title 02',
+          author: 'author 02',
+          comment_count: 0,
+        },
+        {
+          id: 9,
+          title: 'title 03',
+          author: 'author 03',
+          comment_count: 1,
+        },
+      ],
+    };
 
-    let comp, hist, tbody;
+    let comp; let hist; let
+      tbody;
 
     beforeAll(async () => {
       axios.get.mockResolvedValueOnce({ data: mocked_data });
       hist = { push: jest.fn() };
       comp = shallow(<ArticleListInner
-        fetchEndpoint={ mock_endpoint } history={ hist }/>, 
-          { disableLifecycleMethods: false });
+        fetchEndpoint={mock_endpoint}
+        history={hist}
+      />,
+      { disableLifecycleMethods: false });
       // wait for the axios & re-render() jobs to finish,
       //   by flushing Promise chain; cf.
       //   GitHub: facebook/jest#2157
-      await new Promise(resolve => window.setImmediate(resolve));
+      await new Promise((resolve) => window.setImmediate(resolve));
       tbody = comp.find('table.article-list-table tbody');
     });
 
@@ -76,22 +94,22 @@ describe('ArticleList', () => {
     it('should display comment numbers', () => {
       const titles = tbody.find('tr .title button');
       // first item has 3 comments
-      expect(titles.at(0).text()).toEqual(expect.stringContaining("[3]"));
+      expect(titles.at(0).text()).toEqual(expect.stringContaining('[3]'));
 
       // second item has no comments
-      expect(titles.at(1).text()).toEqual(expect.not.stringContaining("[0]"));
+      expect(titles.at(1).text()).toEqual(expect.not.stringContaining('[0]'));
     });
 
     it('should display page buttons', () => {
       const arr = comp.find('PageButtonArray');
       expect(arr.length).toBe(1);
-      expect(arr.prop("n")).toBe(mocked_data.pages);
-      expect(arr.prop("cur")).toBe(mocked_data.cur);
+      expect(arr.prop('n')).toBe(mocked_data.pages);
+      expect(arr.prop('cur')).toBe(mocked_data.cur);
     });
 
     it('page buttons should attempt to fetch', (done) => {
       const arr = comp.find('PageButtonArray');
-      const browser = arr.prop("onclick");
+      const browser = arr.prop('onclick');
       axios.get.mockImplementationOnce(async (url) => {
         expect(url).toEqual(`${mock_endpoint}?page=17`);
         done();
