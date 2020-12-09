@@ -1,18 +1,22 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+
+import { createShallow, createMount } from '@material-ui/core/test-utils';
 
 import Signin from './signin';
 
 jest.spyOn(window, 'alert');
 
 describe('Signin', () => {
+  const shallow = createShallow({ disableLifecycleMethods: false });
+  const mount = createMount();
+
   it('should handle changes', async () => {
-    const comp = shallow(<Signin loginAttempt={jest.fn()} errorMessage={null} />);
-    const input_email = comp.find('.row-email input');
+    const comp = mount(<Signin loginAttempt={jest.fn()} errorMessage={null} />);
+    const input_email = comp.find('input[name="email"]');
     expect(input_email.length).toBe(1);
     input_email.simulate('change', { target: { name: 'email', value: 'TEST_EMAIL' } });
 
-    const input_password = comp.find('.row-password input');
+    const input_password = comp.find('input[name="password"]');
     expect(input_password.length).toBe(1);
     input_password.simulate('change', { target: { name: 'password', value: 'TEST_PASSWORD' } });
 

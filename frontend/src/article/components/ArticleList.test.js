@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
-import { shallow } from 'enzyme';
+
+import { createShallow, createMount } from '@material-ui/core/test-utils';
 
 import ArticleList from './ArticleList';
 
@@ -10,12 +11,11 @@ jest.spyOn(window, 'alert');
 describe('ArticleList', () => {
   const ArticleListInner = ArticleList.WrappedComponent;
   const mock_endpoint = '/end/point';
+  const shallow = createShallow({ disableLifecycleMethods: false });
+  const mount = createMount();
 
   it('should display loading message when not loaded', () => {
-    // Since disableLifecycleMethods: true (globally),
-    //   axios.get() will not be called, and
-    //   the component will show loading message.
-    const comp = shallow(<ArticleListInner />);
+    const comp = shallow(<ArticleListInner />, { disableLifecycleMethods: true });
     const msg = comp.find('p.loading');
     expect(msg.length).toBe(1);
   });
@@ -26,8 +26,7 @@ describe('ArticleList', () => {
       rej(); done();
     }));
 
-    shallow(<ArticleListInner fetchEndpoint={mock_endpoint} />,
-      { disableLifecycleMethods: false });
+    shallow(<ArticleListInner fetchEndpoint={mock_endpoint} />);
   });
 
   describe('with mock data', () => {
@@ -56,8 +55,7 @@ describe('ArticleList', () => {
       ],
     };
 
-    let comp; let hist; let
-      tbody;
+    let comp, hist, items;
 
     beforeAll(async () => {
       axios.get.mockResolvedValueOnce({ data: mocked_data });
@@ -65,39 +63,29 @@ describe('ArticleList', () => {
       comp = shallow(<ArticleListInner
         fetchEndpoint={mock_endpoint}
         history={hist}
-      />,
-      { disableLifecycleMethods: false });
+      />);
       // wait for the axios & re-render() jobs to finish,
       //   by flushing Promise chain; cf.
       //   GitHub: facebook/jest#2157
       await new Promise((resolve) => window.setImmediate(resolve));
-      tbody = comp.find('table.article-list-table tbody');
+      items = comp.find('.row');
     });
 
     it('should display all items', () => {
-      const rows = tbody.find('tr');
-      expect(rows.length).toBe(mocked_data.list.length);
-    });
-
-    it('title button should work', () => {
-      for (let i = 0; i < 3; ++i) {
-        const a_id = mocked_data.list[i].id;
-        const row0 = tbody.find('tr').at(i);
-        const btns = row0.find('button');
-        expect(btns.length).toBe(1);
-
-        btns.simulate('click');
-        expect(hist.push).lastCalledWith(`/article/${a_id}`);
-      }
+      expect(items.length).toBe(mocked_data.list.length);
     });
 
     it('should display comment numbers', () => {
-      const titles = tbody.find('tr .title button');
+      const titles = items.map(
+        x => x.find('.td.title').childAt(0)
+      ).map(
+        x => mount(x.prop('primary')).text()
+      );
       // first item has 3 comments
-      expect(titles.at(0).text()).toEqual(expect.stringContaining('[3]'));
+      expect(titles[0]).toEqual(expect.stringContaining('[3]'));
 
       // second item has no comments
-      expect(titles.at(1).text()).toEqual(expect.not.stringContaining('[0]'));
+      expect(titles[1]).toEqual(expect.not.stringContaining('[0]'));
     });
 
     it('should display page buttons', () => {

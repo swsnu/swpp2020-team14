@@ -1,14 +1,17 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+
+import { createShallow, createMount } from '@material-ui/core/test-utils';
 
 import PageButtonArray from './pagination.js';
 
 describe('PageButtonArray', () => {
-  let comp; let
-    onclick;
+  const shallow = createShallow({ disableLifecycleMethods: false });
+  const mount = createMount();
+
+  let comp; let onclick;
   beforeAll(() => {
     onclick = jest.fn();
-    comp = shallow(<PageButtonArray
+    comp = mount(<PageButtonArray
       cur={38}
       n={40}
       onclick={onclick}

@@ -16,6 +16,7 @@ import { SignupView, SigninView } from './sign/views/all';
 import NavigationBar from './common/NavigationBar';
 
 import './App.css';
+import { Container } from '@material-ui/core';
 
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN';
@@ -39,25 +40,27 @@ function App(props) {
     <div className="App">
       <BrowserRouter>
         <NavigationBar />
-        <Switch>
-          <Route exact path="/article" component={ArticleListView} />
-          <AuthorizedRoute exact path="/article/create" component={ArticleCreateView} />
-          <Route exact path="/article/:article_id" component={ArticleDetailView} />
-          <AuthorizedRoute exact path="/article/:article_id/edit" component={ArticleEditView} />
-          <Route exact path="/font" component={FontListView} />
-          <Route exact path="/font/:font_id" component={FontItemView} />
-          <AuthorizedRoute exact path="/photo/create" component={PhotoCreateView} />
-          <AuthorizedRoute exact path="/my-page" component={MyPageView} />
-          <AuthorizedRoute exact path="/my-page/photo" component={PhotoListView} />
-          <AuthorizedRoute exact path="/my-page/photo/create" component={PhotoCreateView} />
-          <AuthorizedRoute exact path="/my-page/photo/:photo_id" component={PhotoDetailView} />
-          <AuthorizedRoute exact path="/my-page/photo/:photo_id/report" component={ReportView} />
+        <Container className="content" maxWidth="sm">
+          <Switch>
+            <Route exact path="/article" component={ArticleListView} />
+            <AuthorizedRoute exact path="/article/create" component={ArticleCreateView} />
+            <Route exact path="/article/:article_id" component={ArticleDetailView} />
+            <AuthorizedRoute exact path="/article/:article_id/edit" component={ArticleEditView} />
+            <Route exact path="/font" component={FontListView} />
+            <Route exact path="/font/:font_id" component={FontItemView} />
+            <AuthorizedRoute exact path="/photo/create" component={PhotoCreateView} />
+            <AuthorizedRoute exact path="/my-page" component={MyPageView} />
+            <AuthorizedRoute exact path="/my-page/photo" component={PhotoListView} />
+            <AuthorizedRoute exact path="/my-page/photo/create" component={PhotoCreateView} />
+            <AuthorizedRoute exact path="/my-page/photo/:photo_id" component={PhotoDetailView} />
+            <AuthorizedRoute exact path="/my-page/photo/:photo_id/report" component={ReportView} />
 
-          <UnauthorizedRoute exact path="/signin" component={SigninView} />
-          <UnauthorizedRoute exact path="/signup" component={SignupView} />
+            <UnauthorizedRoute exact path="/signin" component={SigninView} />
+            <UnauthorizedRoute exact path="/signup" component={SignupView} />
 
-          <Redirect from="*" to="/article" />
-        </Switch>
+            <Redirect from="*" to="/article" />
+          </Switch>
+        </Container>
       </BrowserRouter>
     </div>
   );
