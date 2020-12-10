@@ -11,6 +11,7 @@ class PageButtonArray extends Component {
         <Button
           key={i}
           className={`page-btn ${(i === this.props.cur) ? 'page-btn-cur' : ''}`}
+          variant={ (i === this.props.cur) ? "contained" : "outlined" }
           onClick={H(i)}
         >
           {i}
