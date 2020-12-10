@@ -17,7 +17,7 @@ class MyPage extends Component {
                         Manage
                     </Button>
                 </Grid>
-                <PhotoList fetchEndpoint="/api/my-page/photo" isUploadAvailabe isDeleteAvailabe />
+                <PhotoList trunc={6} fetchEndpoint="/api/my-page/photo" isUploadAvailabe isDeleteAvailabe />
             </Paper>
 
             <Paper className="my-article">

@@ -39,21 +39,31 @@ class APIPhotoMy(View):
     @method_decorator(force_login)
     def get(self, request):
         photos_my = Photo.objects.filter(author=request.user)
-        resp = [{
-            'id': p.id,
-            'memo': p.memo,
-            'image_url': p.image_file.url,
-            'selected_font': {
-                'id': p.selected_font.id,
-                'name': p.selected_font.name,
-                'manufacturer_name': p.selected_font.manufacturer,
-                'license': {
-                    'is_free': p.selected_font.is_free,
-                    'type': p.selected_font.license_summary
-                },
-                'view_count': p.selected_font.view_count,
-            } if p.selected_font else None,
-            } for p in photos_my]
+        photos_my = photos_my.select_related('selected_font')
+
+        n = None
+        try:
+            n = int(request.GET['trunc'])
+            assert 1 <= n
+        except (KeyError, ValueError, AssertionError):
+            n = None
+
+        resp = [
+            {
+                'id': p.id,
+                'memo': p.memo,
+                'image_url': p.image_file.url,
+                'selected_font': {
+                    'id': p.selected_font.id,
+                    'name': p.selected_font.name,
+                    'manufacturer_name': p.selected_font.manufacturer,
+                    'license': {
+                        'is_free': p.selected_font.is_free,
+                        'type': p.selected_font.license_summary
+                    },
+                    'view_count': p.selected_font.view_count,
+                } if p.selected_font else None,
+            } for p in photos_my[:n]]
 
         return JsonResponse(data={
             'photos': resp,
