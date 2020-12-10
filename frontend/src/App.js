@@ -40,7 +40,7 @@ function App(props) {
     <div className="App">
       <BrowserRouter>
         <NavigationBar />
-        <Container className="content" maxWidth="sm">
+        <Container className="content" maxWidth="md">
           <Switch>
             <Route exact path="/article" component={ArticleListView} />
             <AuthorizedRoute exact path="/article/create" component={ArticleCreateView} />

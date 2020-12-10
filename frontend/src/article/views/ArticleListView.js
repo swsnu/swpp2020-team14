@@ -14,6 +14,7 @@ class ArticleListView extends Component {
           <Button
             onClick={() => this.props.history.push('/article/create')}
             variant="contained"
+            color="secondary"
           >
             New article
           </Button>

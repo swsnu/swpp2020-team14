@@ -7,14 +7,19 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 import loginReducer from './sign/reducers/reducers';
+import { ThemeProvider } from '@material-ui/core';
+import { getTheme } from './theme';
 
 const reducer = combineReducers({
   login: loginReducer,
 });
+
 const store = createStore(reducer);
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <ThemeProvider theme={ getTheme() }>
+      <App />
+    </ThemeProvider>
   </Provider>,
   document.getElementById('root'),
 );
