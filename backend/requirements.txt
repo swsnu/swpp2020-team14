@@ -4,3 +4,4 @@ pylint==2.6.0
 pylint-django==2.3.0
 Pillow==8.0.1
 numpy==1.18.5
+torch==1.4.0

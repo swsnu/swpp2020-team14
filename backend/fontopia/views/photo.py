@@ -6,6 +6,7 @@ from django.core.files.images import get_image_dimensions
 
 from fontopia.models import Photo, Font
 from fontopia.utils import date2str, force_login, prepare_patch
+from fontopia.ml import inference
 
 from datetime import datetime, timezone
 
@@ -29,6 +30,9 @@ class APIPhoto(View):
 
         p.save()
         p.image_file.save('photo', uploaded_image)
+
+        inference.perform_inference(p)
+
         return JsonResponse({'success': True, 'id': p.id})
 
 class APIPhotoMy(View):
