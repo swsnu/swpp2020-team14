@@ -21,12 +21,11 @@ class APIPhoto(View):
         now = datetime.now(timezone.utc)
         width, height = get_image_dimensions(uploaded_image)
         metadata = {'data': 'data'}
-        f = Font.objects.get(id=1)
 
         p = Photo.objects.create(author=request.user, memo=memo,
         is_analyzed=False, analyzed_at=now,
         width=width, height=height,
-        selected_font=f, metadata=metadata)
+        selected_font=None, metadata=metadata)
 
         p.save()
         p.image_file.save('photo', uploaded_image)
@@ -49,7 +48,7 @@ class APIPhotoMy(View):
                     'type': p.selected_font.license_summary
                 },
                 'view_count': p.selected_font.view_count,
-            },
+            } if p.selected_font else None,
             } for p in photos_my]
 
         return JsonResponse(data={
@@ -78,7 +77,7 @@ class APIPhotoItem(View):
                     'type': p.selected_font.license_summary
                 },
                 'view_count': p.selected_font.view_count,
-            },
+            } if p.selected_font else None,
         }})
 
     @method_decorator([force_login, prepare_patch])

@@ -9,7 +9,9 @@ class FindingList extends Component {
         findings: null,
         image_file: null,
         selected_font: null,
-        memo: ''
+        memo: '',
+        loaded_report: false,
+        loaded_image: false
     }
 
     onInit() {
@@ -25,7 +27,7 @@ class FindingList extends Component {
                     license_summary: finding.font.license_summary,
                 }
             })
-            this.setState({ findings: newFindings })
+            this.setState({ loaded_report: true, findings: newFindings })
         })
         .catch((err) => {
             alert(err);
@@ -34,7 +36,7 @@ class FindingList extends Component {
         axios.get(`/api/photo/${this.props.photo_id}`)
         .then((resp) => {
             const photo = resp.data.photo;
-            this.setState({ selected_font: photo.selected_font.id })
+            this.setState({ loaded_image: true, selected_font: photo.selected_font && photo.selected_font.id })
 
         })
         .catch((err) => {
@@ -67,10 +69,10 @@ class FindingList extends Component {
     }
 
     render() {
-        if (this.state.findings === null) {
+        if (!this.state.loaded_report) {
             return <p className="loading">Loading report...</p>
         }
-        if (this.state.selected_font === null) {
+        if (!this.state.loaded_image) {
             return <p className="loading">Loading photo...</p>
         }
         

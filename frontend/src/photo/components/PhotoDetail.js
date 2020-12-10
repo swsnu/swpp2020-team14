@@ -7,13 +7,15 @@ class PhotoDetail extends Component {
 		image_url: null,
 		memo: '', 
 		selected_font: null,
-		memo_changed: false
+		memo_changed: false,
+		loaded: false
 	}
 
 	onInit() {
 		axios.get(`/api/photo/${this.props.photo_id}`)
 			.then((resp) => {
-				this.setState({ 
+				this.setState({
+					loaded: true, 
 					memo: resp.data.photo.memo,
 					image_url: resp.data.photo.image_url,
 					selected_font: resp.data.photo.selected_font
@@ -52,7 +54,7 @@ class PhotoDetail extends Component {
 	
 
 	render() {
-		if (this.state.selected_font === null) {
+		if (!this.state.loaded) {
 			return <p>Loading photo detail...</p>;
 		}
 
@@ -73,7 +75,7 @@ class PhotoDetail extends Component {
 				</button>
 
 				<div className="selected-font">
-					<p>{this.state.selected_font.name}</p>
+					<p>{this.state.selected_font && this.state.selected_font.name}</p>
 				</div>
 
 				<button 
