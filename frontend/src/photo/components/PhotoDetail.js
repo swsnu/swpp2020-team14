@@ -48,10 +48,8 @@ class PhotoDetail extends Component {
 	}
 
 	onAnalysisButtonClicked = () => {
-		this.props.history.push(`/my-page/photo/${this.props.photo_id}/report`);
-		
+		this.props.history.push(`/photo/${this.props.photo_id}/report`);
 	}
-	
 
 	render() {
 		if (!this.state.loaded) {

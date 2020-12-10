@@ -48,12 +48,12 @@ function App(props) {
             <AuthorizedRoute exact path="/article/:article_id/edit" component={ArticleEditView} />
             <Route exact path="/font" component={FontListView} />
             <Route exact path="/font/:font_id" component={FontItemView} />
-            <AuthorizedRoute exact path="/photo/create" component={PhotoCreateView} />
+
             <AuthorizedRoute exact path="/my-page" component={MyPageView} />
             <AuthorizedRoute exact path="/my-page/photo" component={PhotoListView} />
-            <AuthorizedRoute exact path="/my-page/photo/create" component={PhotoCreateView} />
-            <AuthorizedRoute exact path="/my-page/photo/:photo_id" component={PhotoDetailView} />
-            <AuthorizedRoute exact path="/my-page/photo/:photo_id/report" component={ReportView} />
+            <AuthorizedRoute exact path="/photo/create" component={PhotoCreateView} />
+            <AuthorizedRoute exact path="/photo/:photo_id" component={PhotoDetailView} />
+            <AuthorizedRoute exact path="/photo/:photo_id/report" component={ReportView} />
 
             <UnauthorizedRoute exact path="/signin" component={SigninView} />
             <UnauthorizedRoute exact path="/signup" component={SignupView} />

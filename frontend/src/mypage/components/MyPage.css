@@ -1,0 +1,8 @@
+.my-page > .MuiPaper-root {
+    margin-bottom: 64px;
+    padding: 16px 32px 48px 32px;
+}
+
+.section-title {
+    margin-bottom: 32px;
+}

@@ -7,11 +7,12 @@ import './PhotoList.css';
 class PhotoList extends Component {
     state = {
         is_delete_clicked: false,
-        photos: null
+        photos: null,
+        loaded: false
     }
 
     onInit() {
-        axios.get(`${this.props.fetchEndpoint}`)
+        axios.get(`/api/my-page/photo`)
         .then((resp) => {
             const newPhotos = resp.data.photos.map((photo) => {
                 return {
@@ -21,7 +22,7 @@ class PhotoList extends Component {
                     is_checked: false,
                 };
             })
-            this.setState({ photos: newPhotos })
+            this.setState({ loaded: true, photos: newPhotos })
         })
         .catch((err) => {
               alert(err);
@@ -33,7 +34,7 @@ class PhotoList extends Component {
     }
 
     onPhotoDetailClicked = (photo) => {
-        this.props.history.push(`/my-page/photo/${photo.id}`);
+        this.props.history.push(`/photo/${photo.id}`);
     }
 
     onPhotoChecked = (photo) => {
@@ -84,7 +85,6 @@ class PhotoList extends Component {
             )
         })
 
-
         return (
             <div className='PhotoList'>
                 {this.props.isUploadAvailable ?
@@ -97,4 +97,5 @@ class PhotoList extends Component {
         )
     }
 }
+
 export default withRouter(PhotoList);
