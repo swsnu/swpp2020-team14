@@ -73,7 +73,7 @@ class ArticleDetail extends Component {
     payload.append("article", this.props.article_id);
 
     const job = (target !== -1 ?
-      axios.put(`/api/comment/${content}`, payload) :
+      axios.put(`/api/comment/${target}`, payload) :
       axios.post("/api/comment", payload));
     job.then(this._afterUpdateComment.bind(this))
       .catch((err) => { alert("Error submitting comment: " + err); });

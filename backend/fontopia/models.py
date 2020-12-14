@@ -72,4 +72,4 @@ class Comment(models.Model):
     )
     created_at = models.DateTimeField()
     last_edited_at = models.DateTimeField()
-    contents = models.TextField()
+    content = models.TextField()

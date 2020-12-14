@@ -14,6 +14,9 @@ urlpatterns = [
     path('article/<int:article_id>/like', views.article.APIArticleLike.as_view()),
     path('article/<int:article_id>/comment', views.article.APIComment.as_view()),
 
+    path('comment', views.article.APICommentItem.as_view()),
+    path('comment/<int:comment_id>', views.article.APICommentItem.as_view()),
+
     path('font', views.font.APIFont.as_view()),
     path('font/<int:font_id>', views.font.APIFontItem.as_view()),
     path('photo', views.photo.APIPhoto.as_view()),

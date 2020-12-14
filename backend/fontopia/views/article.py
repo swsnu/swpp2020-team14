@@ -5,7 +5,7 @@ from django.http import JsonResponse, HttpResponseNotFound
 from django.utils.decorators import method_decorator
 from django.core.paginator import Paginator
 
-from fontopia.models import Article
+from fontopia.models import Article, Comment
 from fontopia.utils import date2str, force_login, prepare_put
 
 class APIArticle(View):
@@ -104,9 +104,11 @@ class APIArticleItem(View):
             assert title and content
         except (KeyError, AssertionError):
             return JsonResponse({'success': False, 'error': 'Malformed request'})
+        now = datetime.now(timezone.utc)
 
         a.title = title
         a.content = content
+        a.last_edited_at = now
         a.image_file.delete()
         a.image_file.save('article/attachment', uploaded_image)
         a.save()
@@ -169,6 +171,61 @@ class APIComment(View):
           'author': c.author.first_name,
           'created_at': date2str(c.created_at),
           'last_edited_at': date2str(c.last_edited_at),
-          'content': a.content,
-          'is_owner': (a.author.id == request.user.id)
+          'content': c.content,
+          'is_owner': (c.author.id == request.user.id)
         } for c in cmts]})
+
+
+class APICommentItem(View):
+    @method_decorator([force_login, prepare_put])
+    def post(self, request):
+        try:
+            body = request.POST
+            article_id = body['article']
+            content = body['content']
+        except KeyError:
+            return JsonResponse({'success': False, 'error': 'Malformed request'})
+        now = datetime.now(timezone.utc)
+
+        q = Article.objects.filter(id=article_id)
+        if not q.count():
+            return HttpResponseNotFound()
+        a = q.get()
+        c = Comment.objects.create(content=content, article=a,
+            author=request.user, created_at=now, last_edited_at=now)
+        c.save()
+        return JsonResponse({'success': True, 'id': c.id})
+
+    @method_decorator([force_login, prepare_put])
+    def put(self, request, comment_id=None): # pragma: no cover
+        q = Comment.objects.filter(id=comment_id)
+        if not q.count():
+            return JsonResponse({'success': False, 'error': 'No such comment'})
+        c = q.get()
+        if c.author != request.user:
+            return JsonResponse({'success': False, 'error': 'Author mismatch'})
+
+        try:
+            content = request.PUT['content']
+        except (KeyError, AssertionError):
+            return JsonResponse({'success': False, 'error': 'Malformed request'})
+
+        now = datetime.now(timezone.utc)
+        c.content = content
+        c.last_edited_at = now
+        c.save()
+
+        return JsonResponse({'success': True, 'id': c.id})
+
+    @method_decorator(force_login)
+    def delete(self, request, comment_id=None):
+        q = Comment.objects.filter(id=comment_id)
+        if not q.count():
+            return JsonResponse({'success': False, 'error': 'No such comment'})
+        c = q.get()
+
+        if c.author != request.user:
+            return JsonResponse({'success': False, 'error': 'Author mismatch'})
+
+        c.delete()
+        return JsonResponse({'success': True})
