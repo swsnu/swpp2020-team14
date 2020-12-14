@@ -1,1 +1,16 @@
-/* TODO */
+.row .id {
+    text-align: right;
+}
+
+.row .title {
+    text-align: left;
+}
+
+.row .author {
+    text-align: right;
+    align-items: center;
+}
+
+.row-head {
+    font-weight: bold;
+}

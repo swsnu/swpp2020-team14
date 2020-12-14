@@ -6,7 +6,7 @@ import MyPage from '../components/MyPage';
 class MyPageView extends Component {
   render() {
     return (
-      <div className="my-page">
+      <div className="my-page-wrapper">
         <MyPage />
       </div>
     );

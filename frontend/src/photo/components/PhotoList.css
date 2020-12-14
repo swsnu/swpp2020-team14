@@ -1,7 +1,7 @@
-.Photo {
-    display: inline;
+.photo-list {
+    padding: 32px;
 }
 
-.Photo img {
-    max-height: 100px;
+.tile-wrapper .MuiCheckbox-root {
+    color: white;
 }

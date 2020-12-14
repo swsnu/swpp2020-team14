@@ -1,36 +1,59 @@
+import { Button, ButtonGroup } from '@material-ui/core';
 import React, { Component } from 'react';
+
+const around = 4;
 
 class PageButtonArray extends Component {
   render() {
     const arr = [];
     const H = (i) => ((e) => { this.props.onclick(i); e.preventDefault(); });
-    for (let i = this.props.cur - 5; i <= this.props.cur + 5; ++i) {
-      if (i < 1 || i > this.props.n) continue;
-      arr.push(<button
-        key={i}
-        className={
-        `page-btn ${(i === this.props.cur) ? 'page-btn-cur' : ''}`
-}
-        onClick={H(i)}
-      >
-        {i}
-      </button>);
+
+    if (1 < this.props.cur - around) {
+      arr.push(
+        <Button key="right-gap" className="page-btn" variant={ "outlined" } disabled>
+          …
+        </Button>
+      );
     }
+
+    for (let i = this.props.cur - around; i <= this.props.cur + around; ++i) {
+      if (i < 1 || i > this.props.n) continue;
+      arr.push(
+        <Button
+          key={i}
+          className={`page-btn ${(i === this.props.cur) ? 'page-btn-cur' : ''}`}
+          variant={ (i === this.props.cur) ? "contained" : "outlined" }
+          onClick={H(i)}
+        >
+          {i}
+        </Button>);
+    }
+
+    if (this.props.cur + around < this.props.n) {
+      arr.push(
+        <Button key="right-gap" className="page-btn" variant={ "outlined" } disabled>
+          …
+        </Button>
+      );
+    }
+
     return (
       <div className="page-button-array">
-        <button
-          className="page-btn page-btn-ends"
-          onClick={H(1)}
-        >
-          First
-        </button>
-        {arr}
-        <button
-          className="page-btn page-btn-ends"
-          onClick={H(this.props.n)}
-        >
-          Last
-        </button>
+        <ButtonGroup color="primary">
+          <Button
+            className="page-btn page-btn-ends"
+            onClick={H(1)}
+          >
+            First
+          </Button>
+          {arr}
+          <Button
+            className="page-btn page-btn-ends"
+            onClick={H(this.props.n)}
+          >
+            Last
+          </Button>
+        </ButtonGroup>
       </div>
     );
   }

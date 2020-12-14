@@ -2,16 +2,19 @@ import React, {Component} from 'react';
 import { withRouter } from 'react-router';
 import axios from 'axios';
 
+import { Button, Checkbox, GridList, GridListTile, GridListTileBar, Paper, Typography } from '@material-ui/core';
+
 import './PhotoList.css';
 
 class PhotoList extends Component {
     state = {
         is_delete_clicked: false,
-        photos: null
+        photos: null,
+        loaded: false
     }
 
     onInit() {
-        axios.get(`${this.props.fetchEndpoint}`)
+        axios.get(`/api/my-page/photo` + (this.props.trunc ? `?trunc=${this.props.trunc}` : ''))
         .then((resp) => {
             const newPhotos = resp.data.photos.map((photo) => {
                 return {
@@ -21,7 +24,7 @@ class PhotoList extends Component {
                     is_checked: false,
                 };
             })
-            this.setState({ photos: newPhotos })
+            this.setState({ loaded: true, photos: newPhotos })
         })
         .catch((err) => {
               alert(err);
@@ -33,7 +36,7 @@ class PhotoList extends Component {
     }
 
     onPhotoDetailClicked = (photo) => {
-        this.props.history.push(`/my-page/photo/${photo.id}`);
+        this.props.history.push(`/photo/${photo.id}`);
     }
 
     onPhotoChecked = (photo) => {
@@ -74,27 +77,40 @@ class PhotoList extends Component {
 
         const photos = this.state.photos.map((photo) => {
             return ( 
-                <div className='Photo' key={photo.id}>
-                    <img src={photo.image_url} alt="uploaded" onClick={() => this.onPhotoDetailClicked(photo)}/>
-                    {this.props.isDeleteAvailable && this.state.is_delete_clicked &&
-                    <input type="checkbox" id="delete-checkbox" 
-                        disabled={!this.state.is_delete_clicked}
-                        onClick={() => this.onPhotoChecked(photo)} />}
-                </div>
+                <GridListTile className="tile-wrapper" key={photo.id} cols={1}>
+                    <img
+                        className="tile-img"
+                        src={photo.image_url}
+                        alt="uploaded"
+                        onClick={() => this.onPhotoDetailClicked(photo)}
+                    />
+                    {
+                        this.props.isDeleteAvailable && this.state.is_delete_clicked &&
+                        <GridListTileBar actionIcon={
+                            <Checkbox color="primary.light" id="delete-checkbox" 
+                                onClick={() => this.onPhotoChecked(photo)} />
+                        } />
+                    }
+                </GridListTile>
             )
         })
 
-
         return (
-            <div className='PhotoList'>
+            <Paper elevation={2} className="photo-list">
                 {this.props.isUploadAvailable ?
-                <button id="upload-button" onClick={() => this.onUploadClicked()}>Upload New</button> : null}
+                <Button id="upload-button" onClick={() => this.onUploadClicked()}>Upload New</Button> : null}
+
+                {this.props.isUploadAvailable && this.props.isDeleteAvailable &&
+                <Typography component="span">&middot;</Typography>}
 
                 {this.props.isDeleteAvailable ?
-                <button id="delete-button" onClick={() => this.onDeleteClicked()}>Delete</button> : null}
-                <div className="photos">{photos}</div>
-            </div>
+                <Button id="delete-button" onClick={() => this.onDeleteClicked()}>Delete</Button> : null}
+                <GridList cellHeight={160} cols={3} className="photo-grid">
+                    {photos}
+                </GridList>
+            </Paper>
         )
     }
 }
+
 export default withRouter(PhotoList);

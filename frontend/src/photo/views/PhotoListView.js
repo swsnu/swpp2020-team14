@@ -7,7 +7,7 @@ class PhotoListView extends Component {
   render() {
     return (
       <div className="photo-list-view">
-        <PhotoList fetchEndpoint="/api/photo" isUploadAvailable isDeleteAvailable />
+        <PhotoList fetchEndpoint="/api/my-page/photo" isUploadAvailable isDeleteAvailable />
       </div>
     );
   }
