@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
+import { Button } from '@material-ui/core';
 
 import axios from 'axios';
 
@@ -106,6 +107,11 @@ class ArticleDetail extends Component {
 
     const a = this.state.article;
     return (<div className="article-detail">
+      {a.is_owner && <div className="control-buttons">
+        <Button onClick={()=>this.onEdit()} className="edit">Edit</Button>
+        <Button onClick={()=>this.onDelete()} className="delete" disabled={this.state.is_deleting}>Delete</Button>
+      </div>}
+
       <div className="title">
         <h3>{a.title}</h3>
       </div>
@@ -126,15 +132,11 @@ class ArticleDetail extends Component {
       <div className="content">{a.content}</div>
 
       <div className="likes">
-        <button onClick={()=>this.onLike()} className={a.is_liked ? "liked" : "not-liked"}
-          disabled={this.state.is_sending_like}>{a.is_liked ? "Unlike" : "Like"}</button>
+        <Button onClick={()=>this.onLike()} className={a.is_liked ? "liked" : "not-liked"}
+          color="primary" variant="contained"
+          disabled={this.state.is_sending_like}>{a.is_liked ? "Unlike" : "Like"}</Button>
         <span className="like-cnt">{a.like_count} {a.like_count === 1 ? "Like" : "Likes"}</span>
       </div>
-
-      {a.is_owner && <div className="control-buttons">
-        <button onClick={()=>this.onEdit()} className="edit">Edit</button>
-        <button onClick={()=>this.onDelete()} className="delete" disabled={this.state.is_deleting}>Delete</button>
-      </div>}
 
       <CommentList comments={this.state.comments}
         onDelete={this.onDeleteComment.bind(this)}

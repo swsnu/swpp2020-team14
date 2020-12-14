@@ -42,11 +42,20 @@ class ArticleEdit extends Component {
       alert("Empty title or content; please fill in both.");
       return;
     }
+    if (this.state.originalImage === null && this.state.chosen_file === null) {
+      alert("Please attach a photo.");
+      return;
+    }
+
     this.setState({ is_submitting: true });
     const payload = new FormData();
     payload.append('title', this.state.title);
     payload.append('content', this.state.content);
-    payload.append('image', this.imgInput.current.files[0]);
+    (this.state.chosen_file !== null) ? (
+      payload.append('image', this.imgInput.current.files[0])
+    ) : (
+      payload.append('image', '')
+    );
 
     (async ()=>{
       await axios.get('/api/token');

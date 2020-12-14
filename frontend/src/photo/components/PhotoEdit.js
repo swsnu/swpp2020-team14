@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { withRouter } from 'react-router-dom';
+import { Button, Grid, TextField, Typography } from '@material-ui/core';
 
 class PhotoEdit extends Component {
   state = {
     originalPhoto: null,
+    originalImage: null,
     memo: '',
-    is_submitting: false
+    is_submitting: false,
+    chosen_file: null
   }
 
   constructor(props) {
@@ -19,7 +22,7 @@ class PhotoEdit extends Component {
     axios.get(`/api/photo/${this.props.originalId}`)
     .then((resp) => {
       const p = resp.data.photo;
-      this.setState({ originalPhoto: p, memo: p.memo });
+      this.setState({ originalPhoto: p, memo: p.memo, originalImage: p.image_url });
     }).catch((err) => {
       alert("Error loading photo: " + err);
       this.props.history.goBack();
@@ -63,23 +66,53 @@ class PhotoEdit extends Component {
     this.setState({ [target.name]: target.value });
   }
 
+  handleFileChange() {
+    this.setState({ chosen_file: ((this.imgInput.current && this.imgInput.current.files[0]) || null), originalImage: null});
+  }
+
   render() {
     if (this.props.originalId !== -1 && this.state.originalPhoto === null) {
       return <p>Loading photo...</p>;
     }
+
+    const image_area = (this.state.originalImage === null) ? (
+      (this.state.chosen_file === null) ? (
+        <div className="image-empty">
+          <Typography variant="overline">Click here to<br />choose image</Typography>
+        </div>
+      ) : (
+        <img className="image-preview" src={ URL.createObjectURL(this.state.chosen_file) } />
+      )
+    ) : (
+      <img className="image-preview" src={ this.state.originalImage } alt="photo attachment"/>
+    );
+
+
     return (<div className="photo-edit">
       <form onSubmit={this.onSubmit.bind(this)}>
-        <div className="row-title">
-        </div>
         <div className="row-file">
-          <input type="file" ref={this.imgInput} accept="image/jpeg,image/png" />
+          <Grid container className="image-area-wrapper" alignItems="center" justify="center">
+            <label className="image-area" htmlFor="file">{ image_area }</label>
+          </Grid>
+          <Button
+            className="btn-reset" variant="contained" size="small"
+            disabled={ this.state.originalImage === null && this.state.chosen_file === null }
+            onClick={ ()=>{ this.imgInput.current && (this.imgInput.current.value = ''); this.handleFileChange(); } }>
+            Reset image?
+          </Button>
+          <input hidden id="file" type="file" ref={ this.imgInput } accept="image/jpeg,image/png"
+            onChange={ this.handleFileChange.bind(this) }/>
         </div>
         <div className="row-content">
-          <textarea className="memo" value={this.state.memo}
-            name="memo" onChange={this.handleChange.bind(this)} />
+          <TextField multiline fullWidth margin="normal" className="memo" value={this.state.memo} rows={1} rowsMax={10}
+            label="Memo" name="memo" onChange={this.handleChange.bind(this)} />
         </div>
         <div className="row-submit">
-          <input type="submit" value="Submit" />
+          <Button
+            type="submit" color="primary" variant="contained"
+            onClick={ this.onSubmit.bind(this) }>
+            Submit
+          </Button>
         </div>
       </form>
     </div>);

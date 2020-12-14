@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Grid, TextField, Typography } from '@material-ui/core';
+import { Button, TextField} from '@material-ui/core';
 
 import './CommentList.css';
 

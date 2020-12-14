@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
+import { Button, TextField} from '@material-ui/core';
 import axios from 'axios';
 
 class PhotoDetail extends Component {
@@ -41,6 +42,7 @@ class PhotoDetail extends Component {
 		axios.patch(`/api/photo/${this.props.photo_id}`, payload)
 			.then((resp) => {
 				this.setState({ memo_changed: false });
+				alert("Memo Updated!");
 			})
 			.catch((err) => {
 				alert(err);
@@ -60,27 +62,26 @@ class PhotoDetail extends Component {
 			<div className="photo-detail">
 				<img src={this.state.image_url} alt="uploaded"/>
 
-				<input className="memo" 
-					type="text" 
-					value={this.state.memo}
-					onChange={this.onMemoChanged} />
+				<TextField multiline fullWidth margin="normal" className="memo" 
+					value={this.state.memo} rows={1} rowsMax={10}
+					onChange={this.onMemoChanged.bind(this)} />
 
-				<button 
+				<Button 
 					className="update-memo-button" 
 					onClick={() => this.onUpdateMemoChanged()}
 					disabled={!this.state.memo_changed}>
 					Update Memo
-				</button>
+				</Button>
 
 				<div className="selected-font">
 					<p>{this.state.selected_font && this.state.selected_font.name}</p>
 				</div>
 
-				<button 
+				<Button 
 					className="analysis-button" 
 					onClick={() => this.onAnalysisButtonClicked()} >
 					Analysis!
-				</button>
+				</Button>
 			</div>
 		);
 	}
