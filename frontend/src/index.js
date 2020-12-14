@@ -1,22 +1,27 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import { createStore, combineReducers } from 'redux';
+import { Provider } from 'react-redux';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
-import { createStore, combineReducers } from 'redux';
-import { Provider } from 'react-redux';
-
 import loginReducer from './sign/reducers/reducers';
+import { ThemeProvider } from '@material-ui/core';
+import { getTheme } from './theme';
+
 const reducer = combineReducers({
-  login: loginReducer
+  login: loginReducer,
 });
+
 const store = createStore(reducer);
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <ThemeProvider theme={ getTheme() }>
+      <App />
+    </ThemeProvider>
   </Provider>,
-  document.getElementById('root')
+  document.getElementById('root'),
 );
 
 // If you want to start measuring performance in your app, pass a function

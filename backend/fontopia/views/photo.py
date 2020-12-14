@@ -6,6 +6,7 @@ from django.core.files.images import get_image_dimensions
 
 from fontopia.models import Photo, Font
 from fontopia.utils import date2str, force_login, prepare_patch
+from fontopia.ml import inference
 
 from datetime import datetime, timezone
 
@@ -21,36 +22,48 @@ class APIPhoto(View):
         now = datetime.now(timezone.utc)
         width, height = get_image_dimensions(uploaded_image)
         metadata = {'data': 'data'}
-        f = Font.objects.get(id=1)
 
         p = Photo.objects.create(author=request.user, memo=memo,
         is_analyzed=False, analyzed_at=now,
         width=width, height=height,
-        selected_font=f, metadata=metadata)
+        selected_font=None, metadata=metadata)
 
         p.save()
         p.image_file.save('photo', uploaded_image)
+
+        inference.perform_inference(p)
+
         return JsonResponse({'success': True, 'id': p.id})
 
 class APIPhotoMy(View):
     @method_decorator(force_login)
     def get(self, request):
         photos_my = Photo.objects.filter(author=request.user)
-        resp = [{
-            'id': p.id,
-            'memo': p.memo,
-            'image_url': p.image_file.url,
-            'selected_font': {
-                'id': p.selected_font.id,
-                'name': p.selected_font.name,
-                'manufacturer_name': p.selected_font.manufacturer,
-                'license': {
-                    'is_free': p.selected_font.is_free,
-                    'type': p.selected_font.license_summary
-                },
-                'view_count': p.selected_font.view_count,
-            },
-            } for p in photos_my]
+        photos_my = photos_my.select_related('selected_font')
+
+        n = None
+        try:
+            n = int(request.GET['trunc'])
+            assert 1 <= n
+        except (KeyError, ValueError, AssertionError):
+            n = None
+
+        resp = [
+            {
+                'id': p.id,
+                'memo': p.memo,
+                'image_url': p.image_file.url,
+                'selected_font': {
+                    'id': p.selected_font.id,
+                    'name': p.selected_font.name,
+                    'manufacturer_name': p.selected_font.manufacturer,
+                    'license': {
+                        'is_free': p.selected_font.is_free,
+                        'type': p.selected_font.license_summary
+                    },
+                    'view_count': p.selected_font.view_count,
+                } if p.selected_font else None,
+            } for p in photos_my[:n]]
 
         return JsonResponse(data={
             'photos': resp,
@@ -78,7 +91,7 @@ class APIPhotoItem(View):
                     'type': p.selected_font.license_summary
                 },
                 'view_count': p.selected_font.view_count,
-            },
+            } if p.selected_font else None,
         }})
 
     @method_decorator([force_login, prepare_patch])

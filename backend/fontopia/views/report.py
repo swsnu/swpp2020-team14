@@ -6,8 +6,23 @@ from fontopia.models import Finding, Font, Photo
 
 class APIReport(View):
     def get(self, request, photo_id=None):
-        
         target_photo = Photo.objects.get(id=photo_id)
+        if not target_photo.is_analyzed:
+            return JsonResponse(data={
+                'findings': None,
+            })
+
+        qry = (
+            Finding.objects.filter(photo=target_photo)
+            .order_by('-probability')
+            .select_related('font')
+        )
+
+        n = 20
+        try:
+            n = int(request.GET['n'])
+            assert 1 <= n
+        except (KeyError, ValueError, AssertionError): pass
 
         resp = [{
             'id': f.id,
@@ -22,7 +37,7 @@ class APIReport(View):
                 'view_count': f.font.view_count,
             },
             'probability': f.probability,
-            } for f in Finding.objects.filter(photo=target_photo)]
+            } for f in qry[:n]]
 
         return JsonResponse(data={
             'findings': resp,

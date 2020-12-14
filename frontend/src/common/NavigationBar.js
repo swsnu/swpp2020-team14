@@ -1,11 +1,25 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import axios from 'axios';
+import { AppBar, Button, ButtonGroup, IconButton, Menu, MenuItem, Tab, Tabs, Toolbar, Typography } from '@material-ui/core';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
 import { updateLogin } from '../sign/actions/actions';
 
+import './NavigationBar.css';
+
 class NavigationBar extends Component {
+  constructor () {
+    super();
+    this.state = {
+      profileOpen: false,
+      menuOpen: false
+    };
+    this.profileAnchorRef = React.createRef();
+    this.menuAnchorRef = React.createRef();
+  }
+
   onSignout() {
     (async () => {
       await axios.get('/api/token')
@@ -17,29 +31,48 @@ class NavigationBar extends Component {
     });
   }
 
+  onProfileOpen() { this.setState({ profileOpen: !this.state.profileOpen }); }
+  onProfileClose() { this.setState({ profileOpen: false }); }
+
   render() {
     const { logged_in, user_info } = this.props.login;
-    return (<div className="navi">
-      <img src="" alt="Logo" />
-      <Link replace to="/article"><button className="btn btn-article">Articles</button></Link>
-      <Link replace to="/my-page"><button className="btn btn-mypage">My Page</button></Link>
-      <Link replace to="/font"><button className="btn btn-font">Font</button></Link>
-      <div className="greeting">{
-        (logged_in) ? (
-          <div className="greeting-logged-in">
-            <div className="username">Hello, { user_info.nickname }.</div>
-            <div className="btn-signout"><button onClick={ this.onSignout.bind(this) }>Sign out</button></div>
-          </div>
-        ) : (
-          <div className="greeting-not-logged-in">
-            <div className="msg-signin">Please sign in.</div>
-            <span className="btn-signin"><Link to="/signin">Sign in</Link></span>
-            &nbsp;/&nbsp;
-            <span className="btn-signup"><Link to="/signup">Sign up</Link></span>
-          </div>
-        )
-      }</div>
-    </div>);
+    let profile_area = null;
+
+    if (logged_in) {
+      profile_area = (<div className="profile-auth">
+        <Typography component="span" ><b>{ user_info.nickname }</b></Typography>
+        <IconButton ref={ this.profileAnchorRef } onClick={ () => this.onProfileOpen() }><AccountCircleIcon /></IconButton>
+        <Menu keepMounted
+          anchorEl={ this.state.profileOpen ? this.profileAnchorRef.current : null }
+          open={ this.state.profileOpen }
+          onClose={ this.onProfileClose.bind(this) }>
+          <MenuItem onClick={ ()=>{ this.onProfileClose(); this.onSignout(); } }>Sign out</MenuItem>
+        </Menu>
+      </div>);
+    } else {
+      profile_area = (<div className="profile-unauth">
+        <Button color="inherit" onClick={ ()=>this.props.history.push('/signin') }>Sign in</Button>
+        <Typography component="span">&middot;</Typography>
+        <Button color="inherit" onClick={ ()=>this.props.history.push('/signup') }>Sign up</Button>
+      </div>)
+    }
+
+    const current_page_name = this.props.history.location.pathname.split('/')[1];
+    const current_tab_idx = ['article', 'font', 'my-page'].indexOf(current_page_name);
+
+    return (<AppBar className="navbar" position="static">
+      <Toolbar variant="dense">
+        <div className="logo">
+          <Typography variant="h5" onClick={ ()=>this.props.history.replace('/') }>Fontopia</Typography>
+        </div>
+        <Tabs className="menu-tabs" aria-label="simple tabs example"
+          value={ (current_tab_idx === -1) ? false : current_tab_idx } >
+          <Tab label="Article" onClick={ ()=>this.props.history.push('/article') } />
+          <Tab label="Font" onClick={ ()=>this.props.history.push('/font') } />
+          { logged_in && <Tab label="My page" onClick={ ()=>this.props.history.push('/my-page') } /> }
+        </Tabs>
+        { profile_area }
+      </Toolbar></AppBar>);
   }
 }
 
@@ -51,4 +84,4 @@ const mapDispatchToProps = dispatch => ({
   updateLogin: (data) => dispatch(updateLogin(data))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(NavigationBar));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(NavigationBar));

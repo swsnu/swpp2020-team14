@@ -24,7 +24,8 @@ class Photo(models.Model):
     analyzed_at = models.DateTimeField()
     selected_font = models.ForeignKey(
         Font,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        null=True
     )
     memo = models.TextField()
     metadata = models.JSONField()

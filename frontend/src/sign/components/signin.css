@@ -1,15 +1,10 @@
-.signin {
-    display: inline-table;
-}
-
-.row-email,.row-password {
-    display: table-row;
-}
-
-.hint {
-    display: table-cell;
-}
-
 .row-error-message {
-    color: red;
+    display: inline-flex;
+    color: tomato;
+    align-items: center;
+}
+
+.row {
+    margin-top: 16px;
+    margin-bottom: 8px;
 }

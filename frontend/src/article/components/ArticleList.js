@@ -5,6 +5,7 @@ import axios from 'axios';
 import PageButtonArray from '../../common/pagination';
 
 import './ArticleList.css';
+import { Grid, List, ListItem, ListItemText, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@material-ui/core';
 
 class ArticleList extends Component {
   state = {
@@ -13,9 +14,7 @@ class ArticleList extends Component {
     cur: -1,    // current page
   }
 
-  onInit() {
-    this.onBrowsePage(1);
-  }
+  onInit() { this.onBrowsePage(1); }
 
   onBrowsePage(n) {
     this.setState({list: null});
@@ -32,9 +31,7 @@ class ArticleList extends Component {
       });
   }
 
-  componentDidMount() {
-    this.onInit();
-  }
+  componentDidMount() { this.onInit(); }
 
   render() {
     if (this.state.list === null) {
@@ -43,30 +40,26 @@ class ArticleList extends Component {
 
     const items = this.state.list.map(a => {
       const title_btn = (a.comment_count > 0 ?
-        (<button onClick={(e)=>this.props.history.push(`/article/${a.id}`)}>
-            <b>{a.title}</b> [{a.comment_count}]
-        </button>) :
-        (<button onClick={(e)=>this.props.history.push(`/article/${a.id}`)}>
-          {a.title}
-        </button>));
-      return <tr key={a.id}>
-        <td className="id">{a.id}</td>
-        <td className="title">{title_btn}</td>
-        <td className="author">{a.author}</td>
-      </tr>
+        (<Typography variant="h5"><b>{a.title}</b> [{a.comment_count}]</Typography>) :
+        (<Typography variant="h5">{a.title}</Typography>));
+
+      return (<ListItem key={a.id} button onClick={(e)=>this.props.history.push(`/article/${a.id}`)}>
+        <Grid className="row" container direction="row" alignItems="center" spacing={3}>
+          <Grid item container xs={1} justify="flex-end" className="td id">
+            <Typography>#{a.id}</Typography>
+          </Grid>
+          <Grid item xs={8} className="td title">
+            <ListItemText primary={ title_btn } secondary="preview" />
+          </Grid>
+          <Grid item container xs={3} justify="flex-end" className="td author">
+            <Typography>{a.author}</Typography>
+          </Grid>
+        </Grid>
+      </ListItem>);
     });
 
     return <div className="article-list">
-      <table className="article-list-table">
-        <thead>
-          <tr>
-            <th className="id">#</th>
-            <th className="title">Title</th>
-            <th className="author">Author</th>
-          </tr>
-        </thead>
-        <tbody>{items}</tbody>
-      </table>
+      <List>{items}</List>
       <PageButtonArray n={this.state.pages}
         cur={this.state.cur} onclick={(i)=>this.onBrowsePage(i)} />
     </div>

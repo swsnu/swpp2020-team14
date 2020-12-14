@@ -48,12 +48,16 @@ def _perform_inference_actual(img):
         patch_range = w - h
         patch_bound_list = np.random.randint(0, 1+patch_range, size=1)
 
+        patch_list = []
         for patch_bound in patch_bound_list:
 # batch & channel indices
-            patch = arr[None, :, patch_bound:patch_bound+h, None]
-            patch = patch.astype(np.float32) / 255
-
-        res = my_model.predict(patch)
+            patch = arr[None, None, :, patch_bound:patch_bound+h]
+            patch_list.append(patch)
+        
+        patch_batch = np.concatenate(patch_list, axis=0).astype(np.float32) / 255
+        patch_batch -= patch_batch.mean(axis=(2, 3))
+        res = my_model(patch_batch)
+        res = res.mean(dim=0)
     return res
 
 def _put_inference_result(photo, probs):
@@ -77,6 +81,8 @@ def _put_inference_result(photo, probs):
             photo=photo,
             font=fnt,
             probability=prob)
+    photo.is_analyzed = True
+    photo.save()
 
 def _perform_inference_and_put(photo):
     probs = _perform_inference_actual(Image.open(photo.image_file))

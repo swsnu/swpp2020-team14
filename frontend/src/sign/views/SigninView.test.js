@@ -45,6 +45,4 @@ describe('<LoginPage />', () => {
 		mount(loginPage)
 	});
 
-	});
-
-  })
+});

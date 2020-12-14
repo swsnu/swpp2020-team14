@@ -10,7 +10,7 @@ class FontLicenseDetail extends Component {
       </div>
     );
   }
-};
+}
 
 class FontDetail extends Component {
   state = {
@@ -61,6 +61,6 @@ class FontDetail extends Component {
     </div>
     );
   }
-};
+}
 
 export default FontDetail;

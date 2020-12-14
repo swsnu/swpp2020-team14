@@ -1,20 +1,27 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+
+import { createShallow, createMount } from '@material-ui/core/test-utils';
 
 import PageButtonArray from './pagination.js';
 
 describe('PageButtonArray', () => {
-  let comp, onclick;
+  const shallow = createShallow({ disableLifecycleMethods: false });
+  const mount = createMount();
+
+  let comp; let onclick;
   beforeAll(() => {
     onclick = jest.fn();
-    comp = shallow(<PageButtonArray
-      cur={38} n={40} onclick={onclick} />);
+    comp = mount(<PageButtonArray
+      cur={38}
+      n={40}
+      onclick={onclick}
+    />);
   });
   afterEach(() => jest.clearAllMocks());
 
   it('should display current page button', () => {
     const btns = comp.find('button');
-    const cur_page = btns.filterWhere(x => x.text() === "38");
+    const cur_page = btns.filterWhere((x) => x.text() === '38');
     expect(cur_page.length).toBe(1);
   });
 
@@ -22,12 +29,11 @@ describe('PageButtonArray', () => {
     const btns = comp.find('button.page-btn-ends');
     expect(btns.length).toBe(2);
   });
-  
+
   it('should call callback', async () => {
-    const btn = comp.find('button').filterWhere(x => x.text() === "38");
-    btn.simulate("click", { preventDefault: ()=>{} });
-    while (onclick.mock.calls.length === 0)
-      await new Promise(x => setTimeout(x, 100));
+    const btn = comp.find('button').filterWhere((x) => x.text() === '38');
+    btn.simulate('click', { preventDefault: () => {} });
+    while (onclick.mock.calls.length === 0) await new Promise((x) => setTimeout(x, 100));
     expect(onclick).toHaveBeenLastCalledWith(38);
   });
 });

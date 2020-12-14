@@ -1,0 +1,19 @@
+.logo {
+    margin-right: 16px;
+}
+
+.logo h5 {
+    cursor: pointer;
+}
+
+.menu-tabs {
+    flex-grow: 1;
+}
+
+.profile-greeting {
+    padding-left: 16px;
+}
+
+.profile-unauth {
+    display: inline-block;
+}
