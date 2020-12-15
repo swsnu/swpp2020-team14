@@ -15,11 +15,25 @@ class APISignup(View):
             nickname = query['nickname']
         except KeyError:
             return HttpResponse("Malformed sign-up request", status=400)
-        u = User.objects.create_user(
-            username=email,
-            email=email,
-            password=password,
-            first_name=nickname)
+
+        print(email, password, nickname)
+        user = User.objects.filter(email=email)
+        if user.count():
+            return HttpResponse("This email has already signed up.", status=400)
+
+        user = User.objects.filter(first_name=nickname)
+        if user.count():
+            return HttpResponse("Please use another nickname.", status=400)
+
+        try:
+            u = User.objects.create_user(
+                username=email,
+                email=email,
+                password=password,
+                first_name=nickname)
+        except:
+            return HttpResponse("Unknown error occured", status=400)
+
         u.save()
         return HttpResponse()
 

@@ -3,6 +3,7 @@ import { withRouter } from 'react-router-dom';
 import Signup from '../components/signup';
 
 class SignupView extends Component {
+
   render() {
     return <Signup />;
   }

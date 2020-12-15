@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import axios from 'axios';
+import { Button, TextField, FormHelperText } from '@material-ui/core';
+import ErrorIcon from '@material-ui/icons/Error';
 
 import './signup.css';
 
@@ -31,35 +33,38 @@ class Signup extends Component {
       });
       alert('Signup success.\nNow please login.');
       this.props.history.replace('/signin');
-    })().catch((err) => this.setState({ errorMessage: err.message }));
+    })().catch((err) => {
+      if (err.response) {
+        this.setState({ errorMessage: err.response.data });
+      } else {
+        this.setState({ errorMessage: err.message });
+      }
+    });
   }
 
   render() {
     return (
       <div className="signup">
         <form onSubmit={this.onSubmit.bind(this)}>
-          <div className="row-email">
-            <span className="hint hint-email">Email</span>
-            <input type="email" name="email" onChange={this.handleChange.bind(this)} />
-          </div>
-          <div className="row-password">
-            <span className="hint hint-password">Password</span>
-            <input type="password" name="password" onChange={this.handleChange.bind(this)} />
-          </div>
-          <div className="row-nickname">
-            <span className="hint hint-nickname">Nickname</span>
-            <input type="text" name="nickname" onChange={this.handleChange.bind(this)} />
+          <TextField margin="normal" variant="filled" type="email" required fullWidth
+            label="Email" name="email" value={ this.state.email } onChange={ this.handleChange.bind(this) } />
+          <TextField margin="normal" variant="filled" type="password" required fullWidth
+            label="Password" name="password" value={ this.state.password } onChange={ this.handleChange.bind(this) } />
+          <TextField margin="normal" variant="filled" type="nickname" required fullWidth
+            label="Nickname" name="nickname" value={ this.state.nickname } onChange={ this.handleChange.bind(this) } />
+          <div className="row-submit">
+            <Button color="primary" fullWidth variant="contained" type="submit">Sign up</Button>
           </div>
           {this.state.errorMessage !== null
           && (
           <div className="row-error-message">
-            <span className="icon">⚠&nbsp;</span>
-            <span className="error-message">{ this.state.errorMessage }</span>
+            {this.state.errorMessage !== null &&
+              <div className="row row-error-message">
+                <ErrorIcon />&nbsp;<span>{ this.state.errorMessage }</span>
+              </div>}
           </div>
           )}
-          <div className="row-submit">
-            <button type="submit">Sign up</button>
-          </div>
+          
         </form>
       </div>
     );
