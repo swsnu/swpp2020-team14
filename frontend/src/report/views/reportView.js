@@ -10,8 +10,7 @@ class ReportView extends Component {
       <div className="report-view">
         <button
           className="back"
-          onClick={(e) => this.props.history.push(`/my-page/photo/${this.props.match.params.photo_id}`)}
-        >
+          onClick={() => this.props.history.replace(`/photo/${this.props.match.params.photo_id}`)}>
           Back
         </button>
         <PhotoReport photo_id={this.props.match.params.photo_id} />

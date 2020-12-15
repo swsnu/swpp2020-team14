@@ -35,10 +35,6 @@ class PhotoEdit extends Component {
 
   onSubmit(event) {
     event.preventDefault();
-    if (this.state.memo === "") {
-      alert("Empty memo; please fill in.");
-      return;
-    }
     this.setState({ is_submitting: true });
     const payload = new FormData();
     payload.append('memo', this.state.memo);
@@ -53,7 +49,8 @@ class PhotoEdit extends Component {
       if (resp.data.success !== true) throw new Error(resp.data.error);
       if (this.props.originalId !== -1)
         this.props.history.goBack();
-      this.props.history.replace(`/my-page/photo/`);
+      this.props.history.push(`/photo/${resp.data.id}`);
+      
     })().catch((err) => {
       this.setState({ is_submitting: false });
       alert("Error saving photo: " + err.name + ": " + err.message);
