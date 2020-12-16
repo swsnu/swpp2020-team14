@@ -10,8 +10,13 @@ class FontItem extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isExpanded: !!this.props.expanded
+            isExpanded: !!this.props.expanded,
+            isMounted: false
         };
+    }
+
+    componentDidMount() {
+        setTimeout(() => this.setState({ isMounted: true }), 10);
     }
 
     handleChange(e, status) { this.setState({ isExpanded: status }); }
@@ -24,7 +29,7 @@ class FontItem extends Component {
         const prob_str = (prob_actual * 100).toFixed(2) + '%';
 
         const r = 0.01;
-        const prob_revised = r + (1-r) * prob_actual;
+        const prob_revised = (this.state.isMounted ? (r + (1-r) * prob_actual) : r);
         const prob_revised_str = (prob_revised * 100).toFixed(2) + '%';
 
         return (<Accordion className="font-item"
