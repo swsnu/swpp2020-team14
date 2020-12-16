@@ -18,6 +18,7 @@ urlpatterns = [
     path('comment/<int:comment_id>', views.article.APICommentItem.as_view()),
 
     path('font', views.font.APIFont.as_view()),
+    path('font/most-viewed', views.font.APIFontMostViewed.as_view()),
     path('font/<int:font_id>', views.font.APIFontItem.as_view()),
     path('photo', views.photo.APIPhoto.as_view()),
     path('photo/<int:photo_id>', views.photo.APIPhotoItem.as_view()),
