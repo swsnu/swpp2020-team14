@@ -1,48 +1,32 @@
-import React, { Component } from 'react';
-import { Provider, connect } from 'react-redux';
-import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
+import React from 'react';
+import { shallow, mount } from 'enzyme';
+import signin from '../components/signin';
+import SigninView from './SigninView';
 import axios from 'axios';
 
-import Signin from '../components/signin';
-import SigninView from './SigninView';
+describe("SigninView", () => {
+  afterEach(() => jest.clearAllMocks());
 
-import { updateLogin } from '../actions/actions';
-import { mount } from 'enzyme';
+  it('should call component properly', () => {
+    const comp = shallow(<SigninView.WrappedComponent />);
+    const sn = comp.find(signin);
+    expect(sn.length).toBe(1); 
+  })
 
-jest.mock('../actions/actions')
-jest.mock('axios')
+  it('should submit signin form', async () => {
+    let func = jest.fn()
+    const comp = mount(<SigninView.WrappedComponent />)
+    const form = comp.find(".signin form");
+    comp.state().email = "TEST_EMAIL"
+    comp.state().password = "TEST_PASSWORD"
+    expect(form.length).toBe(1);
+    axios.get = jest.fn(url => 0);
+    axios.post = jest.fn((url, data) => {"hello"});
 
-describe('<LoginPage />', () => {
-	let loginPage
-	beforeEach(() => {
-		const UnauthorizedRoute = ({ component, ...rest}) => {
-			if (props.login.logged_in === false) {
-			  return <Route {...rest} component={ component } />;
-			}
-			return <Redirect to="/" />;
-      };
-      
-	  loginPage = (
-      <UnauthorizedRoute exact path="/signin" component={SigninView} />
-	  );
-	  updateLogin.mockImplementationOnce((data) => { return dispatch => {}; });
-	})
-  
-	afterEach(() => { jest.clearAllMocks() });
-  
-	it(`should render LoginPage`, () => {
-	  const components = mount(loginPage);
-	  const wrapper = components.find('Signin');
-	  expect(wrapper.length).toBe(1);
-	})
-  
-	it('should attempt to fetch token', (done) => {
-		axios.get.mockImplementationOnce((url) => new Promise((resv, rej) => {
-				expect(url).toEqual(`/api/token`);
-				rej(); done();
-		}));
+    await comp.instance().loginAttempt({email: "TEST_EMAIL", password: "TEST_PASSWORD"})
+    await comp.instance().loginAttempt({email: "", password: ""})
 
-		mount(loginPage)
-	});
-
+    
+    // expect(func).toHaveBeenCalledWith({email: "TEST_EMAIL", password: "TEST_PASSWORD"})
+  })
 });
