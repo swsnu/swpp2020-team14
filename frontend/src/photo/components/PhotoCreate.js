@@ -16,6 +16,12 @@ class PhotoEdit extends Component {
 
   onSubmit(event) {
     event.preventDefault();
+
+    if (this.state.chosen_file === null) {
+      alert("Please attach a photo.");
+      return;
+    }
+
     this.setState({ is_submitting: true });
     const payload = new FormData();
     payload.append('memo', this.state.memo);
