@@ -1,10 +1,21 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import PhotoEdit from '../components/PhotoEdit';
+import { Paper, Typography } from '@material-ui/core';
+
+import PhotoCreate from '../components/PhotoCreate';
+
+import './PhotoCreateView.css';
 
 class PhotoCreateView extends Component {
   render() {
-    return <PhotoEdit originalId={-1} />;
+    return (
+      <Paper className="photo-create-wrapper">
+        <Typography variant="h4">
+          Font recognition
+        </Typography>
+        <PhotoCreate originalId={-1} />
+      </Paper>
+    );
   }
 }
 

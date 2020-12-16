@@ -58,7 +58,7 @@ class NavigationBar extends Component {
     }
 
     const current_page_name = this.props.history.location.pathname.split('/')[1];
-    const current_tab_idx = ['article', 'font', 'my-page'].indexOf(current_page_name);
+    const current_tab_idx = ['photo', 'article', 'font', 'my-page'].indexOf(current_page_name);
 
     return (<AppBar className="navbar" position="static">
       <Toolbar variant="dense">
@@ -67,6 +67,7 @@ class NavigationBar extends Component {
         </div>
         <Tabs className="menu-tabs" aria-label="simple tabs example"
           value={ (current_tab_idx === -1) ? false : current_tab_idx } >
+          <Tab label="Photo" onClick={ ()=>this.props.history.push('/photo/create') } />
           <Tab label="Article" onClick={ ()=>this.props.history.push('/article') } />
           <Tab label="Font" onClick={ ()=>this.props.history.push('/font') } />
           { logged_in && <Tab label="My page" onClick={ ()=>this.props.history.push('/my-page') } /> }

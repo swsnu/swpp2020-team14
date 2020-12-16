@@ -35,8 +35,11 @@ class APIFontItem(View):
         if not len(q):
             return HttpResponseNotFound()
 
+        if request.user.is_authenticated:
+            q = q.prefetch_related('similars')
+
         f = q.get()
-        return JsonResponse(data={
+        response = {
             'id': f.id,
             'name': f.name,
             'manufacturer_name': f.manufacturer,
@@ -46,5 +49,12 @@ class APIFontItem(View):
                 'detail': f.license_detail,
             },
             'view_count': f.view_count
-        })
+        }
 
+        if request.user.is_authenticated:
+            response['similars'] = [{
+                'id': s.id,
+                'name': s.name
+            } for s in f.similars.all()]
+
+        return JsonResponse(data=response)

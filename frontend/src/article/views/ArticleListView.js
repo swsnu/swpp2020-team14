@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Button } from '@material-ui/core';
+import { Button, Paper, Typography } from '@material-ui/core';
 
 import ArticleList from '../components/ArticleList';
 
@@ -9,7 +9,8 @@ import './ArticleListView.css';
 class ArticleListView extends Component {
   render() {
     return (
-      <div className="article-list-view">
+      <Paper className="article-list-view">
+        <Typography variant="h4">Recent Articles</Typography>
         <div className="row-create">
           <Button
             onClick={() => this.props.history.push('/article/create')}
@@ -20,7 +21,7 @@ class ArticleListView extends Component {
           </Button>
         </div>
         <ArticleList fetchEndpoint="/api/article" />
-      </div>
+      </Paper>
     );
   }
 }

@@ -10,10 +10,12 @@ class Font(models.Model):
     license_detail = models.JSONField()
     manufacturer = models.CharField(max_length=100)
     view_count = models.IntegerField()
+    similars = models.ManyToManyField("self", symmetrical=False)
 
 class Photo(models.Model):
     author = models.ForeignKey(
         User,
+        null=True,
         on_delete=models.CASCADE,
         related_name='my_photos'
     )
@@ -21,14 +23,8 @@ class Photo(models.Model):
     height = models.IntegerField()
     image_file = models.FileField()
     is_analyzed = models.BooleanField()
-    analyzed_at = models.DateTimeField()
-    selected_font = models.ForeignKey(
-        Font,
-        on_delete=models.CASCADE,
-        null=True
-    )
+    analyzed_at = models.DateTimeField(null=True)
     memo = models.TextField()
-    metadata = models.JSONField()
 
 class Finding(models.Model):
     photo = models.ForeignKey(
@@ -48,8 +44,8 @@ class Article(models.Model):
         on_delete=models.CASCADE,
         related_name='my_articles'
     )
-    created_at = models.DateTimeField()
-    last_edited_at = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    last_edited_at = models.DateTimeField(auto_now=True)
     title = models.CharField(max_length=100)
     content = models.TextField()
     image_file = models.FileField()
@@ -70,6 +66,6 @@ class Comment(models.Model):
         on_delete=models.CASCADE,
         related_name='comments'
     )
-    created_at = models.DateTimeField()
-    last_edited_at = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    last_edited_at = models.DateTimeField(auto_now=True)
     content = models.TextField()

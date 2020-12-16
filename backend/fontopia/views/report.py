@@ -24,6 +24,9 @@ class APIReport(View):
             assert 1 <= n
         except (KeyError, ValueError, AssertionError): pass
 
+        if not request.user.is_authenticated:
+            n = min(n, 5)
+
         resp = [{
             'id': f.id,
             'font': {

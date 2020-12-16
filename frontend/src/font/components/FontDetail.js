@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
+import { Divider, Grid, Typography } from '@material-ui/core';
 
 import axios from 'axios';
+
+import FontItem from './FontItem';
+
+import './FontDetail.css';
 
 class FontLicenseDetail extends Component {
   render() {
@@ -38,24 +43,55 @@ class FontDetail extends Component {
     }
 
     const f = this.state.data;
+
+    const similar_content = ((f.similars === undefined) ?
+      <Typography>
+        Please sign in to see all similar fonts.
+      </Typography> :
+      <div className="similars-list">
+        { f.similars.map(g => <FontItem key={g.id} font={g} />) }
+      </div>
+    );
+
     return (<div className="font-detail">
-      <div className="name">
-        <h3>Font Name</h3>
-        <p>{f.name}</p>
+      <Typography className="font-name" variant="h3">{f.name}</Typography>
+      <div>
+        <img
+          className="font-sample"
+          src={`/static/font-samples/${f.name}.png`} />
       </div>
 
-      <div className="manufacturer">
-        <h3>Manufacturer</h3>
-        <p>{f.manufacturer_name}</p>
+      <div className="section">
+        <Typography className="section-header" variant="h4">Manufacturer</Typography>
+        <div>
+          <Typography className="section-body" variant="h5">
+            { f.manufacturer_name }
+          </Typography>
+        </div>
       </div>
 
-      <div className="license">
-        <h3>License</h3>
-        <div className={f.license.is_free ?
-          "license-free" : "license-nonfree"}>
-          <p>{f.license.is_free ?
-            "Free" : "Non-free"}</p>
-          <FontLicenseDetail license={f.license} />
+      <Divider />
+
+      <div className="section">
+        <Typography className="section-header" variant="h4">License</Typography>
+        <div>
+          <Typography className="section-body" variant="h5">
+            <div className={f.license.is_free ?
+              "license-free" : "license-nonfree"}>
+              <Typography variant="p">{f.license.is_free ?
+                "Free" : "Non-free"}</Typography>
+              <FontLicenseDetail license={f.license} />
+            </div>
+          </Typography>
+        </div>
+      </div>
+
+      <Divider />
+
+      <div className="section">
+        <Typography className="section-header" variant="h4">Similar Fonts</Typography>
+        <div>
+          { similar_content }
         </div>
       </div>
     </div>

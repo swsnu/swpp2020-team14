@@ -1,3 +1,11 @@
+.article-list-view {
+    padding: 32px;
+}
+
+.article-list-view > h4 {
+    text-align: left;
+}
+
 .row-create {
     text-align: right;
 }
