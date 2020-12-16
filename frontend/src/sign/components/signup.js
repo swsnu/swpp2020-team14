@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
 import axios from 'axios';
 import { Button, TextField, FormHelperText } from '@material-ui/core';
 import ErrorIcon from '@material-ui/icons/Error';
+import { connect } from 'react-redux';
+import { updateLogin } from '../actions/actions';
 
 import './signup.css';
 
@@ -31,8 +32,14 @@ class Signup extends Component {
         password: this.state.password,
         nickname: this.state.nickname,
       });
-      alert('Signup success.\nNow please login.');
-      this.props.history.replace('/signin');
+      alert('Signup success.');
+      this.props.updateLogin({
+        logged_in: true,
+        user_info: {
+          email: this.state.email,
+          nickname: this.state.nickname
+        },
+      });
     })().catch((err) => {
       if (err.response) {
         this.setState({ errorMessage: err.response.data });
@@ -71,4 +78,12 @@ class Signup extends Component {
   }
 }
 
-export default withRouter(Signup);
+const mapStateToProps = (state) => ({
+  loginState: state.login,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  updateLogin: (data) => dispatch(updateLogin(data)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Signup);
