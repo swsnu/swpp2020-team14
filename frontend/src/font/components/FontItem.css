@@ -7,6 +7,8 @@
     z-index: 10;
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
+
+    transition: width .7s;
 }
 
 .font-item .bar-fg {
@@ -32,8 +34,12 @@
     width: 100%;
 }
 
+.font-item .detail .viewcount {
+    margin-right: 16px;
+}
+
 .font-item img.sample {
     max-width: 90%;
     max-height: 64px;
-    margin: 8px;
+    margin: 16px;
 }

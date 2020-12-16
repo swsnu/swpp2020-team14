@@ -54,13 +54,17 @@ class FontDetail extends Component {
     );
 
     return (<div className="font-detail">
-      <Typography className="font-name" variant="h3">{f.name}</Typography>
-      <div>
+      <Grid container className="font-name-row" justify="space-between" alignItems="center">
+        <Typography className="font-name" variant="h3">{f.name}</Typography>
+        <Typography className="view-count" variant="h5" color="textSecondary">
+          View: { f.view_count }
+        </Typography>
+      </Grid>
+      <div className="font-sample-row">
         <img
           className="font-sample"
           src={`/static/font-samples/${f.name}.png`} />
       </div>
-
       <div className="section">
         <Typography className="section-header" variant="h4">Manufacturer</Typography>
         <div>
