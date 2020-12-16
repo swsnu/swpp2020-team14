@@ -1,3 +1,7 @@
 .finding-list {
     text-align: center;
 }
+
+.finding-list .finding-item {
+    margin: 8px 0;
+}

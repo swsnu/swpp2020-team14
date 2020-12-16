@@ -1,0 +1,35 @@
+.font-item .bar-bg {
+    background-color: #2f7bd180;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 10;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.font-item .bar-fg {
+    z-index: 100;
+    position: relative;
+}
+
+.font-item .bar-fg .col-prob {
+    text-align: right;
+}
+
+.font-item .bar-fg .col-fold {
+    text-align: right;
+    margin-left: auto;
+}
+
+.font-item .detail {
+    text-align: left;
+    width: 100%;
+}
+
+.font-item img.sample {
+    max-width: 90%;
+    max-height: 64px;
+    margin: 8px;
+}

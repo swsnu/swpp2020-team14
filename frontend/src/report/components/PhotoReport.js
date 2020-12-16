@@ -28,15 +28,7 @@ class PhotoReport extends Component {
 				}
 				this.setState({
 					loaded: true,
-					findings: resp.data.findings.map((finding) => (
-						{
-							font_id: finding.font.id,
-							font_name: finding.font.name,
-							probability: finding.probability,
-							is_free: finding.font.is_free,
-							license_summary: finding.font.license_summary,
-						}
-					))
+					findings: resp.data.findings
 				});
 			})
 			.catch((err) => {
