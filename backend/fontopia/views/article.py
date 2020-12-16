@@ -100,17 +100,19 @@ class APIArticleItem(View):
         try:
             title = request.PUT['title']
             content = request.PUT['content']
-            uploaded_image = request.FILES['image']
             assert title and content
         except (KeyError, AssertionError):
             return JsonResponse({'success': False, 'error': 'Malformed request'})
+        
+        if 'image' in request.FILES:
+            uploaded_image = request.FILES['image']
+            a.image_file.delete()
+            a.image_file.save('article/attachment', uploaded_image)
+        
         now = datetime.now(timezone.utc)
-
         a.title = title
         a.content = content
         a.last_edited_at = now
-        a.image_file.delete()
-        a.image_file.save('article/attachment', uploaded_image)
         a.save()
 
         return JsonResponse({'success': True, 'id': a.id})
