@@ -28,6 +28,7 @@ class NavigationBar extends Component {
       window.localStorage.removeItem("login.logged_in");
       window.localStorage.removeItem("login.user_info");
       this.props.updateLogin({ logged_in: false, user_info: null });
+      this.props.history.replace('/')
     });
   }
 
