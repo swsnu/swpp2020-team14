@@ -1,3 +1,30 @@
+.font-detail {
+    text-align: left;
+}
+
 .font-detail .row {
     align-content: center;
+}
+
+.font-detail > .font-name {
+    margin-bottom: 32px;
+}
+
+.font-detail .font-sample {
+    border: 3px dashed gray;
+    border-radius: 5px;
+    padding: 16px;
+}
+
+.font-detail .section-header {
+    margin: 32px 0;
+}
+
+.font-detail .section-body {
+    margin: 32px 0;
+}
+
+.font-detail .row h4 {
+    text-align: right;
+    padding: 16px;
 }

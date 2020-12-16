@@ -10,6 +10,7 @@ class Font(models.Model):
     license_detail = models.JSONField()
     manufacturer = models.CharField(max_length=100)
     view_count = models.IntegerField()
+    similars = models.ManyToManyField("self", symmetrical=False)
 
 class Photo(models.Model):
     author = models.ForeignKey(

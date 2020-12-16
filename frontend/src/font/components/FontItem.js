@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
 import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Container, Grid, Typography } from '@material-ui/core';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
@@ -64,7 +63,7 @@ class FontItem extends Component {
                         src={`/static/font-samples/${font.name}.png`} />
                     <div style={ { textAlign: 'right' }}>
                         <Button
-                            onClick={() => this.props.history.push(`/font/${font.id}`)}
+                            href={`/font/${font.id}`}
                             variant="contained"
                             color="secondary"
                             >
@@ -78,4 +77,4 @@ class FontItem extends Component {
     }
 }
 
-export default withRouter(FontItem);
+export default FontItem;

@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import { Grid } from '@material-ui/core';
+import { Divider, Grid, Typography } from '@material-ui/core';
 
 import axios from 'axios';
+
+import FontItem from './FontItem';
 
 import './FontDetail.css';
 
@@ -41,48 +43,57 @@ class FontDetail extends Component {
     }
 
     const f = this.state.data;
+
+    const similar_content = ((f.similars === undefined) ?
+      <Typography>
+        Please sign in to see all similar fonts.
+      </Typography> :
+      <div className="similars-list">
+        { f.similars.map(g => <FontItem key={g.id} font={g} />) }
+      </div>
+    );
+
     return (<div className="font-detail">
-      <Grid container className="row row-name">
-        <Grid item xs={4}>
-          <h3>Font Name</h3>
-        </Grid>
-        <Grid item xs={8}>
-          <p>{f.name}</p>
-        </Grid>
-      </Grid>
+      <Typography className="font-name" variant="h3">{f.name}</Typography>
+      <div>
+        <img
+          className="font-sample"
+          src={`/static/font-samples/${f.name}.png`} />
+      </div>
 
-      <Grid container className="row row-manufacturer">
-        <Grid item xs={4}>
-          <h3>Manufacturer</h3>
-          </Grid>
-          <Grid item xs={8}>
-          <p>{f.manufacturer_name}</p>
-        </Grid>
-      </Grid>
+      <div className="section">
+        <Typography className="section-header" variant="h4">Manufacturer</Typography>
+        <div>
+          <Typography className="section-body" variant="h5">
+            { f.manufacturer_name }
+          </Typography>
+        </div>
+      </div>
 
-      <Grid container className="row row-sample">
-        <Grid item xs={4}>
-          <h3>Sample</h3>
-        </Grid>
-        <Grid item xs={8}>
-          <img src={`/static/font-samples/${f.name}.png`} />
-        </Grid>
-      </Grid>
+      <Divider />
 
+      <div className="section">
+        <Typography className="section-header" variant="h4">License</Typography>
+        <div>
+          <Typography className="section-body" variant="h5">
+            <div className={f.license.is_free ?
+              "license-free" : "license-nonfree"}>
+              <Typography variant="p">{f.license.is_free ?
+                "Free" : "Non-free"}</Typography>
+              <FontLicenseDetail license={f.license} />
+            </div>
+          </Typography>
+        </div>
+      </div>
 
-      <Grid container className="row row-license">
-        <Grid item xs={4}>
-          <h3>License</h3>
-        </Grid>
-        <Grid item xs={8}>
-          <div className={f.license.is_free ?
-            "license-free" : "license-nonfree"}>
-            <p>{f.license.is_free ?
-              "Free" : "Non-free"}</p>
-            <FontLicenseDetail license={f.license} />
-          </div>
-        </Grid>
-      </Grid>
+      <Divider />
+
+      <div className="section">
+        <Typography className="section-header" variant="h4">Similar Fonts</Typography>
+        <div>
+          { similar_content }
+        </div>
+      </div>
     </div>
     );
   }

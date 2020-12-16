@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta, timezone
 import os.path
+import pickle
 
 from django.core.management.base import BaseCommand
 from django.core.files.images import get_image_dimensions
@@ -81,6 +82,15 @@ class Command(BaseCommand):
         ])
 
         print(f'Created {len(font_names)} fonts.')
+
+        similarities = pickle.load(open(os.path.join(BASE_DIR, 'relations.pickle'), 'rb'))
+        font_dict = {f.name: f for f in Font.objects.all()}
+        sim_cnt = 0
+        for font_from, font_to_list in similarities:
+            for font_to in font_to_list:
+                font_dict[font_from].similars.add(font_dict[font_to])
+                sim_cnt += 1
+        print(f'Created {sim_cnt} similarity relations.')
 
         for i in range(9):
             fobj = open(f'{BASE_DIR}/test{i+1:02}.jpg', 'rb')
