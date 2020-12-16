@@ -12,6 +12,20 @@ User = get_user_model()
 
 BASE_DIR = 'fontopia/management/commands/populate-data'
 
+def _guess_manufacturer(name):
+    known_prefixes = [
+        ('Yoon', '윤디자인'),
+        ('Sandoll', '산돌구름'),
+        ('HY', '한양정보통신'),
+        ('a', '아시아폰트'),
+        ('J', '직지소프트'),
+        ('sm', '직지소프트'),
+    ]
+    for pref, manufacturer in known_prefixes:
+        if name.lower().startswith(pref.lower()):
+            return manufacturer
+    return '(unknown)'
+
 class Command(BaseCommand):
     help = 'Populate the DB with placeholder values.'
 
@@ -62,7 +76,7 @@ class Command(BaseCommand):
         font_names = open('fontopia/ml/label.txt', encoding='utf-8').read().strip().split('\n')
         Font.objects.bulk_create([
             Font(name=name, is_free=False, license_summary="Non-free (unknown)",
-                license_detail={"content": ""}, manufacturer="(unknown)", view_count=0)
+                license_detail={"content": ""}, manufacturer=_guess_manufacturer(name), view_count=0)
             for name in font_names
         ])
 
@@ -76,11 +90,9 @@ class Command(BaseCommand):
                 author=users[ui],
                 memo=f"Generated from test{i+1:02}.png",
                 is_analyzed=False,
-                analyzed_at=now,
+                analyzed_at=None,
                 width=width,
                 height=height,
-                metadata={'': ''},
-                selected_font=None
             )
             photo.image_file.save('photo', fobj)
             inference.perform_inference(photo)
