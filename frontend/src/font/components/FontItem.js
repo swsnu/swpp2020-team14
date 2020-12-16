@@ -67,6 +67,9 @@ class FontItem extends Component {
                         className="sample"
                         src={`/static/font-samples/${font.name}.png`} />
                     <div style={ { textAlign: 'right' }}>
+                        <Typography className="viewcount" component="span" color="textSecondary">
+                            View: { font.view_count }
+                        </Typography>
                         <Button
                             href={`/font/${font.id}`}
                             variant="contained"

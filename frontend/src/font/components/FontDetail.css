@@ -6,14 +6,20 @@
     align-content: center;
 }
 
-.font-detail > .font-name {
+.font-detail .font-name-row {
+    margin-top: 16px;
     margin-bottom: 32px;
 }
 
-.font-detail .font-sample {
+.font-detail .font-sample-row {
+    text-align: center;
+}
+
+.font-detail img.font-sample {
     border: 3px dashed gray;
     border-radius: 5px;
     padding: 16px;
+    max-width: 90%;
 }
 
 .font-detail .section-header {

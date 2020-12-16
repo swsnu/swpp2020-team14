@@ -34,8 +34,12 @@
     width: 100%;
 }
 
+.font-item .detail .viewcount {
+    margin-right: 16px;
+}
+
 .font-item img.sample {
     max-width: 90%;
     max-height: 64px;
-    margin: 8px;
+    margin: 16px;
 }
