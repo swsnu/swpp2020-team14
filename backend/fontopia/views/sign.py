@@ -21,6 +21,7 @@ class APISignup(View):
             password=password,
             first_name=nickname)
         u.save()
+        login(request, u)
         return HttpResponse()
 
 class APISignin(View):
