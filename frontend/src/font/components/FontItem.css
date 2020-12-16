@@ -14,6 +14,10 @@
     position: relative;
 }
 
+.font-item .bar-fg .col-name {
+    text-align: left;
+}
+
 .font-item .bar-fg .col-prob {
     text-align: right;
 }

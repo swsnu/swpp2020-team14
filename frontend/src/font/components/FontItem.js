@@ -37,7 +37,7 @@ class FontItem extends Component {
                         width: prob_revised_str
                     } }/> }
                     <Grid container className="bar-fg">
-                        <Grid item xs={8}>
+                        <Grid item xs={8} className="col-name">
                             <Typography variant="h5">
                                 { font.name }
                             </Typography>
