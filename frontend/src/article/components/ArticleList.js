@@ -49,10 +49,10 @@ class ArticleList extends Component {
             <Typography>#{a.id}</Typography>
           </Grid>
           <Grid item xs={8} className="td title">
-            <ListItemText primary={ title_btn } secondary="preview" />
+            <ListItemText primary={ title_btn } secondary={ a.preview + '...' } />
           </Grid>
           <Grid item container xs={3} justify="flex-end" className="td author">
-            <Typography>{a.author}</Typography>
+            <Typography>{a.author_name}</Typography>
           </Grid>
         </Grid>
       </ListItem>);
