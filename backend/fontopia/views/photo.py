@@ -11,22 +11,20 @@ from fontopia.ml import inference
 from datetime import datetime, timezone
 
 class APIPhoto(View):
-    @method_decorator(force_login)
     def post(self, request):
         try:
-            body = request.POST
-            memo = body['memo']
             uploaded_image = request.FILES['image']
         except (KeyError, AssertionError):
             return JsonResponse({'success': False, 'error': 'Malformed request'})
-        now = datetime.now(timezone.utc)
         width, height = get_image_dimensions(uploaded_image)
-        metadata = {'data': 'data'}
 
-        p = Photo.objects.create(author=request.user, memo=memo,
-        is_analyzed=False, analyzed_at=now,
-        width=width, height=height,
-        selected_font=None, metadata=metadata)
+        p = Photo.objects.create(
+            author=request.user if request.user.is_authenticated else None,
+            is_analyzed=False,
+            analyzed_at=None,
+            width=width,
+            height=height
+        )
 
         p.save()
         p.image_file.save('photo', uploaded_image)
@@ -39,7 +37,6 @@ class APIPhotoMy(View):
     @method_decorator(force_login)
     def get(self, request):
         photos_my = Photo.objects.filter(author=request.user)
-        photos_my = photos_my.select_related('selected_font')
 
         n = None
         try:
@@ -52,19 +49,8 @@ class APIPhotoMy(View):
             {
                 'id': p.id,
                 'memo': p.memo,
-                'image_url': p.image_file.url,
-                'selected_font': {
-                    'id': p.selected_font.id,
-                    'name': p.selected_font.name,
-                    'manufacturer_name': p.selected_font.manufacturer,
-                    'license': {
-                        'is_free': p.selected_font.is_free,
-                        'type': p.selected_font.license_summary
-                    },
-                    'view_count': p.selected_font.view_count,
-                } if p.selected_font else None,
+                'image_url': p.image_file.url
             } for p in photos_my[:n]]
-
         return JsonResponse(data={
             'photos': resp,
         })
@@ -81,17 +67,7 @@ class APIPhotoItem(View):
         return JsonResponse(data={'photo': {
             'id': p.id,
             'memo': p.memo,
-            'image_url': p.image_file.url,
-            'selected_font': {
-                'id': p.selected_font.id,
-                'name': p.selected_font.name,
-                'manufacturer_name': p.selected_font.manufacturer,
-                'license': {
-                    'is_free': p.selected_font.is_free,
-                    'type': p.selected_font.license_summary
-                },
-                'view_count': p.selected_font.view_count,
-            } if p.selected_font else None,
+            'image_url': p.image_file.url
         }})
 
     @method_decorator([force_login, prepare_patch])
@@ -106,11 +82,6 @@ class APIPhotoItem(View):
         body = request.PATCH
         if('memo' in body):
             p.memo = body['memo']
-
-        if('selected_font' in body):
-            selecetd_font_id = body['selected_font']
-            f = Font.objects.get(id=selecetd_font_id)
-            p.selected_font = f
 
         p.save()
         return JsonResponse({'success': True, 'id': p.id})

@@ -2,13 +2,13 @@ import React from 'react';
 import axios from 'axios';
 import { shallow } from 'enzyme';
 
-import PhotoEdit from './PhotoEdit';
+import PhotoCreate from './PhotoCreate';
 
 jest.mock('axios');
 jest.spyOn(window, 'alert');
 
 describe('PhotoEdit', () => {
-  const PhotoEditInner = PhotoEdit.WrappedComponent;
+  const PhotoEditInner = PhotoCreate.WrappedComponent;
   const mock_history = { push: jest.fn(), goBack: jest.fn(), replace: jest.fn() };
   const pid = 3;
   const mocked_photo = {

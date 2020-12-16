@@ -9,7 +9,7 @@ class PhotoDetailView extends Component {
       <div className="photo-detail-view">
         <button
           className="back"
-          onClick={() => this.props.history.push('/my-page/photo')}
+          onClick={() => this.props.history.goBack()}
         >
           Back
         </button>

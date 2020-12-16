@@ -1,0 +1,24 @@
+.photo-detail-wrapper {
+    padding: 16px;
+}
+
+.photo-detail-wrapper > h4 {
+    text-align: left;
+    margin-left: 12px;
+}
+
+.error-wrapper {
+    color: tomato;
+}
+
+.pane-image, .pane-report {
+    padding: 12px;
+}
+
+.report-pending {
+    padding: 16px 0;
+}
+
+.pane-image > img {
+    width: 100%;
+}

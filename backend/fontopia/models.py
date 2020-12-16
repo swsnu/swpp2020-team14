@@ -23,13 +23,7 @@ class Photo(models.Model):
     image_file = models.FileField()
     is_analyzed = models.BooleanField()
     analyzed_at = models.DateTimeField(null=True)
-    selected_font = models.ForeignKey(
-        Font,
-        on_delete=models.CASCADE,
-        null=True
-    )
     memo = models.TextField()
-    metadata = models.JSONField()
 
 class Finding(models.Model):
     photo = models.ForeignKey(

@@ -5,9 +5,6 @@ import { Button, Grid, TextField, Typography } from '@material-ui/core';
 
 class PhotoEdit extends Component {
   state = {
-    originalPhoto: null,
-    originalImage: null,
-    memo: '',
     is_submitting: false,
     chosen_file: null
   }
@@ -15,22 +12,6 @@ class PhotoEdit extends Component {
   constructor(props) {
     super(props);
     this.imgInput = React.createRef();
-  }
-
-  onInit() {
-    if (this.props.originalId === -1) return;
-    axios.get(`/api/photo/${this.props.originalId}`)
-    .then((resp) => {
-      const p = resp.data.photo;
-      this.setState({ originalPhoto: p, memo: p.memo, originalImage: p.image_url });
-    }).catch((err) => {
-      alert("Error loading photo: " + err);
-      this.props.history.goBack();
-    })
-  }
-
-  componentDidMount() {
-    this.onInit();
   }
 
   onSubmit(event) {
@@ -42,15 +23,10 @@ class PhotoEdit extends Component {
 
     (async ()=>{
       await axios.get('/api/token');
-      const resp = await (this.props.originalId === -1 ?
-        axios.post("/api/photo", payload) :
-        axios.put(`/api/photo/${this.props.originalId}`, payload));
+      const resp = await axios.post("/api/photo", payload);
       this.setState({ is_submitting: false });
       if (resp.data.success !== true) throw new Error(resp.data.error);
-      if (this.props.originalId !== -1)
-        this.props.history.goBack();
       this.props.history.push(`/photo/${resp.data.id}`);
-      
     })().catch((err) => {
       this.setState({ is_submitting: false });
       alert("Error saving photo: " + err.name + ": " + err.message);
@@ -58,13 +34,8 @@ class PhotoEdit extends Component {
     });
   }
 
-  handleChange(event) {
-    const target = event.target;
-    this.setState({ [target.name]: target.value });
-  }
-
   handleFileChange() {
-    this.setState({ chosen_file: ((this.imgInput.current && this.imgInput.current.files[0]) || null), originalImage: null});
+    this.setState({ chosen_file: ((this.imgInput.current && this.imgInput.current.files[0]) || null) });
   }
 
   render() {
@@ -72,20 +43,16 @@ class PhotoEdit extends Component {
       return <p>Loading photo...</p>;
     }
 
-    const image_area = (this.state.originalImage === null) ? (
+    const image_area = 
       (this.state.chosen_file === null) ? (
         <div className="image-empty">
           <Typography variant="overline">Click here to<br />choose image</Typography>
         </div>
       ) : (
         <img className="image-preview" src={ URL.createObjectURL(this.state.chosen_file) } />
-      )
-    ) : (
-      <img className="image-preview" src={ this.state.originalImage } alt="photo attachment"/>
-    );
+      );
 
-
-    return (<div className="photo-edit">
+    return (<div className="photo-create">
       <form onSubmit={this.onSubmit.bind(this)}>
         <div className="row-file">
           <Grid container className="image-area-wrapper" alignItems="center" justify="center">
@@ -95,14 +62,10 @@ class PhotoEdit extends Component {
             className="btn-reset" variant="contained" size="small"
             disabled={ this.state.originalImage === null && this.state.chosen_file === null }
             onClick={ ()=>{ this.imgInput.current && (this.imgInput.current.value = ''); this.handleFileChange(); } }>
-            Reset image?
+            Reset
           </Button>
           <input hidden id="file" type="file" ref={ this.imgInput } accept="image/jpeg,image/png"
             onChange={ this.handleFileChange.bind(this) }/>
-        </div>
-        <div className="row-content">
-          <TextField multiline fullWidth margin="normal" className="memo" value={this.state.memo} rows={1} rowsMax={10}
-            label="Memo" name="memo" onChange={this.handleChange.bind(this)} />
         </div>
         <div className="row-submit">
           <Button

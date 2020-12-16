@@ -1,0 +1,7 @@
+.photo-create-wrapper {
+    padding: 32px;
+}
+
+.photo-create-wrapper > h4 {
+    text-align: left;
+}

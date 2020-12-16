@@ -51,9 +51,8 @@ function App(props) {
 
             <AuthorizedRoute exact path="/my-page" component={MyPageView} />
             <AuthorizedRoute exact path="/my-page/photo" component={PhotoListView} />
-            <AuthorizedRoute exact path="/photo/create" component={PhotoCreateView} />
-            <AuthorizedRoute exact path="/photo/:photo_id" component={PhotoDetailView} />
-            <AuthorizedRoute exact path="/photo/:photo_id/report" component={ReportView} />
+            <Route exact path="/photo/create" component={PhotoCreateView} />
+            <Route exact path="/photo/:photo_id" component={PhotoDetailView} />
 
             <UnauthorizedRoute exact path="/signin" component={SigninView} />
             <UnauthorizedRoute exact path="/signup" component={SignupView} />
