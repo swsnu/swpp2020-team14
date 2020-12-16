@@ -35,6 +35,7 @@ class APISignup(View):
             return HttpResponse("Unknown error occured", status=400)
 
         u.save()
+        login(request, u)
         return HttpResponse()
 
 class APISignin(View):
