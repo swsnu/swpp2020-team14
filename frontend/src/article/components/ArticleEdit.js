@@ -10,6 +10,7 @@ class ArticleEdit extends Component {
     originalArticle: null,
     title: '',
     content: '',
+    originalImage: null,
     is_submitting: false,
     chosen_file: null
   }
@@ -24,7 +25,7 @@ class ArticleEdit extends Component {
     axios.get(`/api/article/${this.props.originalId}`)
     .then((resp) => {
       const a = resp.data.article;
-      this.setState({ originalArticle: a, title: a.title, content: a.content });
+      this.setState({ originalArticle: a, title: a.title, content: a.content, originalImage: a.image_url });
     }).catch((err) => {
       alert("Error loading article: " + err);
       this.props.history.goBack();
@@ -41,11 +42,20 @@ class ArticleEdit extends Component {
       alert("Empty title or content; please fill in both.");
       return;
     }
+    if (this.state.originalImage === null && this.state.chosen_file === null) {
+      alert("Please attach a photo.");
+      return;
+    }
+
     this.setState({ is_submitting: true });
     const payload = new FormData();
     payload.append('title', this.state.title);
     payload.append('content', this.state.content);
-    payload.append('image', this.imgInput.current.files[0]);
+    (this.state.chosen_file !== null) ? (
+      payload.append('image', this.imgInput.current.files[0])
+    ) : (
+      payload.append('image', '')
+    );
 
     (async ()=>{
       await axios.get('/api/token');
@@ -69,7 +79,7 @@ class ArticleEdit extends Component {
   }
 
   handleFileChange() {
-    this.setState({ chosen_file: ((this.imgInput.current && this.imgInput.current.files[0]) || null) });
+    this.setState({ chosen_file: ((this.imgInput.current && this.imgInput.current.files[0]) || null), originalImage: null});
   }
 
   render() {
@@ -77,12 +87,16 @@ class ArticleEdit extends Component {
       return <p>Loading article...</p>;
     }
 
-    const image_area = (this.state.chosen_file === null) ? (
-      <div className="image-empty">
-        <Typography variant="overline">Click here to<br />choose image</Typography>
-      </div>
+    const image_area = (this.state.originalImage === null) ? (
+      (this.state.chosen_file === null) ? (
+        <div className="image-empty">
+          <Typography variant="overline">Click here to<br />choose image</Typography>
+        </div>
+      ) : (
+        <img className="image-preview" src={ URL.createObjectURL(this.state.chosen_file) } />
+      )
     ) : (
-      <img className="image-preview" src={ URL.createObjectURL(this.state.chosen_file) } />
+      <img className="image-preview" src={ this.state.originalImage } alt="article attachment"/>
     );
 
     return (<div className="article-edit">
@@ -95,7 +109,7 @@ class ArticleEdit extends Component {
           </Grid>
           <Button
             className="btn-reset" variant="contained" size="small"
-            disabled={ this.state.chosen_file === null }
+            disabled={ this.state.originalImage === null && this.state.chosen_file === null }
             onClick={ ()=>{ this.imgInput.current && (this.imgInput.current.value = ''); this.handleFileChange(); } }>
             Reset image?
           </Button>

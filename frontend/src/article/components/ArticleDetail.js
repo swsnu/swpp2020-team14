@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
+import { Button, Typography, Paper, Grid } from '@material-ui/core';
 
 import axios from 'axios';
 
@@ -73,7 +74,7 @@ class ArticleDetail extends Component {
     payload.append("article", this.props.article_id);
 
     const job = (target !== -1 ?
-      axios.put(`/api/comment/${content}`, payload) :
+      axios.put(`/api/comment/${target}`, payload) :
       axios.post("/api/comment", payload));
     job.then(this._afterUpdateComment.bind(this))
       .catch((err) => { alert("Error submitting comment: " + err); });
@@ -99,6 +100,22 @@ class ArticleDetail extends Component {
     this.onInit();
   }
 
+  makeTimeShort(str) {
+    let result
+    let dictObject = {}
+    const pattern = /^20([0-9]{2})\/([0-9]{1,2})\/([0-9]{1,2}) ([0-9]{2}):([0-9]{2}):([0-9]{2})$/;
+    if((result = pattern.exec(str)) != null) {
+      dictObject['year'] = result[1]
+      dictObject['month'] = result[2]
+      dictObject['date'] = result[3]
+      dictObject['hour'] = result[4]
+      dictObject['minute'] = result[5]
+      dictObject['second'] = result[6]
+    }
+    const newStr = dictObject.year +'/'+ dictObject.month +'/'+ dictObject.date +' '+ dictObject.hour +':'+ dictObject.minute
+    return newStr
+  }
+
   render() {
     if (this.state.loaded === false) {
       return <p>Loading article detail...</p>;
@@ -106,39 +123,45 @@ class ArticleDetail extends Component {
 
     const a = this.state.article;
     return (<div className="article-detail">
-      <div className="title">
-        <h3>{a.title}</h3>
-      </div>
+      
 
-      <div className="author">
-        <p>{a.author}</p>
-      </div>
+      <Grid container className="title" justify="space-between">
+        <Typography variant="h4">{a.title}</Typography>
+        {a.is_owner && 
+          <div className="control-buttons">
+            <Button onClick={()=>this.onEdit()} className="edit" variant="outlined">Edit</Button>
+            <Button onClick={()=>this.onDelete()} className="delete" disabled={this.state.is_deleting} variant="outlined">Delete</Button>
+          </div>}  
+      </Grid>
 
-      <div className="dates">
-        <span className="create">Created at {a.created_at}</span>;&nbsp;
-        <span className="last-edit">Last edit at {a.last_edited_at}</span>
-      </div>
+      <Grid container className="meta" justify="space-left">
+        <span className="author">Written by {a.author}</span>,&nbsp;
+        <span className="create">Created at {this.makeTimeShort(a.created_at)}</span>,&nbsp;
+        <span className="last-edit">Last edit at {this.makeTimeShort(a.last_edited_at)}</span>
+      </Grid>
 
-      <div className="image">
-        <img src={a.image_url} alt="article attachment" />
-      </div>
+      <Paper className="content">
+        <Paper className="image">
+          <img src={a.image_url} alt="article attachment" />
+        </Paper>
 
-      <div className="content">{a.content}</div>
+        <Grid container className="content" alignContent="flex-start">
+          <Typography variant="h6">{a.content}</Typography>
+        </Grid>
 
-      <div className="likes">
-        <button onClick={()=>this.onLike()} className={a.is_liked ? "liked" : "not-liked"}
-          disabled={this.state.is_sending_like}>{a.is_liked ? "Unlike" : "Like"}</button>
-        <span className="like-cnt">{a.like_count} {a.like_count === 1 ? "Like" : "Likes"}</span>
-      </div>
+        <Grid className="likes">
+          <Button onClick={()=>this.onLike()} className={a.is_liked ? "liked" : "not-liked"}
+            color="primary" variant="contained"
+            disabled={this.state.is_sending_like}>{a.is_liked ? "Unlike" : "Like"}</Button>
+          <span className="like-cnt">{a.like_count} {a.like_count === 1 ? "Like" : "Likes"}</span>
+        </Grid>
+      </Paper>
 
-      {a.is_owner && <div className="control-buttons">
-        <button onClick={()=>this.onEdit()} className="edit">Edit</button>
-        <button onClick={()=>this.onDelete()} className="delete" disabled={this.state.is_deleting}>Delete</button>
-      </div>}
-
-      <CommentList comments={this.state.comments}
-        onDelete={this.onDeleteComment.bind(this)}
-        onSubmit={this.onSubmitComment.bind(this)} />
+      <Paper className="comments">
+        <CommentList comments={this.state.comments}
+          onDelete={this.onDeleteComment.bind(this)}
+          onSubmit={this.onSubmitComment.bind(this)} />  
+      </Paper>
     </div>
     );
   }
