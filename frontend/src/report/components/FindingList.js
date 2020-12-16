@@ -6,6 +6,7 @@ import '../../font/components/FontItem';
 
 import './FindingList.css';
 import FontItem from '../../font/components/FontItem';
+import { Divider } from '@material-ui/core';
 
 class FindingList extends Component {
     onFindingDetailClicked = (finding) => {
@@ -15,10 +16,11 @@ class FindingList extends Component {
     render() {
         const items = this.props.findings.map(finding => {
             return <div key={finding.font.id}>
-                <FontItem expanded
+                <FontItem
                     font={ finding.font } probability={ finding.probability }
                     className="finding-item"
                 />
+                <Divider />
             </div>
         })
 

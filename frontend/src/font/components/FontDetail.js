@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
+import { Grid } from '@material-ui/core';
 
 import axios from 'axios';
+
+import './FontDetail.css';
 
 class FontLicenseDetail extends Component {
   render() {
@@ -39,25 +42,47 @@ class FontDetail extends Component {
 
     const f = this.state.data;
     return (<div className="font-detail">
-      <div className="name">
-        <h3>Font Name</h3>
-        <p>{f.name}</p>
-      </div>
+      <Grid container className="row row-name">
+        <Grid item xs={4}>
+          <h3>Font Name</h3>
+        </Grid>
+        <Grid item xs={8}>
+          <p>{f.name}</p>
+        </Grid>
+      </Grid>
 
-      <div className="manufacturer">
-        <h3>Manufacturer</h3>
-        <p>{f.manufacturer_name}</p>
-      </div>
+      <Grid container className="row row-manufacturer">
+        <Grid item xs={4}>
+          <h3>Manufacturer</h3>
+          </Grid>
+          <Grid item xs={8}>
+          <p>{f.manufacturer_name}</p>
+        </Grid>
+      </Grid>
 
-      <div className="license">
-        <h3>License</h3>
-        <div className={f.license.is_free ?
-          "license-free" : "license-nonfree"}>
-          <p>{f.license.is_free ?
-            "Free" : "Non-free"}</p>
-          <FontLicenseDetail license={f.license} />
-        </div>
-      </div>
+      <Grid container className="row row-sample">
+        <Grid item xs={4}>
+          <h3>Sample</h3>
+        </Grid>
+        <Grid item xs={8}>
+          <img src={`/static/font-samples/${f.name}.png`} />
+        </Grid>
+      </Grid>
+
+
+      <Grid container className="row row-license">
+        <Grid item xs={4}>
+          <h3>License</h3>
+        </Grid>
+        <Grid item xs={8}>
+          <div className={f.license.is_free ?
+            "license-free" : "license-nonfree"}>
+            <p>{f.license.is_free ?
+              "Free" : "Non-free"}</p>
+            <FontLicenseDetail license={f.license} />
+          </div>
+        </Grid>
+      </Grid>
     </div>
     );
   }

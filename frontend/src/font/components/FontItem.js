@@ -20,14 +20,21 @@ class FontItem extends Component {
     render() {
         const font = this.props.font;
         const has_prob = (this.props.probability !== undefined);
-        const prob_str = ((this.props.probability || 0.0) * 100).toFixed(2) + '%';
+        const prob_actual = (has_prob ? this.props.probability : 0.0);
+
+        const prob_str = (prob_actual * 100).toFixed(2) + '%';
+
+        const r = 0.01;
+        const prob_revised = r + (1-r) * prob_actual;
+        const prob_revised_str = (prob_revised * 100).toFixed(2) + '%';
+
         return (<Accordion className="font-item"
             expanded={ this.state.isExpanded }
             onChange={ this.handleChange.bind(this) }>
             <AccordionSummary>
                 <Container>
                     { has_prob && <div className="bar-bg" style={ {
-                        width: prob_str
+                        width: prob_revised_str
                     } }/> }
                     <Grid container className="bar-fg">
                         <Grid item xs={8}>
