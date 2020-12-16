@@ -17,6 +17,7 @@ import NavigationBar from './common/NavigationBar';
 
 import './App.css';
 import { Container } from '@material-ui/core';
+import MainpageView from './mainpage/views/MainpageView.js';
 
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN';
@@ -42,6 +43,8 @@ function App(props) {
         <NavigationBar />
         <Container className="content" maxWidth="md">
           <Switch>
+            <Route exact path="/" component={ MainpageView } />
+
             <Route exact path="/article" component={ArticleListView} />
             <AuthorizedRoute exact path="/article/create" component={ArticleCreateView} />
             <Route exact path="/article/:article_id" component={ArticleDetailView} />
@@ -57,7 +60,7 @@ function App(props) {
             <UnauthorizedRoute exact path="/signin" component={SigninView} />
             <UnauthorizedRoute exact path="/signup" component={SignupView} />
 
-            <Redirect from="*" to="/article" />
+            <Redirect from="*" to="/" />
           </Switch>
         </Container>
       </BrowserRouter>
