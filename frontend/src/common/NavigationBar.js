@@ -67,6 +67,7 @@ class NavigationBar extends Component {
           <Typography variant="h5" onClick={ ()=>this.props.history.replace('/') }>Fontopia</Typography>
         </div>
         <Tabs className="menu-tabs" aria-label="simple tabs example"
+          scrollButtons="on" variant="scrollable"
           value={ (current_tab_idx === -1) ? false : current_tab_idx } >
           <Tab label="Photo" onClick={ ()=>this.props.history.push('/photo/create') } />
           <Tab label="Article" onClick={ ()=>this.props.history.push('/article') } />
