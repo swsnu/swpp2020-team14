@@ -13,73 +13,53 @@ describe('PhotoCreate', () => {
   const pid = 3;
   const mocked_photo = {
     id: pid,
-    memo: 'TEST_MEMO',
     image_url: 'TEST_URL',
     selected_font: {
       name: 'TEST_NAME',
     },
   };
+  let comp;
+  global.URL.createObjectURL = jest.fn();
 
   afterEach(() => jest.clearAllMocks());
 
-  describe('on new photo', () => {
-    let comp;
-    beforeEach(() => {
-      comp = shallow(<PhotoEditInner
-        originalId={-1}
-        history={mock_history}
-      />, { disableLifecycleMethods: false });
-    });
-
-    it('should handle submit', async () => {
-      const form = comp.find('.photo-create form');
-      comp.instance().imgInput = { current: { files: [''] } };
-
-      axios.post.mockResolvedValueOnce({ data: { success: false, error: 'err' } });
-      await new Promise((r) => comp.setState({ memo: 'TEST_MEMO' }, r))
-        .then(() => form.simulate('submit', { preventDefault: () => {} }));
-
-      axios.post.mockResolvedValueOnce({ data: { success: true, id: 123 } });
-      await new Promise((r) => comp.setState({ memo: 'TEST_MEMO' }, r))
-        .then(() => form.simulate('submit', { preventDefault: () => {} }));
-    });
-
-    it('should deny empty memo', async () => {
-      const form = comp.find('.photo-create form');
-      await new Promise((r) => comp.setState({ memo: '' }, r));
-      form.simulate('submit', { preventDefault: () => {} });
-      while (window.alert.mock.calls.length !== 1) await new Promise((r) => setTimeout(r, 100));
-    });
-  });
-
-  it('should handle failure loading photo', async () => {
-    axios.get.mockImplementationOnce((url) => new Promise((recv, rej) => rej()));
-    shallow(<PhotoEditInner
-      originalId={pid}
+  beforeEach(() => {
+    comp = shallow(<PhotoEditInner
       history={mock_history}
     />, { disableLifecycleMethods: false });
-    while (mock_history.push.mock.calls.length === 0) await new Promise((r) => setTimeout(r, 100));
   });
 
-  describe('on existing photo', () => {
-    let comp;
-    beforeEach(() => {
-      axios.get.mockResolvedValueOnce({ data: { photo: mocked_photo } });
-      comp = shallow(<PhotoEditInner
-        originalId={pid}
-        history={mock_history}
-      />, { disableLifecycleMethods: false });
-    });
+  it('should handle submit', async () => {
+    const form = comp.find('.photo-create form');
+    comp.instance().imgInput = { current: { files: [''] } };
 
-    it('should handle submit', async () => {
-      const form = comp.find('.photo-create form');
-      comp.instance().imgInput = { current: { files: [''] } };
-
-      axios.put.mockResolvedValueOnce({ data: { success: true, id: pid } });
-      await new Promise((r) => comp.setState({ memo: 'TEST_MEMO' }, r))
+    axios.post.mockResolvedValueOnce({ data: { success: false, error: 'err' } });
+    await new Promise((r) => comp.setState({ chosen_file: "/test/test" }, r))
         .then(() => form.simulate('submit', { preventDefault: () => {} }));
+    while (window.alert.mock.calls.length === 0) await new Promise((r) => setTimeout(r, 100));
 
-      while (mock_history.push.mock.calls.length === 0) await new Promise((r) => setTimeout(r, 100));
-    });
+    axios.post.mockResolvedValueOnce({ data: { success: true, id: 123 } });
+    await new Promise((r) => comp.setState({ chosen_file: "/test/test" }, r))
+        .then(() => form.simulate('submit', { preventDefault: () => {} }));
+    while (mock_history.push.mock.calls.length === 0) await new Promise((r) => setTimeout(r, 100));
+
+  });
+
+  it('should handle submit with no photo', async () => {
+    const form = comp.find('.photo-create form');
+    comp.instance().imgInput = { current: { files: [''] } };
+
+    axios.post.mockResolvedValueOnce({ data: { success: false, error: 'err' } });
+    await new Promise((r) => comp.setState({ chosen_file: null }, r))
+        .then(() => form.simulate('submit', { preventDefault: () => {} }));
+    while (window.alert.mock.calls.length === 0) await new Promise((r) => setTimeout(r, 100));
+  });
+
+  it('should reset photo', () => {
+    comp.instance().imgInput = { current: { files: [''] } };
+    const btn = comp.find('.btn-reset');
+    expect(btn.length).toBe(1);
+
+    btn.simulate('click');
   });
 });
