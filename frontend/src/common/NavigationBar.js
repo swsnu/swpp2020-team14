@@ -64,7 +64,9 @@ class NavigationBar extends Component {
     return (<AppBar className="navbar" position="static">
       <Toolbar variant="dense">
         <div className="logo">
-          <Typography variant="h5" onClick={ ()=>this.props.history.replace('/') }>Fontopia</Typography>
+          <Button href='/'>
+            <img src="/logo.png" />
+          </Button>
         </div>
         <Tabs className="menu-tabs" aria-label="simple tabs example"
           scrollButtons="on" variant="scrollable"
