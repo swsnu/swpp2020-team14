@@ -28,6 +28,7 @@ class NavigationBar extends Component {
       window.localStorage.removeItem("login.logged_in");
       window.localStorage.removeItem("login.user_info");
       this.props.updateLogin({ logged_in: false, user_info: null });
+      this.props.history.replace('/')
     });
   }
 
@@ -63,9 +64,12 @@ class NavigationBar extends Component {
     return (<AppBar className="navbar" position="static">
       <Toolbar variant="dense">
         <div className="logo">
-          <Typography variant="h5" onClick={ ()=>this.props.history.replace('/') }>Fontopia</Typography>
+          <Button href='/'>
+            <img src="/logo.png" />
+          </Button>
         </div>
         <Tabs className="menu-tabs" aria-label="simple tabs example"
+          scrollButtons="on" variant="scrollable"
           value={ (current_tab_idx === -1) ? false : current_tab_idx } >
           <Tab label="Photo" onClick={ ()=>this.props.history.push('/photo/create') } />
           <Tab label="Article" onClick={ ()=>this.props.history.push('/article') } />

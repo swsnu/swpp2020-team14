@@ -1,9 +1,5 @@
-.logo {
-    margin-right: 16px;
-}
-
-.logo h5 {
-    cursor: pointer;
+.logo img {
+    max-height: 48px;
 }
 
 .menu-tabs {

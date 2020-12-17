@@ -1,0 +1,8 @@
+.font-list-wrapper {
+    margin-bottom: 64px;
+}
+
+.font-list-wrapper > h3 {
+    text-align: left;
+    margin-bottom: 16px;
+}

@@ -18,12 +18,12 @@ describe('PhotoDetailView', () => {
   });
 
   it('should call goBack properly', () => {
-    const hist = { push: jest.fn() };
+    const hist = { goBack: jest.fn() };
     const comp = shallow(<PhotoDetailView.WrappedComponent
       history={hist}
       match={{ params: { photo_id: 3 } }}
     />);
     comp.find('.back').simulate('click');
-    expect(hist.push).toHaveBeenCalledTimes(1);
+    expect(hist.goBack).toHaveBeenCalledTimes(1);
   });
 });

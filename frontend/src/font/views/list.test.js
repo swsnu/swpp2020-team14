@@ -9,6 +9,6 @@ describe('FontListView', () => {
   it('should call component properly', () => {
     const comp = shallow(<FontListView.WrappedComponent />);
     const flist = comp.find(FontList);
-    expect(flist.length).toBe(1);
+    expect(flist.length).toBe(2);
   });
 });

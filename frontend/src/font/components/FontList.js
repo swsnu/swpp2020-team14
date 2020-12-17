@@ -20,7 +20,7 @@ class FontList extends Component {
 
   onBrowsePage(n) {
     this.setState({list: null});
-    axios.get(`/api/font?page=${n}`)
+    axios.get(`${this.props.fetchEndpoint}?page=${n}`)
       .then((resp) => {
         this.setState({
           list: resp.data.list,
@@ -35,6 +35,7 @@ class FontList extends Component {
 
   componentDidMount() {
     this.onInit();
+    
   }
 
   render() {
@@ -46,11 +47,14 @@ class FontList extends Component {
 
     return <div className="font-list">
       {items}
-      <PageButtonArray n={this.state.pages}
-        cur={this.state.cur} onclick={(i)=>this.onBrowsePage(i)} />
+      { !this.props.noPaging &&
+      <PageButtonArray
+        n={this.state.pages}
+        cur={this.state.cur}
+        onclick={(i)=>this.onBrowsePage(i)} />
+      }
     </div>
   }
 }
 
 export default withRouter(FontList);
-

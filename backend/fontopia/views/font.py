@@ -8,7 +8,7 @@ from fontopia.models import Font
 class APIFont(View):
     def get(self, request):
         page_idx = request.GET.get('page', 1)
-        paginator = Paginator(Font.objects.order_by('-view_count'), 20)
+        paginator = Paginator(Font.objects.order_by('id'), 20)
         page = paginator.get_page(page_idx)
         
         resp = [{
@@ -26,6 +26,24 @@ class APIFont(View):
             'list': resp,
             'pages': paginator.num_pages,
             'cur': page.number
+        })
+
+class APIFontMostViewed(View):
+    def get(self, request):
+        q = Font.objects.order_by('-view_count')
+        resp = [{
+            'id': f.id,
+            'name': f.name,
+            'manufacturer_name': f.manufacturer,
+            'license': {
+                'is_free': f.is_free,
+                'type': f.license_summary
+            },
+            'view_count': f.view_count,
+        } for f in q[:5]]
+
+        return JsonResponse(data={
+            'list': resp
         })
 
 class APIFontItem(View):
@@ -51,10 +69,14 @@ class APIFontItem(View):
             'view_count': f.view_count
         }
 
+        f.view_count += 1
+        f.save()
+
         if request.user.is_authenticated:
             response['similars'] = [{
                 'id': s.id,
-                'name': s.name
+                'name': s.name,
+                'view_count': s.view_count
             } for s in f.similars.all()]
 
         return JsonResponse(data=response)

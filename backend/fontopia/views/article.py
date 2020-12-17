@@ -4,21 +4,26 @@ from django.views import View
 from django.http import JsonResponse, HttpResponseNotFound
 from django.utils.decorators import method_decorator
 from django.core.paginator import Paginator
+from django.db.models import F
+from django.db.models.functions import Left
 
 from fontopia.models import Article, Comment
 from fontopia.utils import date2str, force_login, prepare_put
 
 class APIArticle(View):
     def get(self, request):
+        query = Article.objects.order_by('-id')
+        query = query.values(
+            'id',
+            'title',
+            author_name=F('author__first_name'),
+            preview=Left('content', 20))
+
         page_idx = request.GET.get('page', 1)
-        paginator = Paginator(Article.objects.order_by('-id'), 20)
+        paginator = Paginator(query, 20)
         page = paginator.get_page(page_idx)
 
-        resp = [{
-            'id': a.id,
-            'title': a.title,
-            'author': a.author.first_name
-        } for a in page]
+        resp = list(page)
 
         return JsonResponse(data={
             'list': resp,

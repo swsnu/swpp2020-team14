@@ -16,9 +16,13 @@ class PhotoEdit extends Component {
 
   onSubmit(event) {
     event.preventDefault();
+    if (this.state.chosen_file === null) {
+      alert("Please attach a photo.");
+      return;
+    }
+
     this.setState({ is_submitting: true });
     const payload = new FormData();
-    payload.append('memo', this.state.memo);
     payload.append('image', this.imgInput.current.files[0]);
 
     (async ()=>{
@@ -30,7 +34,6 @@ class PhotoEdit extends Component {
     })().catch((err) => {
       this.setState({ is_submitting: false });
       alert("Error saving photo: " + err.name + ": " + err.message);
-      console.log("Error saving photo: " + err.name + ": " + err.message);
     });
   }
 
@@ -39,10 +42,6 @@ class PhotoEdit extends Component {
   }
 
   render() {
-    if (this.props.originalId !== -1 && this.state.originalPhoto === null) {
-      return <p>Loading photo...</p>;
-    }
-
     const image_area = 
       (this.state.chosen_file === null) ? (
         <div className="image-empty">

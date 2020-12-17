@@ -15,10 +15,9 @@ class FindingList extends Component {
 
     render() {
         const items = this.props.findings.map(finding => {
-            return <div key={finding.font.id}>
+            return <div key={finding.font.id} className="finding-item">
                 <FontItem
                     font={ finding.font } probability={ finding.probability }
-                    className="finding-item"
                 />
                 <Divider />
             </div>

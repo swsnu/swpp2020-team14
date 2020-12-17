@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
+// import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 import { Button, Typography, Paper, Grid } from '@material-ui/core';
 
 import axios from 'axios';
@@ -69,31 +70,41 @@ class ArticleDetail extends Component {
   }
 
   onSubmitComment(target, content) {
-    const payload = new FormData();
-    payload.append("content", content);
-    payload.append("article", this.props.article_id);
+    if(!this.props.loginState.logged_in) {
+      alert("Please login to write a comment.")
+    }
+    else {
+      const payload = new FormData();
+      payload.append("content", content);
+      payload.append("article", this.props.article_id);
 
-    const job = (target !== -1 ?
-      axios.put(`/api/comment/${target}`, payload) :
-      axios.post("/api/comment", payload));
-    job.then(this._afterUpdateComment.bind(this))
-      .catch((err) => { alert("Error submitting comment: " + err); });
+      const job = (target !== -1 ?
+        axios.put(`/api/comment/${target}`, payload) :
+        axios.post("/api/comment", payload));
+      job.then(this._afterUpdateComment.bind(this))
+        .catch((err) => { alert("Error submitting comment: " + err); });  
+    }
   }
 
   onLike() {
-    this.setState({ is_sending_like: true });
-    const a = this.state.article, aid = this.props.article_id;
-    (async () => {
-      await axios.get('/api/token');
-      const resp = await (a.is_liked ?
-        axios.delete(`/api/article/${aid}/like`) :
-        axios.post(`/api/article/${aid}/like`));
-      if (resp.data.success !== true) throw new Error(resp.data.error);
-      a.like_count = resp.data.like_count;
-      a.is_liked = !a.is_liked;
-    })().catch((err) => {
-      alert("Error sending like update: " + err.name + ": " + err.message); })
-    .finally(() => this.setState({ is_sending_like: false }));
+    if(!this.props.loginState.logged_in) {
+      alert("Please login to like.")
+    }
+    else {
+      this.setState({ is_sending_like: true });
+      const a = this.state.article, aid = this.props.article_id;
+      (async () => {
+        await axios.get('/api/token');
+        const resp = await (a.is_liked ?
+          axios.delete(`/api/article/${aid}/like`) :
+          axios.post(`/api/article/${aid}/like`));
+        if (resp.data.success !== true) throw new Error(resp.data.error);
+        a.like_count = resp.data.like_count;
+        a.is_liked = !a.is_liked;
+      })().catch((err) => {
+        alert("Error sending like update: " + err.name + ": " + err.message); })
+      .finally(() => this.setState({ is_sending_like: false }));
+    }
   }
 
   componentDidMount() {
@@ -140,7 +151,7 @@ class ArticleDetail extends Component {
         <span className="last-edit">Last edit at {this.makeTimeShort(a.last_edited_at)}</span>
       </Grid>
 
-      <Paper className="content">
+      <Paper className="body">
         <Paper className="image">
           <img src={a.image_url} alt="article attachment" />
         </Paper>
@@ -167,4 +178,9 @@ class ArticleDetail extends Component {
   }
 }
 
-export default withRouter(ArticleDetail);
+const mapStateToProps = (state) => ({
+  loginState: state.login,
+});
+
+// export default withRouter(ArticleDetail);
+export default connect(mapStateToProps, )(ArticleDetail);

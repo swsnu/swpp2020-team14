@@ -25,7 +25,7 @@ describe('PhotoDetail', () => {
   it('should display loading message when not loaded', () => {
     const comp = shallow(<PhotoDetailInner photo_id={pid} />);
 
-    const msg = comp.find('p');
+    const msg = comp.find('.loading');
     expect(msg.length).toBe(1);
   });
 
@@ -41,19 +41,20 @@ describe('PhotoDetail', () => {
 
   describe('with mock data', () => {
     let comp;
+    const loggedIn = { logged_in: true }
+    const notLoggedIn = { logged_in: false }
 
     beforeAll(async () => {
-      axios.get.mockResolvedValueOnce({ data: { photo: mocked_photo } });
-      comp = shallow(<PhotoDetailInner photo_id={pid} history={mock_history} />,
+      axios.get.mockResolvedValueOnce({ data: { photo: mocked_photo } });  
+      comp = shallow(<PhotoDetailInner photo_id={pid} history={mock_history} login={loggedIn}/>,
         { disableLifecycleMethods: false });
-      while (comp.first().type() === 'p') {
+      while (comp.find('.loading').length === 1) {
         await new Promise((resv) => setTimeout(resv, 100));
       }
     });
 
     it('should display all required items', () => {
       expect(comp.find('.memo').length).toBe(1);
-      expect(comp.find('.selected-font').length).toBe(1);
     });
 
     it('should have working update memo button', () => {
@@ -71,14 +72,6 @@ describe('PhotoDetail', () => {
       axios.patch.mockRejectedValueOnce({ data: { photo: {} } });
       btn.simulate('click');
       expect(axios.patch).toHaveBeenCalled();
-    });
-
-    it('should have working analysisbutton', () => {
-      const btn = comp.find('.analysis-button');
-      expect(btn.length).toBe(1);
-
-      btn.simulate('click');
-      expect(mock_history.push).lastCalledWith(`/my-page/photo/${pid}/report`);
     });
   });
 });
