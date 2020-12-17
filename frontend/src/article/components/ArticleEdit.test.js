@@ -98,11 +98,25 @@ describe('ArticleEdit', () => {
       const form = comp.find('.article-edit form');
       comp.instance().imgInput = { current: { files: [''] } };
 
+      axios.post.mockResolvedValueOnce({ data: { success: false, error: 'err' } });
+      await new Promise((r) => comp.setState({ title: 'new t', content: 'new c' }, r))
+        .then(() => form.simulate('submit', { preventDefault: () => {} }));
+
+      while (window.alert.mock.calls.length === 0) await new Promise((r) => setTimeout(r, 100));
+
       axios.put.mockResolvedValueOnce({ data: { success: true, id: aid } });
       await new Promise((r) => comp.setState({ title: 'new t', content: 'new c' }, r))
         .then(() => form.simulate('submit', { preventDefault: () => {} }));
 
       while (mock_history.goBack.mock.calls.length === 0) await new Promise((r) => setTimeout(r, 100));
+    });
+
+    it('should reset photo', () => {
+      comp.instance().imgInput = { current: { files: [''] } };
+      const btn = comp.find('.btn-reset');
+      expect(btn.length).toBe(1);
+
+      btn.simulate('click');
     });
   });
 });
