@@ -3,6 +3,7 @@ from datetime import datetime, timezone
 import os, shutil
 import tempfile
 import json
+from unittest.mock import Mock
 
 from django.test import TestCase, RequestFactory, override_settings
 from django.test.client import encode_multipart, MULTIPART_CONTENT
@@ -39,11 +40,9 @@ class PhotoBaseCase(TestCase):
         for i in range(3):
             photo = Photo.objects.create(
                 author=self.users[i], width=3, height=4,
-                is_analyzed=False, analyzed_at=sometime,
-                selected_font=self.fonts[i],
+                is_analyzed=False, analyzed_at=None,
                 image_file=test_image,
-                memo="",
-                metadata={"meta": "hi"})
+                memo="")
             photo.image_file.save('test', test_image)
             self.photos.append(photo)
 
@@ -97,6 +96,7 @@ class PhotoAuthorizedCase(PhotoBaseCase):
         payload = {
             'memo': 'test memo',
         }
+
         resp = cli.post('/api/photo', payload)
         self.assertEqual(resp.status_code, 200)
         resp = resp.json()
@@ -104,10 +104,17 @@ class PhotoAuthorizedCase(PhotoBaseCase):
 
         payload['image'] = test_imgfile
 
+        infer_orig = views.photo.inference.perform_inference
+        infer_mock = Mock()
+        views.photo.inference.perform_inference = infer_mock
+
         resp = cli.post('/api/photo', payload)
         self.assertEqual(resp.status_code, 200)
         resp = resp.json()
         self.assertEqual(resp['success'], True)
+
+        infer_mock.assert_called_once()
+        views.photo.inference.perform_inference = infer_orig
 
     def test_photo_delete(self):
         cli = self.client
@@ -144,6 +151,8 @@ class PhotoFindingCase(PhotoBaseCase):
                 font=self.fonts[i],
                 probability=0.1*i)
             self.findings.append(finding)
+        self.photos[0].is_analyzed = True
+        self.photos[0].save()
         self.client.force_login(self.users[0])
 
     def test_findings(self):

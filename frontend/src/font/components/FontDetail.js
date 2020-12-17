@@ -69,7 +69,9 @@ class FontDetail extends Component {
         <Typography className="section-header" variant="h4">Manufacturer</Typography>
         <div>
           <Typography className="section-body" variant="h5">
-            { f.manufacturer_name }
+            <div className="manufacturer">
+              { f.manufacturer_name }
+            </div>
           </Typography>
         </div>
       </div>

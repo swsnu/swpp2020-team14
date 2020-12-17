@@ -87,7 +87,7 @@ class PhotoDetail extends Component {
 			</Grid>) : (
 			<Grid item xs={5} className="pane-image">
 				<CircularProgress /> <br />
-				<Typography variant="caption">
+				<Typography className="loading" variant="caption">
 					The photo is not loaded yet.
 				</Typography>
 			</Grid>);

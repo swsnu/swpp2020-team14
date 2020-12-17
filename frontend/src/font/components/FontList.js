@@ -35,6 +35,7 @@ class FontList extends Component {
 
   componentDidMount() {
     this.onInit();
+    
   }
 
   render() {

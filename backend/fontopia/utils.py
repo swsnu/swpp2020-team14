@@ -11,7 +11,7 @@ def force_login(func):
     return _inner
 
 # Cf. https://thihara.github.io/Django-Req-Parsing/
-def prepare_put(func):
+def prepare_put(func): # pragma: no cover
     # pylint: disable=protected-access
     def _inner(request, *args, **kwargs):
         if request.method == "PUT":
@@ -30,7 +30,7 @@ def prepare_put(func):
         return func(request, *args, **kwargs)
     return _inner
 
-def prepare_patch(func):
+def prepare_patch(func): # pragma: no cover
     # pylint: disable=protected-access
     def _inner(request, *args, **kwargs):
         if request.method == "PATCH":

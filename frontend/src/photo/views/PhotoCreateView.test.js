@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import PhotoEdit from '../components/PhotoEdit';
+import PhotoCreate from '../components/PhotoCreate';
 import PhotoCreateView from './PhotoCreateView';
 
 describe('PhotoCreateView', () => {
@@ -8,7 +8,7 @@ describe('PhotoCreateView', () => {
 
   it('should call component properly', () => {
     const comp = shallow(<PhotoCreateView.WrappedComponent />);
-    const edit = comp.find(PhotoEdit);
-    expect(edit.length).toBe(1);
+    const create = comp.find(PhotoCreate);
+    expect(create.length).toBe(1);
   });
 });

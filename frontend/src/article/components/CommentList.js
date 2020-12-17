@@ -62,15 +62,15 @@ class CommentList extends Component {
           <div className="edit-comment">
             <TextField multiline fullWidth margin="normal" className="comment-edit-input" value={this.state.comment_body} rows={1} rowsMax={10}
               onChange={this.handleEditInput.bind(this)} />
-            <Button classname={"submit-button"} onClick={()=>this.onClickSubmit()} disabled={this.state.comment_body === c.value}>Submit</Button>  
+            <Button className={"submit-button"} onClick={()=>this.onClickSubmit()} disabled={this.state.comment_body === c.value}>Submit</Button>  
           </div>
           : <Grid container className="content" justify="space-between">
               <Typography variant="h6">{c.content}</Typography>
               {c.is_owner && <div className="btns">
-              <Button classname={"edit-button"} onClick={()=>this.onClickEdit(c)}>
+              <Button className="edit-button" onClick={()=>this.onClickEdit(c)}>
                 {c.id === this.state.edit_target ? "Cancel" : "Edit"}
               </Button>
-              <Button classname={"delete-button"} onClick={()=>this.onClickDelete(c)}>Delete</Button>
+              <Button className="delete-button" onClick={()=>this.onClickDelete(c)}>Delete</Button>
               </div>
           }
             </Grid>
@@ -86,10 +86,11 @@ class CommentList extends Component {
     });
 
     return <div className="comment-list">
-      <TextField multiline fullWidth margin="normal" className="comment-input" rows={1} rowsMax={10}
-          onChange={this.handleCreateInput.bind(this)} />
-      <Button classname={"submit-button"} onClick={()=>this.onClickSubmit()} disabled={this.state.comment_body === ''}>Submit</Button>
-      
+      <div className="new-comment">
+        <TextField multiline fullWidth margin="normal" className="comment-input" rows={1} rowsMax={10}
+            onChange={this.handleCreateInput.bind(this)} />
+        <Button className={"submit-button"} onClick={()=>this.onClickSubmit()} disabled={this.state.comment_body === ''}>Submit</Button>
+      </div>
       <div className="comment-items">
         {items} 
       </div>

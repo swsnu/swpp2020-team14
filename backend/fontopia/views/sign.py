@@ -16,7 +16,6 @@ class APISignup(View):
         except KeyError:
             return HttpResponse("Malformed sign-up request", status=400)
 
-        print(email, password, nickname)
         user = User.objects.filter(email=email)
         if user.count():
             return HttpResponse("This email has already signed up.", status=400)
