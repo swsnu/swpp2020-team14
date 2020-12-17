@@ -15,7 +15,7 @@ describe('ArticleDetail', () => {
     id: aid,
     title: 'title 01',
     author: 'author 01',
-    created_at: 'd1',
+    created_at: '2020/12/15 12:01:01',
     last_edited_at: 'd2',
     image_url: 'http://example.com/tmp.png',
     content: 'content',
@@ -60,11 +60,13 @@ describe('ArticleDetail', () => {
 
   describe('with mock data', () => {
     let comp;
+    const loggedIn = {logged_in: true}
+    const notLoggedIn = {logged_in: false}
 
     beforeAll(async () => {
       axios.get.mockResolvedValueOnce({ data: { article: mocked_article } })
         .mockResolvedValueOnce({ data: { comments: mocked_comments } });
-      comp = shallow(<ArticleDetailInner article_id={aid} history={mock_history} />,
+      comp = shallow(<ArticleDetailInner article_id={aid} history={mock_history} loginState={loggedIn}/>,
         { disableLifecycleMethods: false });
       while (comp.first().type() === 'p') {
         await new Promise((resv) => setTimeout(resv, 100));
@@ -83,13 +85,19 @@ describe('ArticleDetail', () => {
       expect(comp.find('.control-buttons').length).toBe(0);
     });
 
+    it('should show datetime', () => {
+      const create = comp.find('.create');
+      expect(create.length).toBe(1);
+      expect(create.at(0).text()).toEqual("Created at 20/12/15 12:01")
+    })
+
     it('should display comments', () => {
       const cmt_list = comp.find('CommentList');
       expect(cmt_list.prop('comments')).toEqual(mocked_comments);
     });
 
     it('should have working Like button', () => {
-      const btn = comp.find('.likes button.not-liked');
+      const btn = comp.find('.likes .not-liked');
       expect(btn.length).toBe(1);
       axios.post.mockRejectedValueOnce(new Error(''));
       btn.simulate('click');
@@ -137,11 +145,13 @@ describe('ArticleDetail', () => {
 
   describe('with mock data for each', () => {
     let comp;
+    const loggedIn = {logged_in: true}
+    const notLoggedIn = {logged_in: false}
 
     const loadArticle = async (delta) => {
       axios.get.mockResolvedValueOnce({ data: { article: { ...mocked_article, ...delta } } })
         .mockResolvedValueOnce({ data: { comments: mocked_comments } });
-      comp = shallow(<ArticleDetailInner article_id={aid} history={mock_history} />,
+      comp = shallow(<ArticleDetailInner article_id={aid} history={mock_history} loginState={loggedIn}/>,
         { disableLifecycleMethods: false });
       while (comp.first().type() === 'p') {
         await new Promise((resv) => setTimeout(resv, 100));
@@ -151,19 +161,20 @@ describe('ArticleDetail', () => {
     it('should show control buttons for owner', async () => {
       await loadArticle({ is_owner: true });
       expect(comp.find('.control-buttons').length).toBe(1);
-      expect(comp.find('.control-buttons button').length).toBe(2);
+      expect(comp.find('.control-buttons .edit').length).toBe(1);
+      expect(comp.find('.control-buttons .delete').length).toBe(1);
     });
 
     it('should have working edit button', async () => {
       await loadArticle({ is_owner: true });
-      const btn = comp.find('.control-buttons button.edit');
+      const btn = comp.find('.control-buttons .edit');
       btn.simulate('click');
       expect(mock_history.push).lastCalledWith(`/article/${aid}/edit`);
     });
 
     it('should have working delete button', async () => {
       await loadArticle({ is_owner: true });
-      const btn = comp.find('.control-buttons button.delete');
+      const btn = comp.find('.control-buttons .delete');
       axios.delete.mockRejectedValueOnce(new Error(''));
       btn.simulate('click');
       axios.delete.mockResolvedValueOnce({ data: { success: false, error: '' } });
@@ -174,7 +185,7 @@ describe('ArticleDetail', () => {
 
     it('should have working Unlike button', async () => {
       await loadArticle({ is_liked: true });
-      const btn = comp.find('.likes button.liked');
+      const btn = comp.find('.likes .liked');
       expect(btn.length).toBe(1);
       axios.delete.mockRejectedValueOnce(new Error(''));
       btn.simulate('click');

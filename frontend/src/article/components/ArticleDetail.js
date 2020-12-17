@@ -74,7 +74,6 @@ class ArticleDetail extends Component {
       alert("Please login to write a comment.")
     }
     else {
-      console.log(this.props.loginState.logged_in)
       const payload = new FormData();
       payload.append("content", content);
       payload.append("article", this.props.article_id);
@@ -152,7 +151,7 @@ class ArticleDetail extends Component {
         <span className="last-edit">Last edit at {this.makeTimeShort(a.last_edited_at)}</span>
       </Grid>
 
-      <Paper className="content">
+      <Paper className="body">
         <Paper className="image">
           <img src={a.image_url} alt="article attachment" />
         </Paper>
