@@ -19,6 +19,9 @@ describe('FontDetail', () => {
       is_free: false,
       license_detail: 'TEST_DETAIL',
     },
+    similars: [
+      {id: 1}, {id: 2}, {id: 3}
+    ]
   };
   const mocked_free_font = {
     id: fid,
@@ -28,6 +31,9 @@ describe('FontDetail', () => {
       is_free: true,
       license_detail: 'TEST_DETAIL',
     },
+    similars: [
+      {id: 1}, {id: 2}, {id: 3}
+    ]
   };
 
   afterEach(() => jest.clearAllMocks());
@@ -61,7 +67,6 @@ describe('FontDetail', () => {
 
       expect(comp.find('.font-detail').length).toBe(1);
       expect(comp.find('.manufacturer').length).toBe(1);
-      expect(comp.find('.license').length).toBe(1);
       expect(comp.find('.license-nonfree').length).toBe(1);
     });
 
@@ -75,7 +80,6 @@ describe('FontDetail', () => {
 
       expect(comp.find('.font-detail').length).toBe(1);
       expect(comp.find('.manufacturer').length).toBe(1);
-      expect(comp.find('.license').length).toBe(1);
       expect(comp.find('.license-free').length).toBe(1);
     });
   });

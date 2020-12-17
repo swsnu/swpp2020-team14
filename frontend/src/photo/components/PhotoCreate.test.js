@@ -7,7 +7,7 @@ import PhotoCreate from './PhotoCreate';
 jest.mock('axios');
 jest.spyOn(window, 'alert');
 
-describe('PhotoEdit', () => {
+describe('PhotoCreate', () => {
   const PhotoEditInner = PhotoCreate.WrappedComponent;
   const mock_history = { push: jest.fn(), goBack: jest.fn(), replace: jest.fn() };
   const pid = 3;
@@ -32,7 +32,7 @@ describe('PhotoEdit', () => {
     });
 
     it('should handle submit', async () => {
-      const form = comp.find('.photo-edit form');
+      const form = comp.find('.photo-create form');
       comp.instance().imgInput = { current: { files: [''] } };
 
       axios.post.mockResolvedValueOnce({ data: { success: false, error: 'err' } });
@@ -45,7 +45,7 @@ describe('PhotoEdit', () => {
     });
 
     it('should deny empty memo', async () => {
-      const form = comp.find('.photo-edit form');
+      const form = comp.find('.photo-create form');
       await new Promise((r) => comp.setState({ memo: '' }, r));
       form.simulate('submit', { preventDefault: () => {} });
       while (window.alert.mock.calls.length !== 1) await new Promise((r) => setTimeout(r, 100));
@@ -58,7 +58,7 @@ describe('PhotoEdit', () => {
       originalId={pid}
       history={mock_history}
     />, { disableLifecycleMethods: false });
-    while (mock_history.goBack.mock.calls.length === 0) await new Promise((r) => setTimeout(r, 100));
+    while (mock_history.push.mock.calls.length === 0) await new Promise((r) => setTimeout(r, 100));
   });
 
   describe('on existing photo', () => {
@@ -72,14 +72,14 @@ describe('PhotoEdit', () => {
     });
 
     it('should handle submit', async () => {
-      const form = comp.find('.photo-edit form');
+      const form = comp.find('.photo-create form');
       comp.instance().imgInput = { current: { files: [''] } };
 
       axios.put.mockResolvedValueOnce({ data: { success: true, id: pid } });
       await new Promise((r) => comp.setState({ memo: 'TEST_MEMO' }, r))
         .then(() => form.simulate('submit', { preventDefault: () => {} }));
 
-      while (mock_history.goBack.mock.calls.length === 0) await new Promise((r) => setTimeout(r, 100));
+      while (mock_history.push.mock.calls.length === 0) await new Promise((r) => setTimeout(r, 100));
     });
   });
 });
