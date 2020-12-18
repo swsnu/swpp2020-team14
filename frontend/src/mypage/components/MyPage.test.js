@@ -20,12 +20,12 @@ describe('MyPage', () => {
     expect(photo.prop('fetchEndpoint')).toEqual('/api/my-page/photo');
   });
 
-  it('should have working photo button', () => {
+  it('should have working photo manage button', () => {
     const hist = { push: jest.fn() };
     const comp = shallow(<MyPage.WrappedComponent
       history={hist}
     />);
-    comp.find('.photo-button').simulate('click');
-    expect(hist.push).toHaveBeenCalledTimes(1);
+    comp.find('.photo-manage-button').simulate('click');
+    expect(hist.push).toHaveBeenCalledWith('/my-page/photo/');
   });
 });

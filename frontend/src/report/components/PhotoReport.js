@@ -73,7 +73,7 @@ class PhotoReport extends Component {
 			</Paper>) : (
 			<Paper className="report-pending" elevation={4}>
 				<CircularProgress /> <br />
-				<Typography variant="caption">
+				<Typography className="loading" variant="caption">
 					Loading analysis results. Please wait.
 				</Typography>
 			</Paper>)

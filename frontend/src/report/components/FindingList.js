@@ -9,9 +9,9 @@ import FontItem from '../../font/components/FontItem';
 import { Divider } from '@material-ui/core';
 
 class FindingList extends Component {
-    onFindingDetailClicked = (finding) => {
-        this.props.history.push('/font/' + finding.font_id);
-    }
+    // onFindingDetailClicked = (finding) => {
+    //     this.props.history.push('/font/' + finding.font_id);
+    // }
 
     render() {
         const items = this.props.findings.map(finding => {
