@@ -13,7 +13,8 @@ class MyPage extends Component {
             <Paper className="my-photo">
                 <Grid container className="section-title" justify="space-between">
                     <Typography variant="h4">My Photos</Typography>
-                    <Button variant="contained" color="primary" onClick={ () => this.props.history.push('/my-page/photo/') }>
+                    <Button variant="contained" className="photo-manage-button"
+                        color="primary" onClick={ () => this.props.history.push('/my-page/photo/') }>
                         Manage
                     </Button>
                 </Grid>

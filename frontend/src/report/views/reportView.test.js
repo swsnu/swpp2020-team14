@@ -8,7 +8,7 @@ describe('ReportView', () => {
   afterEach(() => jest.clearAllMocks());
 
   it('should call component properly', () => {
-    const hist = { push: jest.fn() };
+    const hist = { replace: jest.fn() };
     const comp = shallow(<ReportView.WrappedComponent
       history={hist}
       match={{ params: { photo_id: 3 } }}
@@ -22,12 +22,12 @@ describe('ReportView', () => {
   });
 
   it('should call goBack properly', () => {
-    const hist = { push: jest.fn() };
+    const hist = { replace: jest.fn() };
     const comp = shallow(<ReportView.WrappedComponent
       history={hist}
       match={{ params: { photo_id: 3 } }}
     />);
     comp.find('.back').simulate('click');
-    expect(hist.push).toHaveBeenCalledTimes(1);
+    expect(hist.replace).toHaveBeenCalledTimes(1);
   });
 });
