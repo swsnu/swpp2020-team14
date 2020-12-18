@@ -12,8 +12,10 @@ class Command(BaseCommand): # pragma: no cover
     def add_arguments(self, parser):
         parser.add_argument('-a', '--all', action="store_true",
             help="List all uploaded files and remove unnecesary (might take long)")
+        parser.add_argument('-n', '--dry-run', action="store_true",
+            help="Do not actually remove files (just show the list)")
 
-    def _clean_all_files(self):
+    def _clean_all_files(self, is_dry_run):
         files_list = sum(([os.path.join(dirpath, fname) for fname in filenames] for \
             dirpath, dirnames, filenames in os.walk(settings.MEDIA_ROOT)), [])
 
@@ -27,34 +29,36 @@ class Command(BaseCommand): # pragma: no cover
         cnt = 0
         for filename in to_prune:
             print(f'Removing file: {filename}')
-            os.remove(filename)
+            if not is_dry_run:
+                os.remove(filename)
             cnt += 1
         print()
         print(f'Removed {cnt} stale files.')
 
-    def _clean_from_db(self):
+    def _clean_from_db(self, is_dry_run):
         photo_cnt = 0
         file_cnt = 0
-        while True:
-            q = models.Photo.objects.filter(author=None, is_analyzed=True)
-            q = q.only('id', 'image_file')
-            if not q.count(): break
-            for photo in q[:20]:
-                fn = photo.image_file
-                file_path = os.path.join(settings.MEDIA_ROOT, fn.path)
-                if os.path.isfile(file_path):
-                    print(f'Removing file: {file_path}')
+        q = models.Photo.objects.filter(author=None, is_analyzed=True)
+        q = q.only('id', 'image_file')
+        for photo in q.all():
+            fn = photo.image_file
+            file_path = os.path.join(settings.MEDIA_ROOT, fn.path)
+            if os.path.isfile(file_path):
+                print(f'Removing file: {file_path}')
+                if not is_dry_run:
                     os.remove(file_path)
-                    file_cnt += 1
-                else:
-                    print(f'Warning: nonexistent file: {file_path}')
+                file_cnt += 1
+            else:
+                print(f'Warning: nonexistent file: {file_path}')
+            if not is_dry_run:
                 photo.delete()
-                photo_cnt += 1
+            photo_cnt += 1
         print()
         print(f'Removed {photo_cnt} photos and {file_cnt} files.')
 
     def handle(self, *args, **kwargs):
+        is_dry_run = kwargs['dry_run']
         if kwargs['all']:
-            self._clean_all_files()
+            self._clean_all_files(is_dry_run)
             return
-        self._clean_from_db()
+        self._clean_from_db(is_dry_run)
