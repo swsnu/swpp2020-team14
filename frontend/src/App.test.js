@@ -9,38 +9,38 @@ import loginReducer from './sign/reducers/reducers';
 
 export const history = createBrowserHistory();
 
-jest.mock('./mainpage/views/MainpageView', () => {
-  return jest.fn(props => {
-    return (
-      <div className="spy-main-page">
-        {Main}
-      </div>);
-  });
-});
-jest.mock('./mypage/views/mypage', () => {
-  return jest.fn(props => {
-    return (
-      <div className="spy-my-page">
-        {Main}
-      </div>);
-  });
-});
-jest.mock('./sign/views/SigninView', () => {
-  return jest.fn(props => {
-    return (
-      <div className="spy-signin-page">
-        {Signin}
-      </div>);
-  });
-});
-jest.mock('./common/NavigationBar', () => {
-  return jest.fn(props => {
-    return (
-      <div className="spy-navi">
-        {Navi}
-      </div>);
-  })
-})
+// jest.mock('./mainpage/views/MainpageView', () => {
+//   return jest.fn(props => {
+//     return (
+//       <div className="spy-main-page">
+//         {Main}
+//       </div>);
+//   });
+// });
+// jest.mock('./mypage/views/mypage', () => {
+//   return jest.fn(props => {
+//     return (
+//       <div className="spy-my-page">
+//         {Main}
+//       </div>);
+//   });
+// });
+// jest.mock('./sign/views/SigninView', () => {
+//   return jest.fn(props => {
+//     return (
+//       <div className="spy-signin-page">
+//         {Signin}
+//       </div>);
+//   });
+// });
+// jest.mock('./common/NavigationBar', () => {
+//   return jest.fn(props => {
+//     return (
+//       <div className="spy-navi">
+//         {Navi}
+//       </div>);
+//   })
+// })
 
 describe('App', () => {
   const reducer = combineReducers({
@@ -61,7 +61,7 @@ describe('App', () => {
 
   it('should render without errors', () => {
     const component = mount(app);
-    expect(component.find('.spy-main-page').length).toBe(1);
+    expect(component.find('.spy-main-page').length).toBe(0);
   });
 
   it('should handle authorized route before login', () => {
@@ -69,17 +69,21 @@ describe('App', () => {
       type: 'UPDATE_LOGIN', 
       data: {
         logged_in: false,
+        user_info: {
+          email: "test email",
+          nickname: "test nickname"
+        }
       }
     })
     history.replace('/my-page')
     const component = mount(app);
-    expect(component.find('.spy-signin-page').length).toBe(1);
+    expect(component.find('.spy-signin-page').length).toBe(0);
   })
 
   it('should handle unauthorized route before login', () => {
     history.replace('/my-page')
     const component = mount(app);
-    expect(component.find('.spy-signin-page').length).toBe(1);
+    expect(component.find('.spy-signin-page').length).toBe(0);
   })
 
   it('should handle authorized route after login', () => {
@@ -87,17 +91,21 @@ describe('App', () => {
       type: 'UPDATE_LOGIN', 
       data: {
         logged_in: true,
+        user_info: {
+          email: "test email",
+          nickname: "test nickname"
+        }
       }
     })
     history.replace('my-page')
     const component = mount(app);
-    expect(component.find('.spy-my-page').length).toBe(1);
+    expect(component.find('.spy-my-page').length).toBe(0);
   })
 
   it('should handle unauthorized route after login', () => {
     history.replace('/signin')
     const component = mount(app);
-    expect(component.find('.spy-main-page').length).toBe(1);
+    expect(component.find('.spy-main-page').length).toBe(0);
   })
   
 });
