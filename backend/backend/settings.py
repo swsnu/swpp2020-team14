@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,8 +26,9 @@ SECRET_KEY = '6#dt^(ulz-m5d10kriy03no(2@a5b4)9+n&em2xhx4)$34p@3^'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+_host = os.environ.get('FONTOPIA_HOST')
+ALLOWED_HOSTS = [_host] if _host else []
+del _host
 
 # Application definition
 
