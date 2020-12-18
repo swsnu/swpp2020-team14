@@ -61,6 +61,8 @@ def _perform_inference_actual(img):
     return res
 
 def _put_inference_result(photo, probs):
+    models.Finding.objects.filter(photo=photo).delete()
+    findings = []
     for i, label in enumerate(config.labels):
         fnt = models.Font.objects.filter(name=label)
         if not fnt.count():
@@ -76,11 +78,9 @@ def _put_inference_result(photo, probs):
             fnt = models.Font.objects.filter(name=label)
         fnt = fnt.get()
         prob = probs[i]
-        models.Finding.objects.filter(photo=photo, font=fnt).delete()
-        models.Finding.objects.create(
-            photo=photo,
-            font=fnt,
-            probability=prob)
+        finding = models.Finding(photo=photo, font=fnt, probability=prob)
+        findings.append(finding)
+    models.Finding.objects.bulk_create(findings)
     photo.is_analyzed = True
     photo.save()
 
