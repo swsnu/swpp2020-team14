@@ -25,8 +25,6 @@ class APISignup(View):
             return HttpResponse("Please use another nickname.", status=400)
 
         try:
-            if '@' not in email:
-                raise Exception
             u = User.objects.create_user(
                 username=email,
                 email=email,
