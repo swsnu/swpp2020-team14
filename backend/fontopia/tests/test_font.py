@@ -53,3 +53,29 @@ class FontCase(TestCase):
         self.assertIn('license', resp)
         self.assertIn('view_count', resp)
 
+        
+    def test_font_item_authenticated(self):
+        cli = self.client
+        # login
+        cred = {"email": "u00@example.com", "password": "testpw"}
+        resp = cli.post('/api/signin', data=cred,
+            content_type="application/json")
+        self.assertEqual(resp.status_code, 200)
+
+        resp = cli.get(f'/api/font/524288')
+        self.assertEqual(resp.status_code, 404)
+
+        font = self.fonts[0]
+        resp = cli.get(f'/api/font/{font.id}')
+        resp = resp.json()
+        self.assertIn('id', resp)
+        self.assertIn('name', resp)
+        self.assertIn('manufacturer_name', resp)
+        self.assertIn('license', resp)
+        self.assertIn('view_count', resp)
+    
+    def test_font_most_viewed(self):
+        cli = self.client
+        resp = cli.get('/api/font/most-viewed')
+        resp = resp.json()
+        self.assertIn('list', resp)

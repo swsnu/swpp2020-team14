@@ -39,6 +39,25 @@ class UserCase(TestCase):
         resp = cli.post('/api/signup', cred,
             content_type='application/json')
         self.assertEqual(resp.status_code, 200)
+        
+        # already signed up
+        resp = cli.post('/api/signup', cred,
+            content_type='application/json')
+        self.assertEqual(resp.status_code, 400)
+
+        cred['email'] = 'good@example.com'
+        # already used nickname
+        resp = cli.post('/api/signup', cred,
+            content_type='application/json')
+        self.assertEqual(resp.status_code, 400)
+
+        # bad email
+        cred['email'] = '1' * 10000
+        cred['nickname'] = 'good'
+        resp = cli.post('/api/signup', cred,
+            content_type='application/json')
+        self.assertEqual(resp.status_code, 400)
+
 
     def test_signout(self):
         cli = self.client

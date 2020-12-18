@@ -41,7 +41,7 @@ class APIPhotoMy(View):
         n = None
         try:
             n = int(request.GET['trunc'])
-            assert 1 <= n
+            # assert 1 <= n
         except (KeyError, ValueError, AssertionError):
             n = None
 

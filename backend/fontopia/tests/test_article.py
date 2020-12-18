@@ -82,6 +82,9 @@ class ArticleUnauthorizedCase(ArticleBaseCase):
         resp = resp.json()
         self.assertIn('comments', resp)
 
+        
+
+
 class ArticleAuthorizedCase(ArticleBaseCase):
     def setUp(self):
         super(ArticleAuthorizedCase, self).setUp()
@@ -116,6 +119,7 @@ class ArticleAuthorizedCase(ArticleBaseCase):
         self.assertEqual(resp.status_code, 200)
         resp = resp.json()
         self.assertEqual(resp['success'], False)
+
 
     def test_delete_article(self):
         cli = self.client
@@ -188,5 +192,25 @@ class ArticleAuthorizedCase(ArticleBaseCase):
         self.assertEqual(resp['success'], False)
 
 
+        
+        payload = {
+            'article': art.id,
+        }
+        resp = cli.post(f'/api/comment', payload)
+        self.assertEqual(resp.status_code, 200)
+        resp = resp.json()
+        self.assertIn('success', resp)
 
+        payload = {
+            'article': art.id,
+            'content': 'hello'
+        }
+        resp = cli.post(f'/api/comment', payload)
+        self.assertEqual(resp.status_code, 200)
+        resp = resp.json()
+        self.assertIn('success', resp)
+
+
+        resp = cli.delete(f'/api/comment/{resp["id"]}')
+        self.assertEqual(resp.status_code, 200)
 
